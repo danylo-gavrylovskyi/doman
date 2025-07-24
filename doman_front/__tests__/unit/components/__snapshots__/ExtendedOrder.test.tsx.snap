@@ -1,0 +1,141 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ExtendedOrder (Unit) matches snapshot 1`] = `
+<DocumentFragment>
+  <section
+    class="minimizedOrder"
+  >
+    <header
+      class="orderHeader"
+    >
+      <div
+        class="info"
+      >
+        <span
+          class="bold"
+        >
+          № 123
+        </span>
+        <span>
+          від 2024-02-20
+        </span>
+      </div>
+      <div>
+        <svg
+          fill="none"
+          viewBox="0 0 24 24"
+          width="25px"
+        >
+          <path
+            d="M17 15L12 10L7 15"
+            stroke="rgb(0, 136, 204)"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.5"
+          />
+        </svg>
+      </div>
+    </header>
+    <main
+      class="flexRowAlignCenter"
+      style="align-items: flex-start;"
+    >
+      <div
+        class="receiver"
+      >
+        <span
+          class="bold"
+        >
+          Отримувач замовлення
+        </span>
+        <span>
+          John Doe
+        </span>
+        <span>
+          123-456-789
+        </span>
+        <span>
+          john.doe@example.com
+        </span>
+      </div>
+      <div>
+        <div
+          class="flexRowAlignCenter orderProduct"
+        >
+          <div
+            style="display: flex; width: 50%; align-items: center;"
+          >
+            <img
+              alt="test-product-1"
+              src="http://localhost:5000/uploads/productsImages/some-image-1.jpg"
+              width="15%"
+            />
+            <div
+              style="margin-left: 5%;"
+            >
+              Test Product 1
+            </div>
+          </div>
+          <div>
+            1200₴ x 2 од.
+          </div>
+          <div
+            class="bold"
+          >
+            2400 ₴
+          </div>
+          <div
+            class="separator"
+          />
+        </div>
+        <div
+          class="flexRowAlignCenter orderProduct"
+        >
+          <div
+            style="display: flex; width: 50%; align-items: center;"
+          >
+            <img
+              alt="test-product-2"
+              src="http://localhost:5000/uploads/productsImages/some-image-2.jpg"
+              width="15%"
+            />
+            <div
+              style="margin-left: 5%;"
+            >
+              Test Product 2
+            </div>
+          </div>
+          <div>
+            1000₴ x 1 од.
+          </div>
+          <div
+            class="bold"
+          >
+            1000 ₴
+          </div>
+          <div
+            class="separator"
+          />
+        </div>
+        <div
+          class="flexRowAlignCenter"
+        >
+          <span
+            class="totalPriceText"
+          >
+            Разом
+          </span>
+          <span
+            class="bold"
+          >
+            <b>
+              3400
+            </b>
+             ₴
+          </span>
+        </div>
+      </div>
+    </main>
+  </section>
+</DocumentFragment>
+`;

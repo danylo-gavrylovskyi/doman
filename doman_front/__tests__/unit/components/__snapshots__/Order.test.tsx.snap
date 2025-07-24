@@ -1,0 +1,64 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Order (Unit) matches snapshot 1`] = `
+<DocumentFragment>
+  <section
+    class="minimizedOrder flexRowAlignCenter"
+  >
+    <div
+      class="sideInfo"
+    >
+      <span
+        class="bold"
+      >
+        № 123
+      </span>
+       від 2024-02-20
+    </div>
+    <div
+      class="orderedProductsImages"
+    >
+      <img
+        alt="test-product-1"
+        src="http://localhost:5000/uploads/productsImages/some-image-1.jpg"
+        width="100%"
+      />
+      <img
+        alt="test-product-2"
+        src="http://localhost:5000/uploads/productsImages/some-image-2.jpg"
+        width="100%"
+      />
+    </div>
+    <div
+      class="flexRowAlignCenter"
+    >
+      <div
+        class="sideInfo"
+        style="margin-right: 10%;"
+      >
+        <span>
+          До сплати
+        </span>
+        <span
+          class="bold"
+        >
+          3400 ₴
+        </span>
+      </div>
+      <svg
+        fill="none"
+        viewBox="0 0 24 24"
+        width="35px"
+      >
+        <path
+          d="M7 10L12 15L17 10"
+          stroke="rgb(0, 136, 204)"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.5"
+        />
+      </svg>
+    </div>
+  </section>
+</DocumentFragment>
+`;

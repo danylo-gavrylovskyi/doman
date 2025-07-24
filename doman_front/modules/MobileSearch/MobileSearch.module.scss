@@ -1,0 +1,64 @@
+@import '../../app/variables.scss';
+
+.darkBg{
+    position: fixed;
+    background-color: rgba(0,0,0,0.7);
+    top: 8%;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    z-index: 2;
+    transition: all .3s;
+}
+
+.search{
+    z-index: 2;
+    position: fixed;
+    top:0;
+    bottom: 90%;
+    right: 0;
+    left: 0;
+    background-color: white;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .3s;
+    svg:hover{
+        path{
+            stroke: $contrast-color;
+        }
+    }
+
+    input{
+        cursor: pointer;
+        margin-left: 10px;
+        border: 1px solid black;
+        border-radius: 20px;
+        width: 75%;
+        padding: 10px 15px;
+        font-size: 15px;
+        &:focus{
+            outline: none;
+        }
+    }
+}
+
+.close{
+    transform: translateY(-100%);
+}
+
+.open{
+    transform: translate(0);
+}
+
+.visible{
+    visibility: visible;
+    opacity: 1;
+}
+
+.hidden{
+    visibility: hidden;
+    opacity: 0;
+}

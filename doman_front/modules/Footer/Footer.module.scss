@@ -1,0 +1,72 @@
+@import '../../app/variables.scss'; 
+
+.container{
+    margin-top: 5vh;
+    background-color: $base-color;
+    min-height: 300px;
+    width: 100%;
+    display: flex;
+    align-items:center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 400;
+    font-size: 14px;
+    b{
+        font-size: 22px;
+        margin-bottom: 10%;
+    }
+    svg{
+        width: 20px;
+        margin-right: 10px;
+    }
+
+    section{
+        display: flex;
+        flex-direction: column;
+        span{
+            line-height: 20px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 6%;
+            cursor: pointer;
+            transition: color .2s;
+            &:hover{
+                color: $contrast-color;
+            }
+            svg:hover{
+                path{
+                    fill: $contrast-color
+                }
+            }
+        }
+    }
+}
+
+.sections{
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    width: 80%;
+    margin: 4% 0;
+}
+
+@media (max-width: 900px){
+    .sections{
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        row-gap: 5vh;
+
+        section{
+            width: 57vw;
+        }
+    }
+}
+
+@media (max-width: 450px){
+    .sections{
+        section{
+            width: 70vw;
+        }
+    }
+}

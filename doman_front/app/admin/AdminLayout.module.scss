@@ -1,0 +1,51 @@
+@import '../variables.scss';
+
+.menu{
+    height: 100svh;
+    width: 15%;
+    background-color: $base-color;
+    color: white;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.logo{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    background-color: rgb(41, 41, 41);
+    margin-bottom: 10%;
+    cursor: pointer;
+}
+
+.sections{
+    display: flex;
+    flex-direction: column;
+    section{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 90%;
+        height: 60px;
+        border-top-right-radius: 50px;
+        border-bottom-right-radius: 50px;
+        transition: background-color 0.2s;
+        cursor: pointer;
+    }
+    section:hover{
+        background-color: rgb(1, 60, 90);
+    }
+}
+
+.active{
+    background-color: rgb(1, 60, 90);
+}
+
+.paper{
+    position: absolute;
+    top: 2%;
+    left: 17%;
+    right: 2%;
+    min-height: 96%;
+}

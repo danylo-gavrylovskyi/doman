@@ -1,0 +1,76 @@
+@import '../../app/variables.scss';
+
+.darkBg{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0,0,0,0.4);
+    transition: all 0.3s;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+}
+
+.loginContainer, .registrContainer{
+    width: 25%;
+    padding: 0 1%;
+    z-index: 100;
+    
+    form{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        margin-top: 5%;
+    }
+
+    header{
+        border-bottom: 1px solid rgba(0,0,0,0.4);
+        font-size: 24px;
+        font-weight: 700;
+        p{
+            margin: 3% 0;
+        }
+    }
+}
+
+.loginContainer{
+    height: 35%;
+    row-gap: 15%;
+}
+.registrContainer{
+    height: 60%;
+    row-gap: 6%;
+}
+
+.login{
+    background-color: $contrast-color;
+    border: 1px solid $contrast-color;
+    color: white;
+    font-size: 18px;
+    padding: 2% 0;
+    border-radius: 5px;
+    font-weight: 600;
+    transition: all .2s;
+    cursor: pointer;
+    &:hover{
+        background-color: $contrast-hover;
+        border: 1px solid $contrast-hover;
+    }
+}
+
+.signup{
+    background-color: transparent;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    color: $admin-base-color;
+    transition: all .2s;
+    cursor: pointer;
+    &:hover{
+        color: $contrast-color;
+    }
+}

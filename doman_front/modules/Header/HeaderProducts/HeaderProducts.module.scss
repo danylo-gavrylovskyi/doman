@@ -1,0 +1,46 @@
+@import '../../../app/variables.scss';
+
+.container {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	width: 100%;
+	font-size: 16px;
+	font-weight: 600;
+	cursor: pointer;
+	img {
+		margin: 3% 0 3% 2%;
+	}
+	p {
+		transition: color 0.2s;
+		margin-left: 4%;
+		margin-right: 4%;
+	}
+	&:hover {
+		p {
+			color: $contrast-color;
+		}
+	}
+	margin-bottom: 2%;
+}
+
+.darkBg {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: rgba(0, 0, 0, 0.4);
+	transition: all 0.3s;
+	z-index: 2;
+}
+
+.paper {
+	padding: 2%;
+	position: absolute;
+	width: 25%;
+	top: 8%;
+	right: 32%;
+	z-index: 2;
+}

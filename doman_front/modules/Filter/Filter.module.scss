@@ -1,0 +1,82 @@
+@import '../../app/variables.scss';
+
+.container{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 70%;
+    left: 0;
+    background-color: white;
+    transition: all 0.3s ease-in-out;
+    z-index: 2;
+    font-family: "Inter";
+
+    main{
+        margin: 5px 0;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+}
+
+.darkBg{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0,0,0,0.6);
+    transition: all 0.3s;
+    z-index: 2;
+}
+
+.header{
+    background-color: $base-color;
+    height: 6%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.filters{
+    margin-top: 5%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    aside{
+        width: 80%;
+    }
+}
+
+.headerTitle{
+    width: 40%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    span{
+        margin-left: 5%;
+    }
+}
+
+.close{
+    transform: translateX(-100%);
+}
+
+.open{
+    transform: translate(0);
+}
+
+.visible{
+    visibility: visible;
+    opacity: 1;
+}
+
+.hidden{
+    visibility: hidden;
+    opacity: 0;
+}

@@ -77,7 +77,11 @@ export const Registration = ({
 					error={Boolean(errors.email?.message)}
 					label="Ел. пошта"></TextField>
 				<TextField
-					{...register("password", { required: "Введіть номер мобільного телефону" })}
+					{...register("password",
+						{
+							required: "Введіть номер мобільного телефону",
+							minLength: 6,
+						})}
 					helperText={errors.password?.message}
 					error={Boolean(errors.password?.message)}
 					type="password"

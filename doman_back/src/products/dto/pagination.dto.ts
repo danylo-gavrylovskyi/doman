@@ -1,4 +1,5 @@
 import { IsOptional } from "class-validator";
+import { Is } from "sequelize-typescript";
 
 export class PaginationDto {
 	@IsOptional()
@@ -9,4 +10,10 @@ export class PaginationDto {
 
 	@IsOptional()
 	readonly inputValue?: string;
+
+	@IsOptional()
+	readonly categoryId?: string;
+
+	@IsOptional()
+	readonly subcategoryId?: string;
 }

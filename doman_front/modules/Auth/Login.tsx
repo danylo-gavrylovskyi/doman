@@ -49,6 +49,7 @@ export const Login = ({
 					})}
 					helperText={errors.password?.message}
 					error={Boolean(errors.password?.message)}
+					type="password"
 					label="Пароль"></TextField>
 				<button type="submit" className={styles.login}>
 					Увійти

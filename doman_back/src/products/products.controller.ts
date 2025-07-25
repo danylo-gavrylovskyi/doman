@@ -34,7 +34,7 @@ export class ProductsController {
 	constructor(
 		private productsService: ProductsService,
 		private productAttributeService: ProductAttributeService
-	) {}
+	) { }
 
 	@ApiOperation({ description: "Getting all products" })
 	@ApiResponse({ type: [Product] })

@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
-import { FindOptions, Op } from "sequelize";
+import { FindOptions, Op, WhereOptions } from "sequelize";
 
 import * as path from "path";
 import * as XLSX from "xlsx";
@@ -12,21 +12,50 @@ import { UpdateProductServiceDto } from "./dto/updateProduct.dto";
 import { PaginationDto } from "./dto/pagination.dto";
 
 import { deleteImage } from "utils/deleteImage";
+import { Subcategory } from "src/subcategories/subcategory.model";
+import { ProductAttribute } from "src/product-attribute/product-attribute.model";
 
 @Injectable()
 export class ProductsService {
-	constructor(@InjectModel(Product) private productsRepository: typeof Product) {}
+	constructor(@InjectModel(Product) private productsRepository: typeof Product) { }
 
-	getProductsWithPagination({ page = "1", perPage = "4", inputValue = "" }: PaginationDto) {
+	getProductsWithPagination(
+		{
+			page = "1",
+			perPage = "4",
+			inputValue = "",
+			categoryId,
+			subcategoryId,
+		}: PaginationDto
+	) {
+		const whereClause: WhereOptions<Product> = {
+			title: {
+				[Op.iLike]: `%${inputValue}%`,
+			},
+		};
+
+		if (subcategoryId) {
+			whereClause.subcategoryId = +subcategoryId;
+		}
+
+		if (categoryId) {
+			whereClause["$subcategory.categoryId$"] = +categoryId;
+		}
+
 		return this.productsRepository.findAndCountAll({
 			limit: +perPage,
 			offset: (+page - 1) * +perPage,
-			include: { all: true },
-			where: {
-				title: {
-					[Op.iLike]: `%${inputValue}%`,
+			include: [
+				{
+					model: Subcategory,
+					required: true,
 				},
-			},
+				{
+					model: ProductAttribute,
+					required: true,
+				}
+			],
+			where: whereClause,
 		});
 	}
 
@@ -51,7 +80,7 @@ export class ProductsService {
 		for (const data of xlData) {
 			data.article = String(data.article);
 
-			const [findedProduct, isCreated] = await this.productsRepository.findOrCreate({
+			const [foundProduct, isCreated] = await this.productsRepository.findOrCreate({
 				where: { article: data.article },
 				defaults: {
 					title: data.title,
@@ -64,7 +93,7 @@ export class ProductsService {
 			});
 
 			if (!isCreated) {
-				this.updateProduct(findedProduct.id, { price: data.price, quantity: data.quantity });
+				this.updateProduct(foundProduct.id, { price: data.price, quantity: data.quantity });
 			}
 		}
 

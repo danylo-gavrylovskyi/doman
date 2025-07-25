@@ -81,9 +81,16 @@ export const Header: React.FC<{ products: Product[] }> = ({ products }) => {
 						elevation={3}
 						style={!isCategoriesClicked ? { visibility: "hidden", opacity: "0" } : {}}
 						className={styles.categoriesDropdown}>
-						{categories.map((category: Category) => (
-							<DropdownCategory key={category.id} {...category} />
-						))}
+						{
+							categories.length === 0 ?
+								(
+									<div>Категорій наразі немає</div>
+								)
+								:
+								categories.map((category: Category) => (
+									<DropdownCategory key={category.id} {...category} />
+								))
+						}
 					</Paper>
 				</section>
 				<div className={styles.search}>

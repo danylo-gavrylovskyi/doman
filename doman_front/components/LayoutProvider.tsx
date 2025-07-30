@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 import { Header } from "@/modules/Header/Header";
 import { Footer } from "@/modules/Footer/Footer";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Product } from "@/types/product.interface";
 
 export const queryClient = new QueryClient({
 	defaultOptions: {
@@ -16,9 +15,9 @@ export const queryClient = new QueryClient({
 	},
 });
 
-export const HeaderProvider: React.FC<{ products: Product[] }> = ({ products }) => {
+export const HeaderProvider: React.FC = () => {
 	const pathname = usePathname();
-	return <>{!pathname.includes("admin") && <Header products={products} />}</>;
+	return <>{!pathname.includes("admin") && <Header />}</>;
 };
 
 export const FooterProvider = () => {

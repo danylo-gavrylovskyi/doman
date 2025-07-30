@@ -1,22 +1,25 @@
 import { Injectable } from "@nestjs/common";
-import { CreateProductAttributeDto } from "./dto/CreateProductAttribute.dto";
 import { InjectModel } from "@nestjs/sequelize";
+import { Transaction } from "sequelize";
+
 import { ProductAttribute } from "./product-attribute.model";
+
+import { CreateProductAttributeDto } from "./dto/CreateProductAttribute.dto";
 
 @Injectable()
 export class ProductAttributeService {
 	constructor(
 		@InjectModel(ProductAttribute) private productAttributeRepo: typeof ProductAttribute
-	) {}
+	) { }
 
-	addProductAttribute(dto: CreateProductAttributeDto) {
-		return this.productAttributeRepo.create(dto);
+	addProductAttribute(dto: CreateProductAttributeDto, transaction?: Transaction): Promise<ProductAttribute> {
+		return this.productAttributeRepo.create(dto, { transaction });
 	}
 
-	updateProductAttribute(productId: number, attributeId: number, attributeValue: string) {
+	updateProductAttribute(productId: number, attributeId: number, attributeValue: string, transaction?: Transaction): Promise<[number]> {
 		return this.productAttributeRepo.update(
 			{ attributeValue },
-			{ where: { productId, attributeId } }
+			{ where: { productId, attributeId }, transaction },
 		);
 	}
 }

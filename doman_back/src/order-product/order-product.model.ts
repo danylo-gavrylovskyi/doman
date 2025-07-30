@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
 
 import { Order } from "src/orders/order.model";
-import { Product } from "src/products/product.model";
+import { Product } from "src/products/product.entity";
 
 interface OrderProductCreationAttr {
 	orderId: number;

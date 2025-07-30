@@ -5,16 +5,14 @@ import { Checkbox, MenuItem, TextField } from "@mui/material";
 import { useRouter, useParams } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 
-import { useEditProduct, useGetProducts } from "@/hooks/products.hooks";
+import { useEditProduct, useGetProductById } from "@/hooks/products.hooks";
 import { useGetAttributes } from "@/hooks/attributes.hooks";
 import { useGetSubcategories } from "@/hooks/subcategories.hooks";
 
 import { Subcategory } from "@/types/category.interface";
 import { Attribute, AttributeIdValuePair } from "@/types/attribute.interface";
-import { Product } from "@/types/product.interface";
 import { UpdateProduct } from "@/types/update-product.interface";
 
-import { findAttribute } from "@/utils/findAttribute";
 
 import styles from "../new/AddProduct.module.scss";
 
@@ -24,7 +22,7 @@ const UpdateProductPage = () => {
 
 	const { register, handleSubmit } = useForm<UpdateProduct>();
 
-	const product = useGetProducts().data?.find((product: Product) => product.id === Number(id));
+	const { data: product } = useGetProductById(Number(id));
 	const { data: subcategories } = useGetSubcategories();
 	const { data: attributes } = useGetAttributes();
 
@@ -56,7 +54,7 @@ const UpdateProductPage = () => {
 	}
 
 	const onSaveProduct: SubmitHandler<UpdateProduct> = (values) => {
-		const { title, article, quantity, subcategoryId, price, isPopular } = values;
+		const { title, article, quantity, subcategoryId, price, description, isPopular } = values;
 
 		const formData = new FormData();
 		if (title !== product.title) formData.append("title", title);
@@ -66,6 +64,7 @@ const UpdateProductPage = () => {
 		if (Number(subcategoryId) !== product.subcategoryId)
 			formData.append("subcategoryId", String(subcategoryId));
 		if (+price !== +product.price) formData.append("price", String(price));
+		if (description !== product.description) formData.append("description", description);
 		if (image) formData.append("image", image);
 		if (oldAttributeValues.length > 0)
 			formData.append("oldAttributeValues", JSON.stringify(oldAttributeValues));
@@ -150,7 +149,7 @@ const UpdateProductPage = () => {
 						<section key={attribute.id}>
 							<TextField
 								label="Атрибут"
-								defaultValue={findAttribute(attributes, attribute.attributeId)?.title}
+								defaultValue={attribute?.title}
 								InputProps={{
 									readOnly: true,
 								}}
@@ -168,7 +167,7 @@ const UpdateProductPage = () => {
 						</section>
 					))}
 
-					{[...Array(attributeCount)].map((el, index: number) => (
+					{[...Array(attributeCount)].map((_, index: number) => (
 						<section key={index}>
 							<TextField
 								onChange={(e) => handleAttributeIdChange(index, e.target.value)}
@@ -214,6 +213,7 @@ const UpdateProductPage = () => {
 						<Checkbox
 							{...register("isPopular")}
 							inputProps={{ "aria-label": "Checkbox demo" }}
+							defaultChecked={product.isPopular}
 						/>
 					</section>
 					<footer>

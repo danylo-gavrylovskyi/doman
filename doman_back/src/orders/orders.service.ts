@@ -1,23 +1,24 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
 import * as nodemailer from "nodemailer";
 
 import { OrderProductService } from "src/order-product/order-product.service";
 
 import { Order } from "./order.model";
-import { Product } from "src/products/product.model";
 import { OrderProduct } from "src/order-product/order-product.model";
 
 import { CreateOrderDto } from "./createOrder.dto";
-import { PaginationDto } from "src/products/dto/pagination.dto";
 import { GetByPhoneNumberPaginationDto } from "./getByPhoneNumberPagination.dto";
+import { PaginatedEntityRequestDto } from "src/shared/paginatedEntity.dto";
+
+import { Product } from "src/products/product.entity";
 
 @Injectable()
 export class OrdersService {
 	constructor(
 		@InjectModel(Order) private ordersRepository: typeof Order,
 		private orderProductService: OrderProductService
-	) {}
+	) { }
 
 	async createOrder(dto: CreateOrderDto) {
 		const { orderedProducts } = dto;
@@ -37,7 +38,7 @@ export class OrdersService {
 		return order;
 	}
 
-	async getOrdersWithPagination({ page = "1", perPage = "10" }: PaginationDto) {
+	async getOrdersWithPagination({ page = "1", perPage = "10" }: PaginatedEntityRequestDto) {
 		return this.ordersRepository.findAndCountAll({
 			limit: +perPage,
 			offset: (+page - 1) * +perPage,
@@ -95,7 +96,7 @@ export class OrdersService {
 		try {
 			await transporter.sendMail(mailOptions);
 		} catch (error) {
-			console.error("Failed to send notification email:", error);
+			throw new InternalServerErrorException("Failed to send notification email");
 		}
 	}
 }

@@ -4,11 +4,11 @@ import { SubcategoriesService } from "./subcategories.service";
 import { SequelizeModule } from "@nestjs/sequelize";
 import { Subcategory } from "./subcategory.model";
 import { Category } from "src/categories/category.model";
-import { Product } from "src/products/product.model";
+import { Product } from "src/products/product.entity";
 
 @Module({
 	controllers: [SubcategoriesController],
 	providers: [SubcategoriesService],
 	imports: [SequelizeModule.forFeature([Subcategory, Category, Product])],
 })
-export class SubcategoriesModule {}
+export class SubcategoriesModule { }

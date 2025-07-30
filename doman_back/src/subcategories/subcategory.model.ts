@@ -10,7 +10,7 @@ import {
 } from "sequelize-typescript";
 
 import { Category } from "src/categories/category.model";
-import { Product } from "src/products/product.model";
+import { Product } from "src/products/product.entity";
 
 interface SubcategoryCreationAttr {
 	title: string;

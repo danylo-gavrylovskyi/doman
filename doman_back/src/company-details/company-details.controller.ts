@@ -8,29 +8,21 @@ import { UpdateCompanyDetailsDto } from "./dto/updateCompanyDetails.dto";
 
 @Controller("company-details")
 export class CompanyDetailsController {
-	constructor(private companyDetailsService: CompanyDetailsService) {}
+	constructor(private companyDetailsService: CompanyDetailsService) { }
 
 	@ApiOperation({ summary: "Getting all info about company" })
 	@ApiResponse({ type: CompanyDetails })
 	@Get()
 	async getAll() {
-		try {
-			const companyDetails = await this.companyDetailsService.getAllCompanyDetails();
-			return companyDetails;
-		} catch (error) {
-			throw new InternalServerErrorException("Error while fetching all company details");
-		}
+		const companyDetails = await this.companyDetailsService.getAllCompanyDetails();
+		return companyDetails;
 	}
 
 	@ApiOperation({ summary: "Add company details or update if they exist" })
 	@ApiResponse({ type: CompanyDetails })
 	@Post()
 	async updateCompanyDetails(@Body() dto: UpdateCompanyDetailsDto) {
-		try {
-			const companyDetails = await this.companyDetailsService.updateCompanyDetails(dto);
-			return companyDetails;
-		} catch (error) {
-			throw new InternalServerErrorException("Error while updating company details");
-		}
+		const companyDetails = await this.companyDetailsService.updateCompanyDetails(dto);
+		return companyDetails;
 	}
 }

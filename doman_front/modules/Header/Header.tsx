@@ -11,25 +11,28 @@ import { setIsCategClicked } from "@/redux/features/homeSlice";
 import { setIsSearchOpened, toggleHamburgerMenu } from "@/redux/features/headerSlice";
 import { RootState } from "@/redux/store";
 
+import { useGetProductsWithPagination } from "@/hooks/products.hooks";
+
 import { Category } from "@/types/category.interface";
 import { Product } from "@/types/product.interface";
 
-import { Auth } from "../Auth/Auth";
-import { HeaderProducts } from "./HeaderProducts/HeaderProducts";
-import { MobileSearch } from "../MobileSearch/MobileSearch";
+import { Auth } from "@/modules/Auth/Auth";
+import { HeaderProducts } from "@/modules/Header/HeaderProducts/HeaderProducts";
+import { MobileSearch } from "@/modules/MobileSearch/MobileSearch";
+
 import { DropdownCategory } from "@/components/DropdownCategory/DropdownCategory";
+import { Search } from "@/components/Search/Search";
 
 import styles from "./Header.module.scss";
 
-export const Header: React.FC<{ products: Product[] }> = ({ products }) => {
+export const Header: React.FC = () => {
 	const dispatch = useDispatch();
 
 	const [inputValue, setInputValue] = React.useState<string>("");
 	const [isAuthClicked, toggleAuth] = React.useState<boolean>(false);
 
-	const foundProducts = products
-		.filter((product) => product.title.toLowerCase().includes(inputValue.toLowerCase()))
-		.slice(0, 4);
+	const { data } = useGetProductsWithPagination({ inputValue });
+	const products: Product[] = data?.rows ?? [];
 
 	const isCategoriesClicked: boolean = useSelector(
 		(state: RootState) => state.home.isCategoriesClicked
@@ -93,27 +96,14 @@ export const Header: React.FC<{ products: Product[] }> = ({ products }) => {
 						}
 					</Paper>
 				</section>
-				<div className={styles.search}>
-					<input
-						onChange={(e) => setInputValue(e.target.value)}
-						placeholder="Я шукаю..."></input>
-					<svg
-						fill="rgb(34, 34, 34);"
-						width="20px"
-						height="20px"
-						viewBox="0 0 1920 1920"
-						xmlns="http://www.w3.org/2000/svg">
-						<g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
-						<g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
-						<g id="SVGRepo_iconCarrier">
-							<path
-								d="M790.588 1468.235c-373.722 0-677.647-303.924-677.647-677.647 0-373.722 303.925-677.647 677.647-677.647 373.723 0 677.647 303.925 677.647 677.647 0 373.723-303.924 677.647-677.647 677.647Zm596.781-160.715c120.396-138.692 193.807-319.285 193.807-516.932C1581.176 354.748 1226.428 0 790.588 0S0 354.748 0 790.588s354.748 790.588 790.588 790.588c197.647 0 378.24-73.411 516.932-193.807l516.028 516.142 79.963-79.963-516.142-516.028Z"
-								fillRule="evenodd"></path>
-						</g>
-					</svg>
-				</div>
 
-				{inputValue && <HeaderProducts products={foundProducts} />}
+				<Search
+					onChangeInput={(e) => setInputValue(e.target.value)}
+					inputValue={inputValue}
+					className={styles.search}
+				/>
+
+				{inputValue && <HeaderProducts products={products} />}
 
 				<section className={`${styles.centerFlex} ${styles.userBtns}`}>
 					<svg

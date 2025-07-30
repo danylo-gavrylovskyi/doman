@@ -2,7 +2,6 @@ import {
 	Body,
 	Controller,
 	Get,
-	InternalServerErrorException,
 	Param,
 	Post,
 	Query,
@@ -14,55 +13,40 @@ import { OrdersService } from "./orders.service";
 import { Order } from "./order.model";
 
 import { CreateOrderDto } from "./createOrder.dto";
-import { PaginationDto } from "src/products/dto/pagination.dto";
-import { GetByPhoneNumberPaginationDto } from "./getByPhoneNumberPagination.dto";
+import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/shared/paginatedEntity.dto";
 
 @ApiTags("Orders")
 @Controller("orders")
 export class OrdersController {
-	constructor(private readonly ordersService: OrdersService) {}
+	constructor(private readonly ordersService: OrdersService) { }
 
 	@ApiOperation({ description: "Creating order" })
 	@ApiResponse({ type: Order })
 	@Post()
 	async create(@Body() dto: CreateOrderDto) {
-		try {
-			const order = await this.ordersService.createOrder(dto);
-			return order;
-		} catch (error) {
-			throw new InternalServerErrorException("Error while creating order");
-		}
+		const order = await this.ordersService.createOrder(dto);
+		return order;
 	}
 
 	@ApiOperation({ description: "Getting all orders with pagination" })
-	@ApiResponse({ type: Order })
+	@ApiResponse({ type: PaginatedEntityResponseDto<Order> })
 	@Get()
-	async getAllWithPagination(@Query() queryParams: PaginationDto) {
-		try {
-			const orders = await this.ordersService.getOrdersWithPagination(queryParams);
-			return orders;
-		} catch (error) {
-			throw new InternalServerErrorException("Error while getting orders with pagination");
-		}
+	async getAllWithPagination(@Query() queryParams: PaginatedEntityRequestDto) {
+		const orders = await this.ordersService.getOrdersWithPagination(queryParams);
+		return orders;
 	}
 
 	@ApiOperation({ description: "Getting orders by phone number with pagination" })
-	@ApiResponse({ type: Order })
+	@ApiResponse({ type: PaginatedEntityResponseDto<Order> })
 	@Get("/:phoneNumber")
 	async getByPhoneNumberPagination(
-		@Query() queryParams: PaginationDto,
+		@Query() queryParams: PaginatedEntityRequestDto,
 		@Param("phoneNumber") phoneNumber: string
 	) {
-		try {
-			const orders = await this.ordersService.getOrdersByPhoneNumberPagination({
-				...queryParams,
-				phoneNumber,
-			});
-			return orders;
-		} catch (error) {
-			throw new InternalServerErrorException(
-				"Error while getting orders by phone number with pagination"
-			);
-		}
+		const orders = await this.ordersService.getOrdersByPhoneNumberPagination({
+			...queryParams,
+			phoneNumber,
+		});
+		return orders;
 	}
 }

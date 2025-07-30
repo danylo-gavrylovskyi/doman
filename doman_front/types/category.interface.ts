@@ -1,5 +1,3 @@
-import { Product } from "./product.interface";
-
 export interface Category {
 	id: number;
 	title: string;
@@ -8,9 +6,13 @@ export interface Category {
 	subcategories?: Subcategory[];
 }
 
-export interface Subcategory extends Category {
+export interface Subcategory {
+	id: number;
+	title: string;
+	slug: string;
+	image: string;
 	categoryId: number;
-	products?: Product[];
+	category?: Category;
 }
 
 export interface PaginationSubcategory {

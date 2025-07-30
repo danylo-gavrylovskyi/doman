@@ -1,6 +1,7 @@
 import { Category, PaginationCategory } from "@/types/category.interface";
 import { ApiRoutes } from "@/types/api-routes.enum";
 import { Pagination } from "@/types/pagination.interface";
+import { AttributeWithValues } from "@/types/attribute.interface";
 
 import customAxios from "@/utils/axios";
 
@@ -16,6 +17,16 @@ export const CategoriesService = {
 
 	async getAll(): Promise<Category[]> {
 		const { data } = await customAxios.get(ApiRoutes.Categories);
+		return data;
+	},
+
+	async getBySlug(slug: string): Promise<Category> {
+		const { data } = await customAxios.get(`${ApiRoutes.Categories}/slug/${slug}`);
+		return data;
+	},
+
+	async getFilterAttributes(categoryId: number): Promise<AttributeWithValues[]> {
+		const { data } = await customAxios.get(`${ApiRoutes.Categories}/${categoryId}/attributes`);
 		return data;
 	},
 

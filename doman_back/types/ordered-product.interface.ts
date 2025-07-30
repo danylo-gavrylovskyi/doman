@@ -1,4 +1,4 @@
-import { Product } from "src/products/product.model";
+import { Product } from "src/products/product.entity";
 
 export interface OrderedProduct {
 	product: Product;

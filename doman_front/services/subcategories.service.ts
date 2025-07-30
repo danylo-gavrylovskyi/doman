@@ -1,4 +1,5 @@
 import { ApiRoutes } from "@/types/api-routes.enum";
+import { AttributeWithValues } from "@/types/attribute.interface";
 import { PaginationSubcategory, Subcategory } from "@/types/category.interface";
 import { Pagination } from "@/types/pagination.interface";
 
@@ -16,6 +17,16 @@ export const SubcategoriesService = {
 
 	async getAll(): Promise<Subcategory[]> {
 		const { data } = await customAxios.get(ApiRoutes.Subcategories);
+		return data;
+	},
+
+	async getBySlug(slug: string): Promise<Subcategory> {
+		const { data } = await customAxios.get(`${ApiRoutes.Subcategories}/slug/${slug}`);
+		return data;
+	},
+
+	async getFilterAttributes(subcategoryId: number): Promise<AttributeWithValues[]> {
+		const { data } = await customAxios.get(`${ApiRoutes.Subcategories}/${subcategoryId}/attributes`);
 		return data;
 	},
 

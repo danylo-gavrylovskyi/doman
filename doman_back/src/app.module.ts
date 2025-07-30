@@ -14,7 +14,7 @@ import { OrderProductModule } from './order-product/order-product.module';
 import { AuthModule } from './auth/auth.module';
 import { CompanyDetailsModule } from './company-details/company-details.module';
 
-import { Product } from './products/product.model';
+import { Product } from './products/product.entity';
 import { Category } from './categories/category.model';
 import { Subcategory } from './subcategories/subcategory.model';
 import { Attribute } from './attributes/attribute.model';
@@ -62,4 +62,4 @@ import { CompanyDetails } from './company-details/company-details.model';
 	controllers: [],
 	providers: [],
 })
-export class AppModule {}
+export class AppModule { }

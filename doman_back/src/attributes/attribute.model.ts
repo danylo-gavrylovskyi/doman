@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Model, Column, Table, DataType, BelongsToMany } from "sequelize-typescript";
 
 import { ProductAttribute } from "src/product-attribute/product-attribute.model";
-import { Product } from "src/products/product.model";
+import { Product } from "src/products/product.entity";
 
 interface AttributeCreationAttr {
 	title: string;

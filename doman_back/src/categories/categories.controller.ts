@@ -4,59 +4,64 @@ import {
 	Controller,
 	Get,
 	Post,
-	HttpException,
-	HttpStatus,
 	Param,
 	UseInterceptors,
 	UploadedFile,
 	Delete,
 	Patch,
 	Query,
-	InternalServerErrorException,
+	NotFoundException,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 
 import { CategoriesService } from "./categories.service";
 
-import { PaginationDto } from "src/products/dto/pagination.dto";
-
 import { Category } from "./category.model";
 import { Subcategory } from "src/subcategories/subcategory.model";
+
+import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/shared/paginatedEntity.dto";
+import { AttributeWithValuesDto } from "src/shared/attributeWithValues.dto";
 
 import { imageStorage } from "utils/imageStorage";
 
 @ApiTags("Categories")
 @Controller("categories")
 export class CategoriesController {
-	constructor(private categoriesService: CategoriesService) {}
+	constructor(private categoriesService: CategoriesService) { }
 
 	@ApiOperation({ summary: "Getting all categories" })
 	@ApiResponse({ type: [Category] })
 	@Get()
 	async getAll() {
-		try {
-			const categories = await this.categoriesService.getAllCategories();
-			return categories;
-		} catch (error) {
-			throw new HttpException(
-				"Error while fetching categories",
-				HttpStatus.INTERNAL_SERVER_ERROR
-			);
-		}
+		const categories = await this.categoriesService.getAllCategories();
+		return categories;
 	}
 
 	@ApiOperation({ description: "Getting all categories with pagination" })
-	@ApiResponse({ type: [Category] })
+	@ApiResponse({ type: PaginatedEntityResponseDto<Category> })
 	@Get("/pagination")
-	async getAllWithPagination(@Query() queryParams: PaginationDto) {
-		try {
-			const categories = await this.categoriesService.getCategoriesWithPagination(queryParams);
-			return categories;
-		} catch (error) {
-			throw new InternalServerErrorException(
-				"Error while fetching all categories with pagination"
-			);
+	async getAllWithPagination(@Query() queryParams: PaginatedEntityRequestDto) {
+		const categories = await this.categoriesService.getCategoriesWithPagination(queryParams);
+		return categories;
+	}
+
+	@ApiOperation({ summary: "Getting category by slug" })
+	@ApiResponse({ type: Category })
+	@Get("/slug/:slug")
+	async getBySlug(@Param("slug") slug: string) {
+		const category = await this.categoriesService.getCategoryBySlug(slug);
+		return category;
+	}
+
+	@ApiOperation({ summary: "Getting filter attributes for category" })
+	@ApiResponse({ type: [AttributeWithValuesDto] })
+	@Get("/:id/attributes")
+	async getFilterAttributes(@Param("id") categoryId: number) {
+		const attributes = await this.categoriesService.getFilterAttributes(categoryId);
+		if (!attributes.length) {
+			throw new NotFoundException("No attributes found for this category");
 		}
+		return attributes;
 	}
 
 	@ApiOperation({ summary: "Adding category" })
@@ -67,42 +72,27 @@ export class CategoriesController {
 		@Body() dto: { title: string; slug: string },
 		@UploadedFile() file: Express.Multer.File
 	) {
-		try {
-			const category = await this.categoriesService.addCategory({
-				...dto,
-				image: file.filename,
-			});
-			return category;
-		} catch (error) {
-			throw new HttpException("Error while adding category", HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+		const category = await this.categoriesService.addCategory({
+			...dto,
+			image: file.filename,
+		});
+		return category;
 	}
 
 	@ApiOperation({ summary: "Getting this category subcategories" })
 	@ApiResponse({ type: [Subcategory] })
 	@Get("/:id/subcategories")
 	async getCategorySubcategories(@Param("id") categoryId: number) {
-		try {
-			const subcategories = await this.categoriesService.getSubcategories(categoryId);
-			return subcategories;
-		} catch (error) {
-			throw new HttpException(
-				"Error while getting this category subcategories",
-				HttpStatus.INTERNAL_SERVER_ERROR
-			);
-		}
+		const subcategories = await this.categoriesService.getSubcategories(categoryId);
+		return subcategories;
 	}
 
 	@ApiOperation({ summary: "Deleting category" })
 	@ApiResponse({ type: Number })
 	@Delete("/:id")
 	async delete(@Param("id") categoryId: number) {
-		try {
-			await this.categoriesService.deleteCategory(categoryId);
-			return categoryId;
-		} catch (error) {
-			throw new HttpException("Error while deleting category", HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+		await this.categoriesService.deleteCategory(categoryId);
+		return categoryId;
 	}
 
 	@ApiOperation({ summary: "Edit category" })
@@ -114,18 +104,14 @@ export class CategoriesController {
 		@Body() dto: { title: string },
 		@UploadedFile() file?: Express.Multer.File
 	) {
-		try {
-			if (file) {
-				const updatedCategory = await this.categoriesService.editCategory(categoryId, {
-					...dto,
-					image: file.filename,
-				});
-				return updatedCategory;
-			}
-			const updatedCategory = await this.categoriesService.editCategory(categoryId, { ...dto });
+		if (file) {
+			const updatedCategory = await this.categoriesService.editCategory(categoryId, {
+				...dto,
+				image: file.filename,
+			});
 			return updatedCategory;
-		} catch (error) {
-			throw new HttpException("Error while editing category", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+		const updatedCategory = await this.categoriesService.editCategory(categoryId, { ...dto });
+		return updatedCategory;
 	}
 }

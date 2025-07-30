@@ -1,16 +1,16 @@
 import { ChangeEventHandler } from "react";
 
-import styles from "app/admin/products/AdminProducts.module.scss";
-
 export const Search = ({
 	onChangeInput,
 	inputValue,
+	className
 }: {
 	onChangeInput: ChangeEventHandler<HTMLInputElement>;
 	inputValue: string;
+	className: string;
 }) => {
 	return (
-		<div className={styles.search}>
+		<div className={className}>
 			<input placeholder="Я шукаю..." onChange={onChangeInput} value={inputValue} />
 			<svg
 				fill="rgb(34, 34, 34);"
@@ -26,6 +26,6 @@ export const Search = ({
 						fillRule="evenodd"></path>
 				</g>
 			</svg>
-		</div>
+		</div >
 	);
 };

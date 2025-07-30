@@ -85,9 +85,7 @@ const Subcategories = () => {
 						key={subcategory.id}
 						edit={editSubcategory}
 						deleteItem={deleteSubcategory}
-						subcategoryParent={categories.find(
-							(category) => category.id === subcategory.categoryId
-						)}
+						subcategoryParent={subcategory.category}
 						{...subcategory}
 					/>
 				))}

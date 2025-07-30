@@ -7,15 +7,15 @@ import { useDispatch } from "react-redux";
 
 import { addToCart } from "@/redux/features/cartSlice";
 
-import { useGetProducts } from "@/hooks/products.hooks";
+import { useGetProductBySlug, useGetProducts } from "@/hooks/products.hooks";
 
 import styles from "./ProductPage.module.scss";
 
 const ProductPage = () => {
 	const dispatch = useDispatch();
 
-	let productSlug: string = useParams().product as string;
-	const product = useGetProducts().data?.find((prod) => prod.slug === productSlug);
+	const productSlug: string = useParams().product as string;
+	const { data: product } = useGetProductBySlug(productSlug);
 
 	if (!product) return <div>Loading...</div>;
 

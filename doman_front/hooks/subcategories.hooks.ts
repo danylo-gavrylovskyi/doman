@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, UseQueryOptions } from "@tanstack/react-query";
 
 import { SubcategoriesService } from "@/services/subcategories.service";
 
@@ -10,8 +10,10 @@ import {
 	EDIT_SUBCATEGORY_KEY,
 	GET_SUBCATEGORIES_KEY,
 	GET_SUBCATEGORIES_WITH_PAGINATION_KEY,
+	GET_SUBCATEGORY_FILTER_ATTRIBUTES_KEY,
 } from "@/types/constants/react-query-keys.constants";
 import { Pagination } from "@/types/pagination.interface";
+import { AttributeWithValues } from "@/types/attribute.interface";
 
 export const useGetSubcategoriesWithPagination = (queryParams?: Pagination) => {
 	return useQuery([GET_SUBCATEGORIES_WITH_PAGINATION_KEY, queryParams], () =>
@@ -21,6 +23,18 @@ export const useGetSubcategoriesWithPagination = (queryParams?: Pagination) => {
 
 export const useGetSubcategories = () => {
 	return useQuery([GET_SUBCATEGORIES_KEY], () => SubcategoriesService.getAll());
+};
+
+export const useGetSubcategoryBySlug = (slug: string) => {
+	return useQuery([GET_SUBCATEGORIES_KEY, slug], () => SubcategoriesService.getBySlug(slug));
+};
+
+export const useGetSubcategoryFilterAttributes = (subcategoryId?: number, options?: UseQueryOptions<AttributeWithValues[], unknown, AttributeWithValues[], [string, typeof subcategoryId]>) => {
+	return useQuery(
+		[GET_SUBCATEGORY_FILTER_ATTRIBUTES_KEY, subcategoryId],
+		() => SubcategoriesService.getFilterAttributes(subcategoryId!),
+		{ enabled: !!subcategoryId, ...options }
+	);
 };
 
 export const useAddSubcategory = () => {

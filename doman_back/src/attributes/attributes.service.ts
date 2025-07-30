@@ -3,17 +3,17 @@ import { InjectModel } from "@nestjs/sequelize";
 
 import { Attribute } from "./attribute.model";
 
-import { PaginationDto } from "src/products/dto/pagination.dto";
+import { PaginatedEntityRequestDto } from "src/shared/paginatedEntity.dto";
 
 @Injectable()
 export class AttributesService {
-	constructor(@InjectModel(Attribute) private attributesRepository: typeof Attribute) {}
+	constructor(@InjectModel(Attribute) private attributesRepository: typeof Attribute) { }
 
 	getAllAttributes() {
 		return this.attributesRepository.findAll();
 	}
 
-	getAttributesWithPagination({ page = "1", perPage = "4", inputValue = "" }: PaginationDto) {
+	getAttributesWithPagination({ page = "1", perPage = "4" }: PaginatedEntityRequestDto) {
 		return this.attributesRepository.findAndCountAll({
 			limit: +perPage,
 			offset: (+page - 1) * +perPage,

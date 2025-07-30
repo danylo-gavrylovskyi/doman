@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, UseQueryOptions } from "@tanstack/react-query";
 
 import { ProductsService } from "@/services/products.service";
 
@@ -14,15 +14,26 @@ import {
 } from "@/types/constants/react-query-keys.constants";
 import { Pagination } from "@/types/pagination.interface";
 import { FindOptions } from "@/types/findOptions.interface";
+import { PaginationProducts } from "@/types/product.interface";
 
-export const useGetProductsWithPagination = (queryParams?: Pagination) => {
-	return useQuery([GET_PRODUCTS_WITH_PAGINATION_KEY, queryParams], () =>
-		ProductsService.getAllWithPagination(queryParams)
+export const useGetProductsWithPagination = (queryParams?: Pagination, options?: UseQueryOptions<PaginationProducts, unknown, PaginationProducts, [string, typeof queryParams]>) => {
+	return useQuery(
+		[GET_PRODUCTS_WITH_PAGINATION_KEY, queryParams],
+		() => ProductsService.getAllWithPagination(queryParams),
+		{ keepPreviousData: true, ...options }
 	);
 };
 
 export const useGetProducts = (queryParams?: FindOptions) => {
 	return useQuery([GET_PRODUCTS_KEY, queryParams], () => ProductsService.getAll(queryParams));
+};
+
+export const useGetProductBySlug = (slug: string) => {
+	return useQuery([GET_PRODUCTS_KEY, slug], () => ProductsService.getBySlug(slug));
+};
+
+export const useGetProductById = (productId: number) => {
+	return useQuery([GET_PRODUCTS_KEY, productId], () => ProductsService.getById(productId));
 };
 
 export const useAddProduct = () => {

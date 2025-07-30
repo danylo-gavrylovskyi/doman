@@ -1,7 +1,8 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import * as fs from "fs";
 import * as path from "path";
-import { PaginationDto } from "src/products/dto/pagination.dto";
+
+import { PaginatedEntityRequestDto } from "src/shared/paginatedEntity.dto";
 
 @Injectable()
 export class BannersService {
@@ -12,7 +13,7 @@ export class BannersService {
 		return bannersNames;
 	}
 
-	async getBannersWithPagination({ page = "1", perPage = "4", inputValue = "" }: PaginationDto) {
+	async getBannersWithPagination({ page = "1", perPage = "4" }: PaginatedEntityRequestDto) {
 		const pathToFolder = path.join(__dirname, "..", "..", "..", "uploads", "banners");
 		const allBanners = await fs.promises.readdir(pathToFolder);
 
@@ -26,10 +27,7 @@ export class BannersService {
 	deleteBanner(bannerUrl: string) {
 		fs.unlink(path.join(__dirname, "..", "..", "..", "uploads", "banners", bannerUrl), (err) => {
 			if (err) {
-				throw new HttpException(
-					"Error while deleting banner",
-					HttpStatus.INTERNAL_SERVER_ERROR
-				);
+				throw new InternalServerErrorException("Error while deleting banner")
 			}
 		});
 	}

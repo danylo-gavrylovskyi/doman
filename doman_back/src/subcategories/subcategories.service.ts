@@ -1,27 +1,82 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
 import * as fs from "fs";
 import * as path from "path";
 
 import { Subcategory } from "./subcategory.model";
+import { Category } from "src/categories/category.model";
+import { ProductAttribute } from "src/product-attribute/product-attribute.model";
+import { Attribute } from "src/attributes/attribute.model";
 
 import { CreateSubcategoryDto } from "./dto/createSubcategory.dto";
-import { PaginationDto } from "src/products/dto/pagination.dto";
+import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/shared/paginatedEntity.dto";
+import { AttributeWithValuesDto } from "src/shared/attributeWithValues.dto";
+
+import { Product } from "src/products/product.entity";
 
 @Injectable()
 export class SubcategoriesService {
-	constructor(@InjectModel(Subcategory) private subcategoryRepository: typeof Subcategory) {}
+	constructor(
+		@InjectModel(Subcategory) private subcategoryRepository: typeof Subcategory,
+		@InjectModel(Product) private productRepository: typeof Product
+	) { }
+
+	private readonly includeCategory = [
+		{
+			model: Category,
+			required: true,
+		}
+	]
 
 	getAllSubcategories() {
-		return this.subcategoryRepository.findAll({ include: { all: true } });
+		return this.subcategoryRepository.findAll({
+			include: this.includeCategory
+		});
 	}
 
-	getSubcategoriesWithPagination({ page = "1", perPage = "4", inputValue = "" }: PaginationDto) {
+	getSubcategoriesWithPagination(
+		{ page = "1", perPage = "4" }: PaginatedEntityRequestDto
+	): Promise<PaginatedEntityResponseDto<Subcategory>> {
 		return this.subcategoryRepository.findAndCountAll({
 			limit: +perPage,
 			offset: (+page - 1) * +perPage,
-			include: { all: true },
+			include: this.includeCategory,
 		});
+	}
+
+	getSubcategoryBySlug(slug: string) {
+		return this.subcategoryRepository.findOne({
+			where: { slug },
+			include: this.includeCategory,
+		});
+	}
+
+	async getFilterAttributes(subcategoryId: number): Promise<AttributeWithValuesDto[]> {
+		const products = await this.productRepository.findAll({
+			where: { subcategoryId },
+			include: [
+				{
+					model: ProductAttribute,
+					include: [Attribute]
+				},
+			],
+		});
+
+		const attributeMap: Record<string, Set<string>> = {};
+
+		for (const product of products) {
+			for (const attribute of product.attributes) {
+				if (!attributeMap[attribute.attribute.title]) {
+					attributeMap[attribute.attribute.title] = new Set();
+				}
+				attributeMap[attribute.attribute.title].add(attribute.attributeValue);
+			}
+		}
+
+		return Object.entries(attributeMap).map(([title, values]) => ({
+			title,
+			values: Array.from(values)
+		}));
 	}
 
 	addSubcategory(dto: CreateSubcategoryDto) {
@@ -31,16 +86,14 @@ export class SubcategoriesService {
 	async deleteCategory(id: number) {
 		const category = await this.subcategoryRepository.findOne({ where: { id } });
 		if (!category) {
-			throw new HttpException("Error while deleting category", HttpStatus.NOT_FOUND);
+			throw new NotFoundException("Category not found");
 		}
 		fs.unlink(
 			path.join(__dirname, "..", "..", "..", "uploads", "categoriesImages", category.image),
 			(err) => {
-				if (err)
-					throw new HttpException(
-						"Error while deleting image from folder",
-						HttpStatus.INTERNAL_SERVER_ERROR
-					);
+				if (err) {
+					throw new InternalServerErrorException("Error while deleting image from folder");
+				}
 			}
 		);
 		return this.subcategoryRepository.destroy({ where: { id } });
@@ -49,17 +102,15 @@ export class SubcategoriesService {
 	async editCategory(id: number, dto) {
 		const category = await this.subcategoryRepository.findOne({ where: { id } });
 		if (!category) {
-			throw new HttpException("Error while editing category", HttpStatus.NOT_FOUND);
+			throw new NotFoundException("Category not found");
 		}
 		if (dto.image) {
 			fs.unlink(
 				path.join(__dirname, "..", "..", "..", "uploads", "categoriesImages", category.image),
 				(err) => {
-					if (err)
-						throw new HttpException(
-							"Error while deleting image from folder",
-							HttpStatus.INTERNAL_SERVER_ERROR
-						);
+					if (err) {
+						throw new InternalServerErrorException("Error while deleting image from folder");
+					}
 				}
 			);
 		}

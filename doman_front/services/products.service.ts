@@ -7,10 +7,23 @@ import customAxios from "@/utils/axios";
 
 export const ProductsService = {
 	async getAllWithPagination(queryParams?: Pagination): Promise<PaginationProducts> {
+		const searchParams = new URLSearchParams();
+		if (queryParams?.page) searchParams.append('page', queryParams.page);
+		if (queryParams?.perPage) searchParams.append('perPage', queryParams.perPage);
+		if (queryParams?.inputValue) searchParams.append('inputValue', queryParams.inputValue);
+		if (queryParams?.categoryId) searchParams.append('categoryId', queryParams.categoryId.toString());
+		if (queryParams?.subcategoryId) searchParams.append('subcategoryId', queryParams.subcategoryId.toString());
+
+		if (queryParams?.filterParams) {
+			for (const attribute of queryParams.filterParams) {
+				searchParams.append(attribute.title, attribute.values.join(','));
+			}
+		}
+
 		const { data } = await customAxios({
 			url: ApiRoutes.Products,
 			method: "GET",
-			params: queryParams,
+			params: searchParams,
 		});
 		return data;
 	},
@@ -21,6 +34,16 @@ export const ProductsService = {
 			method: "GET",
 			params: queryParams,
 		});
+		return data;
+	},
+
+	async getById(productId: number): Promise<Product> {
+		const { data } = await customAxios.get(`${ApiRoutes.Products}/${productId}`);
+		return data;
+	},
+
+	async getBySlug(productSlug: string): Promise<Product> {
+		const { data } = await customAxios.get(`${ApiRoutes.Products}/slug/${productSlug}`);
 		return data;
 	},
 

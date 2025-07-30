@@ -1,8 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-type AttributeIdValuePair = [categoryId: number, value: string];
+import { AttributeIdValuePair } from "types/attribute-value-pair.interface";
 
-export class CreateProductControllerDto {
+export class ProductCreateDto {
 	@ApiProperty({ example: "12343afdf232", description: "Product article" })
 	readonly article: string;
 
@@ -20,6 +20,12 @@ export class CreateProductControllerDto {
 
 	@ApiProperty({ example: 264, description: "Product quantity" })
 	readonly quantity: number;
+
+	@ApiProperty({
+		example: "62771c51-3b8b-453a-9aca-2cb439c0b5b6.jpg",
+		description: "Product image",
+	})
+	readonly image: string;
 
 	@ApiProperty({ example: 1289, description: "Product price" })
 	readonly price: number;

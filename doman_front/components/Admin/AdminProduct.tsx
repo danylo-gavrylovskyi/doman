@@ -3,7 +3,6 @@ import { Button, Paper } from "@mui/material";
 import Link from "next/link";
 
 import { useDeleteProduct } from "@/hooks/products.hooks";
-import { useGetSubcategories } from "@/hooks/subcategories.hooks";
 
 import { Product } from "@/types/product.interface";
 
@@ -16,12 +15,8 @@ export const AdminProduct = ({
 	price,
 	image,
 	article,
-	subcategoryId,
+	subcategory,
 }: Product) => {
-	const subcategory = useGetSubcategories().data?.find(
-		(subcategory) => subcategory.id === subcategoryId
-	);
-
 	const deleteProduct = useDeleteProduct();
 
 	return (

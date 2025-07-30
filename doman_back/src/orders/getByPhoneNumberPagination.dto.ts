@@ -1,5 +1,5 @@
-import { PaginationDto } from "src/products/dto/pagination.dto";
+import { PaginatedEntityRequestDto } from "src/shared/paginatedEntity.dto";
 
-export class GetByPhoneNumberPaginationDto extends PaginationDto {
+export class GetByPhoneNumberPaginationDto extends PaginatedEntityRequestDto {
 	readonly phoneNumber: string;
 }

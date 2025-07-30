@@ -31,7 +31,7 @@ const AdminProducts = () => {
 				<Link href={"/admin/products/new"}>
 					<button>Додати новий товар</button>
 				</Link>
-				<Search inputValue={inputValue} onChangeInput={(e) => setInputValue(e.target.value)} />
+				<Search inputValue={inputValue} onChangeInput={(e) => setInputValue(e.target.value)} className={styles.search} />
 				<label className={styles.loadImg}>
 					Завантажити таблицю
 					<input

@@ -1,11 +1,13 @@
 import { Injectable } from "@nestjs/common";
-import { CreateUserDto } from "./dto/createUser.dto";
 import { InjectModel } from "@nestjs/sequelize";
+
 import { User } from "./user.model";
+
+import { CreateUserDto } from "./dto/createUser.dto";
 
 @Injectable()
 export class UsersService {
-	constructor(@InjectModel(User) private userRepository: typeof User) {}
+	constructor(@InjectModel(User) private userRepository: typeof User) { }
 
 	createUser(dto: CreateUserDto) {
 		return this.userRepository.create(dto);
@@ -18,10 +20,10 @@ export class UsersService {
 	}
 
 	async checkForExistingUser(email: string) {
-		const doesEmailExist = await this.findOne({ where: { email } });
+		const user = await this.findOne({ where: { email } });
 
-		if (doesEmailExist) {
-			return doesEmailExist;
+		if (user) {
+			return user;
 		}
 
 		return false;

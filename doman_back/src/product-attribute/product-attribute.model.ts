@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
+import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
 import { Attribute } from "src/attributes/attribute.model";
-import { Product } from "src/products/product.model";
+import { Product } from "src/products/product.entity";
 
 interface ProductAttributeCreationAttr {
 	attributeValue: string;
@@ -29,4 +29,7 @@ export class ProductAttribute extends Model<ProductAttribute, ProductAttributeCr
 
 	@Column({ type: DataType.STRING, unique: false, allowNull: false })
 	attributeValue: string;
+
+	@BelongsTo(() => Attribute, { as: "attribute" })
+	attribute: Attribute;
 }

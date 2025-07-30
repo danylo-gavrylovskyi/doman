@@ -7,14 +7,14 @@ import { UpdateCompanyDetailsDto } from "./dto/updateCompanyDetails.dto";
 
 @Injectable()
 export class CompanyDetailsService {
-	constructor(@InjectModel(CompanyDetails) private companyDetailsRepo: typeof CompanyDetails) {}
+	constructor(@InjectModel(CompanyDetails) private companyDetailsRepo: typeof CompanyDetails) { }
 
 	getAllCompanyDetails() {
 		return this.companyDetailsRepo.findOne({ where: { id: 1 } }); // we have only one row here
 	}
 
 	async updateCompanyDetails(dto: UpdateCompanyDetailsDto) {
-		const [findedProduct, isCreated] = await this.companyDetailsRepo.findOrCreate({
+		const [companyDetails, isCreated] = await this.companyDetailsRepo.findOrCreate({
 			where: { id: 1 }, // id 1 because we have only one row for company details in this table
 			defaults: dto,
 		});
@@ -24,6 +24,6 @@ export class CompanyDetailsService {
 			return this.companyDetailsRepo.findOne({ where: { id: 1 } });
 		}
 
-		return findedProduct;
+		return companyDetails;
 	}
 }

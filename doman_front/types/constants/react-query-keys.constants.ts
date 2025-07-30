@@ -10,12 +10,14 @@ export const DELETE_BANNER_KEY = "delete banner";
 
 export const GET_CATEGORIES_WITH_PAGINATION_KEY = "get categories with pagination";
 export const GET_CATEGORIES_KEY = "get categories";
+export const GET_CATEGORY_FILTER_ATTRIBUTES_KEY = "get category filter attributes";
 export const ADD_CATEGORY_KEY = "add category";
 export const EDIT_CATEGORY_KEY = "edit category";
 export const DELETE_CATEGORY_KEY = "delete category";
 
 export const GET_SUBCATEGORIES_WITH_PAGINATION_KEY = "get subcategories with pagination";
 export const GET_SUBCATEGORIES_KEY = "get subcategories";
+export const GET_SUBCATEGORY_FILTER_ATTRIBUTES_KEY = "get subcategory filter attributes";
 export const ADD_SUBCATEGORY_KEY = "add subcategory";
 export const EDIT_SUBCATEGORY_KEY = "edit subcategory";
 export const DELETE_SUBCATEGORY_KEY = "delete subcategory";

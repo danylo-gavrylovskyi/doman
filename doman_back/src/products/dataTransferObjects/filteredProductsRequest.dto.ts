@@ -1,7 +1,6 @@
 import { IsOptional } from "class-validator";
-import { Is } from "sequelize-typescript";
 
-export class PaginationDto {
+export class FilteredProductsRequestDto {
 	@IsOptional()
 	readonly page?: string;
 

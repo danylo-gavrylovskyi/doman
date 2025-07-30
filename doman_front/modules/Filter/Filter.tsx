@@ -6,21 +6,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { toggleFilter } from "@/redux/features/filterSlice";
 
-import { UniqueAttribute } from "@/types/unique-attribute.interface";
-import { Attribute } from "@/types/attribute.interface";
-
-import { findAttribute } from "@/utils/findAttribute";
-
 import { FilterBlock } from "@/components/FilterBlock/FilterBlock";
+
+import { AttributeWithValues } from "@/types/attribute.interface";
 
 import styles from "./Filter.module.scss";
 
 interface FilterProps {
-	uniqueAttributes: UniqueAttribute[];
-	attributes: Attribute[];
+	attributesWithValues: AttributeWithValues[];
 }
 
-export const Filter = ({ uniqueAttributes, attributes }: FilterProps) => {
+export const Filter = ({ attributesWithValues }: FilterProps) => {
 	const dispatch = useDispatch();
 	const isOpened: boolean = useSelector((state: RootState) => state.filter.isOpened);
 
@@ -68,14 +64,11 @@ export const Filter = ({ uniqueAttributes, attributes }: FilterProps) => {
 					</svg>
 				</header>
 				<div className={styles.filters}>
-					{uniqueAttributes.map((uniqueAttribute) => (
-						<aside key={uniqueAttribute.attrId}>
+					{attributesWithValues.map((attributeWithValues) => (
+						<aside key={attributeWithValues.title}>
 							<FilterBlock
-								attributeName={
-									findAttribute(attributes, uniqueAttribute.attrId) &&
-									findAttribute(attributes, uniqueAttribute.attrId).title
-								}
-								attributeValues={uniqueAttribute.values}
+								attributeName={attributeWithValues.title}
+								attributeValues={attributeWithValues.values}
 							/>
 						</aside>
 					))}

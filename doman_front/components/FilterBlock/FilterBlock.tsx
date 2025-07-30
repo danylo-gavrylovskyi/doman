@@ -20,10 +20,10 @@ export const FilterBlock = ({ attributeName, attributeValues }: FilterProps) => 
 		<Paper elevation={3} className={styles.container}>
 			<h1>{attributeName}</h1>
 			<FormGroup>
-				{attributeValues.map((value: string, index: number) => (
+				{attributeValues.map((value: string) => (
 					<FormControlLabel
-						checked={checkedAttributes.includes(value)}
-						onChange={() => dispatch(toggleAttribute(value))}
+						checked={checkedAttributes.some(attr => attr.title === attributeName && attr.values.includes(value))}
+						onChange={() => dispatch(toggleAttribute({ title: attributeName, value }))}
 						key={value}
 						control={<Checkbox />}
 						label={value}

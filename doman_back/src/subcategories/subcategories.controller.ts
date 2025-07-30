@@ -6,6 +6,7 @@ import {
 	HttpException,
 	HttpStatus,
 	InternalServerErrorException,
+	NotFoundException,
 	Param,
 	Patch,
 	Post,
@@ -18,17 +19,18 @@ import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 
 import { SubcategoriesService } from "./subcategories.service";
 
-import { Subcategory } from "./subcategory.model";
-
 import { CreateSubcategoryDto } from "./dto/createSubcategory.dto";
-import { PaginationDto } from "src/products/dto/pagination.dto";
+import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/shared/paginatedEntity.dto";
+import { AttributeWithValuesDto } from "src/shared/attributeWithValues.dto";
+
+import { Subcategory } from "./subcategory.model";
 
 import { imageStorage } from "utils/imageStorage";
 
 @ApiTags("Subcategories")
 @Controller("subcategories")
 export class SubcategoriesController {
-	constructor(private subcategoriesService: SubcategoriesService) {}
+	constructor(private subcategoriesService: SubcategoriesService) { }
 
 	@ApiOperation({ summary: "Getting all subcategories" })
 	@ApiResponse({ type: [Subcategory] })
@@ -46,9 +48,9 @@ export class SubcategoriesController {
 	}
 
 	@ApiOperation({ description: "Getting all subcategories with pagination" })
-	@ApiResponse({ type: [Subcategory] })
+	@ApiResponse({ type: PaginatedEntityResponseDto<Subcategory> })
 	@Get("/pagination")
-	async getAllWithPagination(@Query() queryParams: PaginationDto) {
+	async getAllWithPagination(@Query() queryParams: PaginatedEntityRequestDto) {
 		try {
 			const subcategories = await this.subcategoriesService.getSubcategoriesWithPagination(
 				queryParams
@@ -59,6 +61,32 @@ export class SubcategoriesController {
 				"Error while fetching all subcategories with pagination"
 			);
 		}
+	}
+
+	@ApiOperation({ summary: "Getting subcategory by slug" })
+	@ApiResponse({ type: Subcategory })
+	@Get("/slug/:slug")
+	async getBySlug(@Param("slug") slug: string) {
+		try {
+			const subcategory = await this.subcategoriesService.getSubcategoryBySlug(slug);
+			if (!subcategory) {
+				throw new NotFoundException("Subcategory not found");
+			}
+			return subcategory;
+		} catch (error) {
+			throw new InternalServerErrorException("Error while fetching subcategory by slug");
+		}
+	}
+
+	@ApiOperation({ summary: "Getting filter attributes for subcategory" })
+	@ApiResponse({ type: [AttributeWithValuesDto] })
+	@Get("/:id/attributes")
+	async getFilterAttributes(@Param("id") subcategoryId: number) {
+		const attributes = await this.subcategoriesService.getFilterAttributes(subcategoryId);
+		if (!attributes.length) {
+			throw new NotFoundException("No attributes found for this subcategory");
+		}
+		return attributes;
 	}
 
 	@ApiOperation({ summary: "Adding subcategory" })

@@ -7,7 +7,6 @@ import { FooterProvider, HeaderProvider, ReactQueryProvider } from "@/components
 import { Cart } from "@/modules/Cart/Cart";
 import { HamburgerMenu } from "@/modules/HamburgerMenu/HamburgerMenu";
 import { AuthProvider } from "@/providers/auth-provider/AuthProvider";
-import { ProductsService } from "@/services/products.service";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,8 +16,6 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-	const products = await ProductsService.getAll();
-
 	return (
 		<html lang="en">
 			<link rel="shortcut icon" href="/logo.png" type="image/x-icon" />
@@ -28,7 +25,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 						<AuthProvider>
 							<Cart />
 							<HamburgerMenu />
-							<HeaderProvider products={products} />
+							<HeaderProvider />
 							{children}
 							<FooterProvider />
 						</AuthProvider>

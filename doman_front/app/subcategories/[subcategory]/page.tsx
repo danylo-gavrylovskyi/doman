@@ -1,18 +1,14 @@
 "use client";
 
 import React from "react";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 
 import { RootState } from "@/redux/store";
 import { toggleFilter } from "@/redux/features/filterSlice";
 
-import { useGetSubcategories } from "@/hooks/subcategories.hooks";
-import { useGetAttributes } from "@/hooks/attributes.hooks";
+import { useGetSubcategoryBySlug, useGetSubcategoryFilterAttributes } from "@/hooks/subcategories.hooks";
 import { useGetProductsWithPagination } from "@/hooks/products.hooks";
-
-import { Subcategory } from "@/types/category.interface";
-import { Product } from "@/types/product.interface";
 
 import { Filter } from "@/modules/Filter/Filter";
 import { SkeletonPage } from "@/modules/SkeletonPage/SkeletonPage";
@@ -20,48 +16,29 @@ import { SkeletonPage } from "@/modules/SkeletonPage/SkeletonPage";
 import { FilterBlock } from "@/components/FilterBlock/FilterBlock";
 import { Item } from "@/components/Item/Item";
 
-import { findUniqueAttributesInSubcategory } from "@/utils/findUniqueAttributes";
-import { findAttribute } from "@/utils/findAttribute";
-
 import styles from "@/app/categories/[category]/CategoryPage.module.scss";
-
-interface UniqueAttribute {
-	attrId: number;
-	values: string[];
-}
+import { Pagination } from "@/components/Pagination/Pagination";
 
 const page = () => {
 	const dispatch = useDispatch();
-
-	let subcategorySlug: string = useParams().subcategory as string;
-
-	const subcategory: Subcategory | undefined = useGetSubcategories().data?.find(
-		(subcategory) => subcategory.slug === subcategorySlug
-	);
-
 	const checkedAttributes = useSelector((state: RootState) => state.filter.checkedAttributes);
 
-	let products = useGetProductsWithPagination().data?.rows.filter(
-		(product: Product) => product.subcategoryId === subcategory?.id
-	);
-	const { data: attributes } = useGetAttributes();
+	const subcategorySlug: string = useParams().subcategory as string;
+	const queryParams = useSearchParams();
+	const perPage = queryParams.get("perPage") ?? undefined;
+	const page = queryParams.get("page") ?? undefined;
 
-	if (!subcategory || !attributes || !products) {
-		return <SkeletonPage />;
-	}
+	const { data: subcategory } = useGetSubcategoryBySlug(subcategorySlug);
+	const { data: products } = useGetProductsWithPagination({
+		page,
+		perPage,
+		subcategoryId: subcategory?.id,
+		filterParams: checkedAttributes
+	}, { enabled: !!subcategory?.id });
 
-	let uniqueAttributes: UniqueAttribute[] = findUniqueAttributesInSubcategory(
-		subcategory,
-		products
-	);
+	const { data: filterAttributes } = useGetSubcategoryFilterAttributes(subcategory?.id);
 
-	if (checkedAttributes.length > 0) {
-		products = products.filter((product) =>
-			product.attributes?.some((attr) => checkedAttributes.includes(attr.attributeValue))
-		);
-	}
-
-	if (uniqueAttributes.length <= 0) {
+	if (!subcategory || !products || !filterAttributes) {
 		return <SkeletonPage />;
 	}
 
@@ -97,26 +74,35 @@ const page = () => {
 					Фільтр
 				</button>
 			</div>
-			<Filter uniqueAttributes={uniqueAttributes} attributes={attributes} />
+			<Filter attributesWithValues={filterAttributes} />
 			<div className={styles.filterProd}>
 				<aside className={styles.filter}>
-					{uniqueAttributes.map((uniqueAttribute) => (
+					{filterAttributes.map((attributeWithValues) => (
 						<FilterBlock
-							key={uniqueAttribute.attrId}
-							attributeName={
-								findAttribute(attributes, uniqueAttribute.attrId) &&
-								findAttribute(attributes, uniqueAttribute.attrId).title
-							}
-							attributeValues={uniqueAttribute.values}
+							key={attributeWithValues.title}
+							attributeName={attributeWithValues.title}
+							attributeValues={attributeWithValues.values}
 						/>
 					))}
 				</aside>
 				<main className={styles.products}>
-					{products.map((product) => (
+					{products.rows.map((product) => (
 						<Item key={product.id} {...product} />
 					))}
 				</main>
 			</div>
+			<footer>
+				<Pagination
+					pageQuantity={
+						perPage
+							? products.count / +perPage < 1
+								? 1
+								: Math.round(products.count / +perPage)
+							: 1
+					}
+					currentPage={page ? +page : 1}
+				/>
+			</footer>
 		</div>
 	);
 };

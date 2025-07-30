@@ -7,14 +7,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { toggleFilter } from "@/redux/features/filterSlice";
 
-import { useGetCategories } from "@/hooks/categories.hooks";
-import { useGetSubcategories } from "@/hooks/subcategories.hooks";
-import { useGetAttributes } from "@/hooks/attributes.hooks";
+import { useGetCategoryBySlug, useGetCategoryFilterAttributes } from "@/hooks/categories.hooks";
 import { useGetProductsWithPagination } from "@/hooks/products.hooks";
 
-import { Category, Subcategory } from "@/types/category.interface";
-import { PaginationProducts, Product } from "@/types/product.interface";
-import { UniqueAttribute } from "@/types/unique-attribute.interface";
+import { Subcategory } from "@/types/category.interface";
 
 import { SkeletonPage } from "@/modules/SkeletonPage/SkeletonPage";
 import { Filter } from "@/modules/Filter/Filter";
@@ -24,59 +20,30 @@ import { FilterBlock } from "@/components/FilterBlock/FilterBlock";
 import { Item } from "@/components/Item/Item";
 import { Pagination } from "@/components/Pagination/Pagination";
 
-import { findUniqueAttributesInCategory } from "@/utils/findUniqueAttributes";
-import { findAttribute } from "@/utils/findAttribute";
-
 import styles from "./CategoryPage.module.scss";
 
 const page = () => {
 	const dispatch = useDispatch();
-
-	let categorySlug: string = useParams().category as string;
-
-	const queryParams = useSearchParams();
-	const perPage = queryParams.get("perPage");
-	const page = queryParams.get("page");
-
-	const category: Category | undefined = useGetCategories().data?.find(
-		(category) => category.slug === categorySlug
-	);
-
 	const checkedAttributes = useSelector((state: RootState) => state.filter.checkedAttributes);
 
-	const { data: subcategories } = useGetSubcategories();
-	const { data: attributes } = useGetAttributes();
-	const { data: products } = useGetProductsWithPagination();
+	const categorySlug: string = useParams().category as string;
+	const queryParams = useSearchParams();
+	const perPage = queryParams.get("perPage") ?? undefined;
+	const page = queryParams.get("page") ?? undefined;
 
-	let foundProducts = products ? products : ({} as PaginationProducts);
+	const { data: category } = useGetCategoryBySlug(categorySlug);
+	const subcategories = category?.subcategories;
 
-	if (page && perPage) {
-		foundProducts.rows = useGetProductsWithPagination({ page, perPage }).data?.rows.filter(
-			(product: Product) => product.subcategory?.categoryId === category?.id
-		) as Product[];
-	} else {
-		foundProducts.rows = useGetProductsWithPagination().data?.rows.filter(
-			(product: Product) => product.subcategory?.categoryId === category?.id
-		) as Product[];
-	}
+	const { data: products } = useGetProductsWithPagination({
+		page,
+		perPage,
+		categoryId: category?.id,
+		filterParams: checkedAttributes
+	}, { enabled: !!category?.id });
 
-	if (!category || !attributes || !foundProducts || !subcategories || !products) {
-		return <SkeletonPage />;
-	}
+	const { data: filterAttributes } = useGetCategoryFilterAttributes(category?.id);
 
-	let uniqueAttributes: UniqueAttribute[] = findUniqueAttributesInCategory(
-		category,
-		subcategories,
-		foundProducts.rows
-	);
-
-	if (checkedAttributes.length > 0) {
-		foundProducts.rows = foundProducts.rows.filter((product) =>
-			product.attributes?.some((attr) => checkedAttributes.includes(attr.attributeValue))
-		) as Product[];
-	}
-
-	if (uniqueAttributes.length <= 0) {
+	if (!category || !subcategories || !products || !filterAttributes) {
 		return <SkeletonPage />;
 	}
 
@@ -124,22 +91,19 @@ const page = () => {
 					Фільтр
 				</button>
 			</div>
-			<Filter uniqueAttributes={uniqueAttributes} attributes={attributes} />
+			<Filter attributesWithValues={filterAttributes} />
 			<div className={styles.filterProd}>
 				<aside className={styles.filter}>
-					{uniqueAttributes.map((uniqueAttribute) => (
+					{filterAttributes.map((attributeWithValues) => (
 						<FilterBlock
-							key={uniqueAttribute.attrId}
-							attributeName={
-								findAttribute(attributes, uniqueAttribute.attrId) &&
-								findAttribute(attributes, uniqueAttribute.attrId).title
-							}
-							attributeValues={uniqueAttribute.values}
+							key={attributeWithValues.title}
+							attributeName={attributeWithValues.title}
+							attributeValues={attributeWithValues.values}
 						/>
 					))}
 				</aside>
 				<main className={styles.products}>
-					{foundProducts.rows.map((product) => (
+					{products.rows.map((product) => (
 						<Item key={product.id} {...product} />
 					))}
 				</main>
@@ -148,9 +112,9 @@ const page = () => {
 				<Pagination
 					pageQuantity={
 						perPage
-							? foundProducts.count / +perPage < 1
+							? products.count / +perPage < 1
 								? 1
-								: Math.round(foundProducts.count / +perPage)
+								: Math.round(products.count / +perPage)
 							: 1
 					}
 					currentPage={page ? +page : 1}

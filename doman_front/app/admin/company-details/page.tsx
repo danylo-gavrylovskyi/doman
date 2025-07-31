@@ -26,10 +26,6 @@ const CompanyDetailsPage = () => {
 		updateCompanyDetails(values);
 	};
 
-	if (!companyDetails) {
-		return <div>Loading...</div>;
-	}
-
 	return (
 		<div className={styles.container}>
 			<header className={styles.heading}>Редагування інформації про компанію</header>

@@ -6,6 +6,7 @@ import { Pagination } from "@/components/Pagination/Pagination";
 import { Category } from "@/types/category.interface";
 
 import styles from "./AdminPageLayout.module.scss";
+import { PerPageSelector } from "@/components/PerPageSelector/PerPageSelector";
 
 interface AdminPageProps {
 	isAdding: boolean;
@@ -50,6 +51,11 @@ export const AdminPageLayout = ({
 						onClick={() => changeAddingMode((prev) => !prev)}>
 						{createBtnText}
 					</button>
+
+					<div style={isAdding ? { display: "none" } : { display: "block" }}>
+						<PerPageSelector perPage={perPage} />
+					</div>
+
 					<button type="submit" style={isAdding ? { display: "block" } : { display: "none" }}>
 						Зберегти
 					</button>

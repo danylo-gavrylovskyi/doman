@@ -1,0 +1,19 @@
+.perPageSelect {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+    gap: 8px;
+    color: white;
+
+    select {
+        padding: 5px 10px;
+        border-radius: 10px;
+        border: none;
+        font-size: 15px;
+        cursor: pointer;
+    }
+
+    label {
+        font-size: 16px;
+    }
+}

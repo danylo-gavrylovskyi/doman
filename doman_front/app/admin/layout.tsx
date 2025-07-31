@@ -21,19 +21,21 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
 	const pathname = usePathname().split("/");
 
 	return (
-		<>
+		<div className={styles.layout}>
 			<aside className={styles.menu}>
 				<Link href="/">
 					<div className={styles.logo}>
-						<img width={"150px"} src="/logo.png"></img>
+						<img width={"150px"} src="/logo.png" />
 					</div>
 				</Link>
 				<div className={styles.sections}>
-					{sections.map((section, index) => (
+					{sections.map((section) => (
 						<Link key={section.href} href={`/admin/${section.href}`}>
 							<section
 								className={
-									pathname[pathname.length - 1] === section.href ? styles.active : ""
+									pathname[pathname.length - 1] === section.href
+										? styles.active
+										: ""
 								}>
 								{section.name}
 							</section>
@@ -41,10 +43,13 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
 					))}
 				</div>
 			</aside>
-			<Paper className={styles.paper} elevation={3}>
-				{children}
-			</Paper>
-		</>
+
+			<div className={styles.content}>
+				<Paper elevation={3}>
+					{children}
+				</Paper>
+			</div>
+		</div>
 	);
 };
 

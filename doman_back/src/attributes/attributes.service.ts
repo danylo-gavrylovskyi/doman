@@ -17,7 +17,6 @@ export class AttributesService {
 		return this.attributesRepository.findAndCountAll({
 			limit: +perPage,
 			offset: (+page - 1) * +perPage,
-			include: { all: true },
 		});
 	}
 

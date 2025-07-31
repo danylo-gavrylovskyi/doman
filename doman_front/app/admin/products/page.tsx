@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { AdminProduct } from "@/components/Admin/AdminProduct";
 import { Pagination } from "@/components/Pagination/Pagination";
@@ -16,6 +16,7 @@ import { ADMIN_PAGINATION_FALLBACK_PER_PAGE, PAGINATION_FALLBACK_PAGE } from "@/
 import { sanitizePagination } from "@/utils/sanitizePagination";
 
 import styles from "./AdminProducts.module.scss";
+import { PerPageSelector } from "@/components/PerPageSelector/PerPageSelector";
 
 const AdminProducts = () => {
 	const [inputValue, setInputValue] = React.useState<string>("");
@@ -34,7 +35,11 @@ const AdminProducts = () => {
 				<Link href={"/admin/products/new"}>
 					<button>Додати новий товар</button>
 				</Link>
+
 				<Search inputValue={inputValue} onChangeInput={(e) => setInputValue(e.target.value)} className={styles.search} />
+
+				<PerPageSelector perPage={perPage} />
+
 				<label className={styles.loadImg}>
 					Завантажити таблицю
 					<input

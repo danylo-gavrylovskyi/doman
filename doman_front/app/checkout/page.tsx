@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Paper, TextField } from "@mui/material";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { RootState, useAppDispatch } from "@/redux/store";
 import { clearCart } from "@/redux/features/cartSlice";
@@ -18,6 +19,7 @@ import styles from "./CheckoutPage.module.scss";
 
 const page = () => {
 	const dispatch = useAppDispatch();
+	const { push } = useRouter();
 
 	const cartProducts = useSelector((state: RootState) => state.cart.cartProducts);
 	const currentUser = useSelector((state: RootState) => state.auth.currentUser);
@@ -61,6 +63,8 @@ const page = () => {
 
 		await OrdersService.placeOrder(data);
 		dispatch(clearCart());
+
+		push("/");
 	};
 
 	return (

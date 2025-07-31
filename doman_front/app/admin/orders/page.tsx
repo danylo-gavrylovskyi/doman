@@ -57,7 +57,7 @@ const AdminOrders = () => {
 						<div
 							onClick={() => toggleOrderExtension(index)}
 							key={order.id}
-							style={{ marginBottom: "1%", width: "90%" }}>
+							style={{ marginBottom: "1%", width: "90%", height: "auto" }}>
 							{extendedOrders.includes(index) ? (
 								<ExtendedOrder
 									customer={customer}

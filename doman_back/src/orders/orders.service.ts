@@ -42,6 +42,9 @@ export class OrdersService {
 		return this.ordersRepository.findAndCountAll({
 			limit: +perPage,
 			offset: (+page - 1) * +perPage,
+			order: [
+				["createdAt", "DESC"]
+			],
 			include: [
 				{
 					model: OrderProduct, // Include the OrderProduct model

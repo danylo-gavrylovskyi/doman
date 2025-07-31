@@ -1,15 +1,17 @@
 import React from "react";
 import { useDispatch } from "react-redux";
+import Link from "next/link";
 
-import { addToCart, removeFromCart, removeOneUnit } from "@/redux/features/cartSlice";
+import { addToCart, removeFromCart, removeOneUnit, changeCartStatus } from "@/redux/features/cartSlice";
 
 import { CartProduct } from "@/types/product.interface";
 
 import styles from "./CartProductCard.module.scss";
 
 export const CartProductCard = (props: CartProduct) => {
-	const { title, price, image, id } = props.product;
+	const { title, slug, price, image, id } = props.product;
 	const dispatch = useDispatch();
+
 	return (
 		<div className={styles.container}>
 			<img
@@ -18,7 +20,9 @@ export const CartProductCard = (props: CartProduct) => {
 				alt="product"></img>
 			<div className={styles.infoAndControls}>
 				<div className={styles.titleAndClearBtns}>
-					<span>{title}</span>
+					<Link href={`/products/${slug}`} onClick={() => dispatch(changeCartStatus())}>
+						<span>{title}</span>
+					</Link>
 					<button
 						onClick={() => dispatch(removeFromCart(id))}
 						className={styles.removeProduct}

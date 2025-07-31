@@ -1,6 +1,6 @@
-@import '../../app/variables.scss';
+@import "../../app/variables.scss";
 
-.container{
+.container {
     position: fixed;
     top: 0;
     bottom: 0;
@@ -8,9 +8,9 @@
     right: 0;
     background-color: white;
     transition: all 0.3s ease-in-out;
-    z-index: 2;
+    z-index: 3;
     font-family: "Inter";
-    footer{
+    footer {
         text-align: center;
         background-color: $base-color;
         width: 100%;
@@ -22,7 +22,7 @@
     }
 }
 
-.totalPrice{
+.totalPrice {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -36,18 +36,18 @@
     background-color: $contrast-color;
 }
 
-.darkBg{
+.darkBg {
     position: fixed;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
-    background-color: rgba(0,0,0,0.6);
+    background-color: rgba(0, 0, 0, 0.6);
     transition: all 0.3s;
-    z-index: 2;
+    z-index: 3;
 }
 
-.header{
+.header {
     background-color: $base-color;
     height: 10%;
     width: 100%;
@@ -61,14 +61,14 @@
     border-bottom-right-radius: 5px;
 }
 
-.products{
+.products {
     margin-top: 5%;
     width: 100%;
     display: flex;
     flex-direction: column;
 }
 
-.makeOrderBtn{
+.makeOrderBtn {
     margin-top: 7%;
     color: $contrast-color;
     border: 1px solid $contrast-color;
@@ -77,43 +77,43 @@
     font-size: 18px;
     font-weight: 600;
     background-color: transparent;
-    &:hover{
+    &:hover {
         background-color: $contrast-color;
         color: white;
     }
-    transition: all .3s;
+    transition: all 0.3s;
     cursor: pointer;
 }
 
-.close{
+.close {
     transform: translateX(100%);
 }
 
-.open{
+.open {
     transform: translate(0);
 }
 
-.visible{
+.visible {
     visibility: visible;
     opacity: 1;
 }
 
-.hidden{
+.hidden {
     visibility: hidden;
     opacity: 0;
 }
 
-.cartArrow{
+.cartArrow {
     position: absolute;
     left: 0;
     cursor: pointer;
 }
 
-@media (max-width: 900px){
-    .container{
+@media (max-width: 900px) {
+    .container {
         width: 80%;
     }
-    .header{
+    .header {
         font-size: 20px;
     }
 }

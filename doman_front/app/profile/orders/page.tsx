@@ -16,11 +16,13 @@ import { Pagination } from "@/components/Pagination/Pagination";
 import { ExtendedOrder } from "@/components/Order/ExtendedOrder";
 
 import styles from "./orders.module.scss";
+import { sanitizePagination } from "@/utils/sanitizePagination";
+import { PAGINATION_FALLBACK_PAGE, PAGINATION_FALLBACK_PER_PAGE } from "@/types/constants/paginationFallbackValues";
 
 const page = () => {
 	const queryParams = useSearchParams();
-	const perPage = queryParams.get("perPage") || "4";
-	const page = queryParams.get("page") || "1";
+	const perPage = sanitizePagination(queryParams.get("perPage"), PAGINATION_FALLBACK_PER_PAGE)
+	const page = sanitizePagination(queryParams.get("page"), PAGINATION_FALLBACK_PAGE);
 
 	const currentUser = useSelector((state: RootState) => state.auth.currentUser);
 

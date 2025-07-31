@@ -3,15 +3,20 @@
 import React from "react";
 import { useSearchParams } from "next/navigation";
 
-import { useAddBanner, useDeleteBanner, useGetBannersWithPagination } from "@/hooks/banners.hooks";
+import { AdminPageLayout } from "@/modules/Admin/AdminPageLayout/AdminPageLayout";
 
 import { AdminBanner } from "@/components/Admin/AdminBanner/AdminBanner";
-import { AdminPageLayout } from "@/modules/Admin/AdminPageLayout/AdminPageLayout";
+
+import { useAddBanner, useDeleteBanner, useGetBannersWithPagination } from "@/hooks/banners.hooks";
+
+import { ADMIN_PAGINATION_FALLBACK_PER_PAGE, PAGINATION_FALLBACK_PAGE } from "@/types/constants/paginationFallbackValues";
+
+import { sanitizePagination } from "@/utils/sanitizePagination";
 
 const Banners = () => {
 	const queryParams = useSearchParams();
-	const perPage = queryParams.get("perPage") || "4";
-	const page = queryParams.get("page") || "1";
+	const perPage = sanitizePagination(queryParams.get("perPage"), ADMIN_PAGINATION_FALLBACK_PER_PAGE)
+	const page = sanitizePagination(queryParams.get("page"), PAGINATION_FALLBACK_PAGE);
 
 	const [isAddingBanner, changeAddingMode] = React.useState<boolean>(false);
 

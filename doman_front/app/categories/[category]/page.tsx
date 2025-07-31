@@ -21,6 +21,8 @@ import { Item } from "@/components/Item/Item";
 import { Pagination } from "@/components/Pagination/Pagination";
 
 import styles from "./CategoryPage.module.scss";
+import { PAGINATION_FALLBACK_PAGE, PAGINATION_FALLBACK_PER_PAGE } from "@/types/constants/paginationFallbackValues";
+import { sanitizePagination } from "@/utils/sanitizePagination";
 
 const page = () => {
 	const dispatch = useDispatch();
@@ -28,8 +30,8 @@ const page = () => {
 
 	const categorySlug: string = useParams().category as string;
 	const queryParams = useSearchParams();
-	const perPage = queryParams.get("perPage") ?? undefined;
-	const page = queryParams.get("page") ?? undefined;
+	const perPage = sanitizePagination(queryParams.get("perPage"), PAGINATION_FALLBACK_PER_PAGE)
+	const page = sanitizePagination(queryParams.get("page"), PAGINATION_FALLBACK_PAGE);
 
 	const { data: category } = useGetCategoryBySlug(categorySlug);
 	const subcategories = category?.subcategories;

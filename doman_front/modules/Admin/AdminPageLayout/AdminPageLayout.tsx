@@ -19,8 +19,8 @@ interface AdminPageProps {
 	createBtnText: string;
 	inputText?: string;
 	insertImgText?: string;
-	page: string;
-	perPage: string;
+	page: number;
+	perPage: number;
 	elementsCount: number;
 }
 

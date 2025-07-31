@@ -9,12 +9,16 @@ import { Order } from "@/components/Order/Order";
 import { Pagination } from "@/components/Pagination/Pagination";
 import { ExtendedOrder } from "@/components/Order/ExtendedOrder";
 
+import { ADMIN_PAGINATION_FALLBACK_PER_PAGE, PAGINATION_FALLBACK_PAGE } from "@/types/constants/paginationFallbackValues";
+
+import { sanitizePagination } from "@/utils/sanitizePagination";
+
 import styles from "./adminOrders.module.scss";
 
 const AdminOrders = () => {
 	const queryParams = useSearchParams();
-	const perPage = queryParams.get("perPage") || "4";
-	const page = queryParams.get("page") || "1";
+	const perPage = sanitizePagination(queryParams.get("perPage"), ADMIN_PAGINATION_FALLBACK_PER_PAGE)
+	const page = sanitizePagination(queryParams.get("page"), PAGINATION_FALLBACK_PAGE);
 
 	const { data: orders } = useGetOrdersWithPagination({ page, perPage });
 

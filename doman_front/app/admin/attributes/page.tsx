@@ -3,9 +3,8 @@
 import React from "react";
 import { useSearchParams } from "next/navigation";
 
-import { Attribute } from "@/types/attribute.interface";
-
 import { AdminPageLayout } from "@/modules/Admin/AdminPageLayout/AdminPageLayout";
+
 import { AdminAttribute } from "@/components/Admin/AdminAttribute/AdminAttribute";
 
 import {
@@ -14,10 +13,15 @@ import {
 	useGetAttributesWithPagination,
 } from "@/hooks/attributes.hooks";
 
+import { Attribute } from "@/types/attribute.interface";
+import { ADMIN_PAGINATION_FALLBACK_PER_PAGE, PAGINATION_FALLBACK_PAGE } from "@/types/constants/paginationFallbackValues";
+
+import { sanitizePagination } from "@/utils/sanitizePagination";
+
 const Attributes = () => {
 	const queryParams = useSearchParams();
-	const perPage = queryParams.get("perPage") || "4";
-	const page = queryParams.get("page") || "1";
+	const perPage = sanitizePagination(queryParams.get("perPage"), ADMIN_PAGINATION_FALLBACK_PER_PAGE)
+	const page = sanitizePagination(queryParams.get("page"), PAGINATION_FALLBACK_PAGE);
 
 	const [isAddingAttribute, changeAddingMode] = React.useState<boolean>(false);
 

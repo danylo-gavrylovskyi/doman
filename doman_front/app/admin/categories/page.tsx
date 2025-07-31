@@ -4,6 +4,10 @@ import React from "react";
 import { useSearchParams } from "next/navigation";
 import slugify from "slugify";
 
+import { AdminPageLayout } from "@/modules/Admin/AdminPageLayout/AdminPageLayout";
+
+import { AdminCategory } from "@/components/Admin/AdminCategory/AdminCategory";
+
 import {
 	useAddCategory,
 	useDeleteCategory,
@@ -11,15 +15,15 @@ import {
 	useGetCategoriesWithPagination,
 } from "@/hooks/categories.hooks";
 
-import { AdminCategory } from "@/components/Admin/AdminCategory/AdminCategory";
-import { AdminPageLayout } from "@/modules/Admin/AdminPageLayout/AdminPageLayout";
-
 import { Category } from "@/types/category.interface";
+import { ADMIN_PAGINATION_FALLBACK_PER_PAGE, PAGINATION_FALLBACK_PAGE } from "@/types/constants/paginationFallbackValues";
+
+import { sanitizePagination } from "@/utils/sanitizePagination";
 
 const Categories = () => {
 	const queryParams = useSearchParams();
-	const perPage = queryParams.get("perPage") || "4";
-	const page = queryParams.get("page") || "1";
+	const perPage = sanitizePagination(queryParams.get("perPage"), ADMIN_PAGINATION_FALLBACK_PER_PAGE)
+	const page = sanitizePagination(queryParams.get("page"), PAGINATION_FALLBACK_PAGE);
 
 	const [isAddingCategory, changeAddingMode] = React.useState<boolean>(false);
 

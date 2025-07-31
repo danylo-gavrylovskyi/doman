@@ -4,13 +4,16 @@ import React from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
-import { useExcelTable, useGetProductsWithPagination } from "@/hooks/products.hooks";
-
 import { AdminProduct } from "@/components/Admin/AdminProduct";
 import { Pagination } from "@/components/Pagination/Pagination";
 import { Search } from "@/components/Search/Search";
 
+import { useExcelTable, useGetProductsWithPagination } from "@/hooks/products.hooks";
+
 import { Product } from "@/types/product.interface";
+import { ADMIN_PAGINATION_FALLBACK_PER_PAGE, PAGINATION_FALLBACK_PAGE } from "@/types/constants/paginationFallbackValues";
+
+import { sanitizePagination } from "@/utils/sanitizePagination";
 
 import styles from "./AdminProducts.module.scss";
 
@@ -20,8 +23,8 @@ const AdminProducts = () => {
 	const addProductsViaExcel = useExcelTable();
 
 	const queryParams = useSearchParams();
-	const perPage = queryParams.get("perPage") || "4";
-	const page = queryParams.get("page") || "1";
+	const perPage = sanitizePagination(queryParams.get("perPage"), ADMIN_PAGINATION_FALLBACK_PER_PAGE)
+	const page = sanitizePagination(queryParams.get("page"), PAGINATION_FALLBACK_PAGE);
 
 	const { data: products } = useGetProductsWithPagination({ page, perPage, inputValue });
 

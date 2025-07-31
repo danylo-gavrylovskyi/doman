@@ -1,8 +1,8 @@
 import { AttributeWithValues } from "./attribute.interface";
 
 export interface Pagination {
-	page?: string;
-	perPage?: string;
+	page?: number;
+	perPage?: number;
 	inputValue?: string;
 	categoryId?: number;
 	subcategoryId?: number;

@@ -18,6 +18,8 @@ import { Item } from "@/components/Item/Item";
 
 import styles from "@/app/categories/[category]/CategoryPage.module.scss";
 import { Pagination } from "@/components/Pagination/Pagination";
+import { sanitizePagination } from "@/utils/sanitizePagination";
+import { PAGINATION_FALLBACK_PAGE, PAGINATION_FALLBACK_PER_PAGE } from "@/types/constants/paginationFallbackValues";
 
 const page = () => {
 	const dispatch = useDispatch();
@@ -25,8 +27,8 @@ const page = () => {
 
 	const subcategorySlug: string = useParams().subcategory as string;
 	const queryParams = useSearchParams();
-	const perPage = queryParams.get("perPage") ?? undefined;
-	const page = queryParams.get("page") ?? undefined;
+	const perPage = sanitizePagination(queryParams.get("perPage"), PAGINATION_FALLBACK_PER_PAGE)
+	const page = sanitizePagination(queryParams.get("page"), PAGINATION_FALLBACK_PAGE);
 
 	const { data: subcategory } = useGetSubcategoryBySlug(subcategorySlug);
 	const { data: products } = useGetProductsWithPagination({

@@ -44,9 +44,10 @@ export const Header: React.FC = () => {
 
 	const { push } = useRouter();
 
+	const clearInput = () => setInputValue("");
+
 	return (
 		<header className={styles.header}>
-			<MobileSearch />
 			<div className={styles.container}>
 				<svg
 					onClick={() => dispatch(toggleHamburgerMenu())}
@@ -101,6 +102,11 @@ export const Header: React.FC = () => {
 					onChangeInput={(e) => setInputValue(e.target.value)}
 					inputValue={inputValue}
 					className={styles.search}
+				/>
+				<MobileSearch
+					onChangeInput={(e) => setInputValue(e.target.value)}
+					inputValue={inputValue}
+					clearInput={clearInput}
 				/>
 
 				{inputValue && <HeaderProducts products={products} />}

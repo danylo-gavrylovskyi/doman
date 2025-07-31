@@ -1,47 +1,66 @@
-@import '../../variables.scss';
+@import "../../variables.scss";
 
-.container{
+.container {
     width: 100%;
-    height: 100%;
     display: flex;
     justify-content: center;
-    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
-.wrapper{
-    margin-top: 2%;
+.wrapper {
     display: flex;
     flex-direction: row;
-    width: 100%;
+    gap: 40px;
     max-width: 1280px;
-    height: 55vh;
+    width: 100%;
+    flex-wrap: wrap;
+    align-items: flex-start;
 }
 
-.paper{
-    margin-right: 5%;
+.paper {
+    flex: 1 1 300px;
+    max-width: 500px;
     text-align: center;
-    width: 100%;
-    height: fit-content;
-    img{
+
+    img {
         width: 100%;
+        height: auto;
+        max-height: 400px;
+        object-fit: contain;
+        border-radius: 10px;
     }
 }
 
-.title{
+.details {
+    flex: 1 1 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.title {
     font-size: 26px;
     font-weight: 700;
+    margin: 0;
 }
 
-.descr{
-    font-size: 18px;
-}
-
-.price{
+.price {
     font-size: 24px;
     font-weight: 600;
+    margin: 0;
 }
 
-.addToCart{
+.descr {
+    font-size: 18px;
+    margin-top: 6px;
+    margin-bottom: 16px;
+    color: #555;
+}
+
+.addToCart {
+    width: fit-content;
+    max-width: 200px;
     padding: 12px 22px;
     border-radius: 50px;
     border: 1px solid $base-color;
@@ -50,9 +69,27 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
-    &:hover{
+
+    &:hover {
         border-color: $contrast-color;
         background-color: $contrast-color;
         color: #fff;
+    }
+}
+
+@media (max-width: 768px) {
+    .wrapper {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .details {
+        align-items: center;
+    }
+
+    .addToCart {
+        width: 100%;
+        max-width: none;
     }
 }

@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 
 import { addToCart } from "@/redux/features/cartSlice";
 
-import { useGetProductBySlug, useGetProducts } from "@/hooks/products.hooks";
+import { useGetProductBySlug } from "@/hooks/products.hooks";
 
 import styles from "./ProductPage.module.scss";
 
@@ -25,9 +25,9 @@ const ProductPage = () => {
 				<Paper elevation={16} className={styles.paper}>
 					<img
 						src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/productsImages/${product.image}`}
-						alt="productSlug"></img>
+						alt={product.slug}></img>
 				</Paper>
-				<div>
+				<div className={styles.details}>
 					<p className={styles.title}>{product.title}</p>
 					<p className={styles.price}>{product.price}грн.</p>
 					<p className={styles.descr}>{product.description}</p>

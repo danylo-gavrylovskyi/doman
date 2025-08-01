@@ -5,7 +5,7 @@ import { useParams, useSearchParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 
 import { RootState } from "@/redux/store";
-import { toggleFilter } from "@/redux/features/filterSlice";
+import { clearFilters, toggleFilter } from "@/redux/features/filterSlice";
 
 import { useGetSubcategoryBySlug, useGetSubcategoryFilterAttributes } from "@/hooks/subcategories.hooks";
 import { useGetProductsWithPagination } from "@/hooks/products.hooks";
@@ -29,6 +29,10 @@ const page = () => {
 	const queryParams = useSearchParams();
 	const perPage = sanitizePagination(queryParams.get("perPage"), PAGINATION_FALLBACK_PER_PAGE)
 	const page = sanitizePagination(queryParams.get("page"), PAGINATION_FALLBACK_PAGE);
+
+	React.useEffect(() => {
+		dispatch(clearFilters());
+	}, [subcategorySlug])
 
 	const { data: subcategory } = useGetSubcategoryBySlug(subcategorySlug);
 	const { data: products } = useGetProductsWithPagination({

@@ -24,8 +24,11 @@ export const filterSlice = createSlice({
 				state.checkedAttributes[index].values.push(action.payload.value);
 			}
 		},
+		clearFilters: (state) => {
+			state.checkedAttributes = []
+		}
 	},
 });
 
-export const { toggleFilter, toggleAttribute } = filterSlice.actions;
+export const { toggleFilter, toggleAttribute, clearFilters } = filterSlice.actions;
 export default filterSlice.reducer;

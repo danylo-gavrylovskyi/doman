@@ -5,7 +5,7 @@ import { useParams, useSearchParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 
 import { RootState } from "@/redux/store";
-import { toggleFilter } from "@/redux/features/filterSlice";
+import { clearFilters, toggleFilter } from "@/redux/features/filterSlice";
 
 import { useGetCategoryBySlug, useGetCategoryFilterAttributes } from "@/hooks/categories.hooks";
 import { useGetProductsWithPagination } from "@/hooks/products.hooks";
@@ -35,6 +35,10 @@ const page = () => {
 
 	const { data: category } = useGetCategoryBySlug(categorySlug);
 	const subcategories = category?.subcategories;
+
+	React.useEffect(() => {
+		dispatch(clearFilters());
+	}, [categorySlug])
 
 	const { data: products } = useGetProductsWithPagination({
 		page,

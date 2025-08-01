@@ -26,7 +26,7 @@ export const useGetAttributes = () => {
 export const useAddAttribute = () => {
 	return useMutation([ADD_ATTRIBUTE_KEY], (title: string) => AttributesService.add(title), {
 		onSuccess() {
-			queryClient.invalidateQueries({ queryKey: [GET_ATTRIBUTES_KEY] });
+			queryClient.invalidateQueries({ queryKey: [GET_ATTRIBUTES_WITH_PAGINATION_KEY] });
 		},
 	});
 };
@@ -37,7 +37,7 @@ export const useDeleteAttribute = () => {
 		(attributeId: number) => AttributesService.delete(attributeId),
 		{
 			onSuccess() {
-				queryClient.invalidateQueries({ queryKey: [GET_ATTRIBUTES_KEY] });
+				queryClient.invalidateQueries({ queryKey: [GET_ATTRIBUTES_WITH_PAGINATION_KEY] });
 			},
 		}
 	);

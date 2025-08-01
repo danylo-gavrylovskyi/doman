@@ -42,7 +42,7 @@ export const useAddProduct = () => {
 		(productData: FormData) => ProductsService.add(productData),
 		{
 			onSuccess() {
-				queryClient.invalidateQueries({ queryKey: [GET_PRODUCTS_KEY] });
+				queryClient.invalidateQueries({ queryKey: [GET_PRODUCTS_WITH_PAGINATION_KEY] });
 			},
 		}
 	);
@@ -55,7 +55,7 @@ export const useExcelTable = () => {
 		(excelTable: FormData) => ProductsService.useExcelTable(excelTable),
 		{
 			onSuccess() {
-				queryClient.invalidateQueries({ queryKey: [GET_PRODUCTS_KEY] });
+				queryClient.invalidateQueries({ queryKey: [GET_PRODUCTS_WITH_PAGINATION_KEY] });
 			},
 		}
 	);
@@ -69,7 +69,7 @@ export const useEditProduct = () => {
 			ProductsService.edit(productId, formData),
 		{
 			onSuccess() {
-				queryClient.invalidateQueries({ queryKey: [GET_PRODUCTS_KEY] });
+				queryClient.invalidateQueries({ queryKey: [GET_PRODUCTS_WITH_PAGINATION_KEY] });
 			},
 		}
 	);
@@ -82,7 +82,7 @@ export const useDeleteProduct = () => {
 		(productId: number) => ProductsService.delete(productId),
 		{
 			onSuccess() {
-				queryClient.invalidateQueries({ queryKey: [GET_PRODUCTS_KEY] });
+				queryClient.invalidateQueries({ queryKey: [GET_PRODUCTS_WITH_PAGINATION_KEY] });
 			},
 		}
 	);

@@ -22,7 +22,7 @@ export const useGetBannersWithPagination = (queryParams?: Pagination) => {
 export const useAddBanner = () => {
 	return useMutation([ADD_BANNER_KEY], (banner: File) => BannersService.add(banner), {
 		onSuccess() {
-			queryClient.invalidateQueries({ queryKey: [GET_BANNERS_KEY] });
+			queryClient.invalidateQueries({ queryKey: [GET_BANNERS_WITH_PAGINATION_KEY] });
 		},
 	});
 };
@@ -30,7 +30,7 @@ export const useAddBanner = () => {
 export const useDeleteBanner = () => {
 	return useMutation([DELETE_BANNER_KEY], (banner: string) => BannersService.delete(banner), {
 		onSuccess() {
-			queryClient.invalidateQueries({ queryKey: [GET_BANNERS_KEY] });
+			queryClient.invalidateQueries({ queryKey: [GET_BANNERS_WITH_PAGINATION_KEY] });
 		},
 	});
 };

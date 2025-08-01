@@ -43,7 +43,7 @@ export const useAddSubcategory = () => {
 		(formData: FormData) => SubcategoriesService.add(formData),
 		{
 			onSuccess() {
-				queryClient.invalidateQueries({ queryKey: [GET_SUBCATEGORIES_KEY] });
+				queryClient.invalidateQueries({ queryKey: [GET_SUBCATEGORIES_WITH_PAGINATION_KEY] });
 			},
 		}
 	);
@@ -57,7 +57,7 @@ export const useEditSubcategory = () => {
 			SubcategoriesService.edit({ id, formData }),
 		{
 			onSuccess() {
-				queryClient.invalidateQueries({ queryKey: [GET_SUBCATEGORIES_KEY] });
+				queryClient.invalidateQueries({ queryKey: [GET_SUBCATEGORIES_WITH_PAGINATION_KEY] });
 			},
 		}
 	);
@@ -70,7 +70,7 @@ export const useDeleteSubcategory = () => {
 		(subcategoryId: number) => SubcategoriesService.delete(subcategoryId),
 		{
 			onSuccess() {
-				queryClient.invalidateQueries({ queryKey: [GET_SUBCATEGORIES_KEY] });
+				queryClient.invalidateQueries({ queryKey: [GET_SUBCATEGORIES_WITH_PAGINATION_KEY] });
 			},
 		}
 	);

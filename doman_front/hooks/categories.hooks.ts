@@ -40,7 +40,7 @@ export const useGetCategoryFilterAttributes = (categoryId?: number, options?: Us
 export const useAddCategory = () => {
 	return useMutation([ADD_CATEGORY_KEY], (formData: FormData) => CategoriesService.add(formData), {
 		onSuccess() {
-			queryClient.invalidateQueries({ queryKey: [GET_CATEGORIES_KEY] });
+			queryClient.invalidateQueries({ queryKey: [GET_CATEGORIES_WITH_PAGINATION_KEY] });
 		},
 	});
 };
@@ -52,7 +52,7 @@ export const useEditCategory = () => {
 			CategoriesService.edit({ id, formData }),
 		{
 			onSuccess() {
-				queryClient.invalidateQueries({ queryKey: [GET_CATEGORIES_KEY] });
+				queryClient.invalidateQueries({ queryKey: [GET_CATEGORIES_WITH_PAGINATION_KEY] });
 			},
 		}
 	);
@@ -64,7 +64,7 @@ export const useDeleteCategory = () => {
 		(categoryId: number) => CategoriesService.delete(categoryId),
 		{
 			onSuccess() {
-				queryClient.invalidateQueries({ queryKey: [GET_CATEGORIES_KEY] });
+				queryClient.invalidateQueries({ queryKey: [GET_CATEGORIES_WITH_PAGINATION_KEY] });
 			},
 		}
 	);

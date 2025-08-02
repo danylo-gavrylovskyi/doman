@@ -3,63 +3,53 @@
 import React from "react";
 import { useSearchParams } from "next/navigation";
 
-import { AdminPageLayout } from "@/modules/Admin/AdminPageLayout/AdminPageLayout";
-
 import { AdminBanner } from "@/components/Admin/AdminBanner/AdminBanner";
 
-import { useAddBanner, useDeleteBanner, useGetBannersWithPagination } from "@/hooks/banners.hooks";
+import { useDeleteBanner, useGetBannersWithPagination } from "@/hooks/banners.hooks";
 
 import { ADMIN_PAGINATION_FALLBACK_PER_PAGE, PAGINATION_FALLBACK_PAGE } from "@/types/constants/paginationFallbackValues";
 
 import { sanitizePagination } from "@/utils/sanitizePagination";
+import { AdminHeader } from "@/components/Admin/AdminHeader/AdminHeader";
+import { Pagination } from "@/components/Pagination/Pagination";
+
+import styles from "./admin-banners.module.scss"
 
 const Banners = () => {
 	const queryParams = useSearchParams();
 	const perPage = sanitizePagination(queryParams.get("perPage"), ADMIN_PAGINATION_FALLBACK_PER_PAGE)
 	const page = sanitizePagination(queryParams.get("page"), PAGINATION_FALLBACK_PAGE);
 
-	const [isAddingBanner, changeAddingMode] = React.useState<boolean>(false);
-
 	const { data: banners } = useGetBannersWithPagination({ page, perPage });
 
-	const { mutate: addBanner } = useAddBanner();
 	const { mutate: deleteBanner } = useDeleteBanner();
-
-	const onSaveBanner = (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
-
-		const fileInput = (event.target as HTMLFormElement).elements.namedItem(
-			"image"
-		) as HTMLInputElement;
-
-		const image = fileInput?.files ? fileInput.files[0] : null;
-
-		if (image) {
-			addBanner(image);
-		}
-		changeAddingMode((prev) => !prev);
-	};
 
 	if (!banners) {
 		return <div>Loading...</div>;
 	}
 
 	return (
-		<AdminPageLayout
-			isAdding={isAddingBanner}
-			onSaveForm={onSaveBanner}
-			changeAddingMode={changeAddingMode}
-			createBtnText="Додати новий банер"
-			insertImgText="Завантажити банер"
-			page={page}
-			perPage={perPage}
-			elementsCount={banners.count}>
-			<>
+		<>
+			<AdminHeader
+				addBtnText="Додати новий банер"
+				perPage={perPage}
+				entityName="banners"
+			/>
+
+			<div className={styles.content}>
 				{banners.rows.map((banner: string) => (
 					<AdminBanner key={banner} deleteBanner={deleteBanner} bannerUrl={banner} />
 				))}
-			</>
-		</AdminPageLayout>
+			</div>
+
+			<footer>
+				<Pagination
+					elementsCount={banners.count}
+					perPage={perPage}
+					currentPage={page}
+				/>
+			</footer>
+		</>
 	);
 };
 

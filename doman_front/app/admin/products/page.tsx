@@ -1,8 +1,7 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 import { AdminProduct } from "@/components/Admin/AdminProduct";
 import { Pagination } from "@/components/Pagination/Pagination";
@@ -16,7 +15,7 @@ import { ADMIN_PAGINATION_FALLBACK_PER_PAGE, PAGINATION_FALLBACK_PAGE } from "@/
 import { sanitizePagination } from "@/utils/sanitizePagination";
 
 import styles from "./AdminProducts.module.scss";
-import { PerPageSelector } from "@/components/PerPageSelector/PerPageSelector";
+import { AdminHeader } from "@/components/Admin/AdminHeader/AdminHeader";
 
 const AdminProducts = () => {
 	const [inputValue, setInputValue] = React.useState<string>("");
@@ -31,17 +30,15 @@ const AdminProducts = () => {
 
 	return (
 		<>
-			<header className={styles.header}>
-				<Link href={"/admin/products/new"}>
-					<button>Додати новий товар</button>
-				</Link>
-
-				<Search inputValue={inputValue} onChangeInput={(e) => setInputValue(e.target.value)} className={styles.search} />
-
-				<PerPageSelector perPage={perPage} />
+			<AdminHeader
+				addBtnText="Додати товар"
+				perPage={perPage}
+				entityName="products"
+			>
+				<Search inputValue={inputValue} onChangeInput={(e) => setInputValue(e.target.value)} />
 
 				<label className={styles.loadImg}>
-					Завантажити таблицю
+					Excel
 					<input
 						onChange={(e) => {
 							const formData = new FormData();
@@ -53,7 +50,8 @@ const AdminProducts = () => {
 						name="image"
 						type="file"></input>
 				</label>
-			</header>
+			</AdminHeader>
+
 			<main className={styles.main}>
 				{products ? (
 					products.rows.map((product: Product) => (
@@ -62,19 +60,15 @@ const AdminProducts = () => {
 				) : (
 					<div>Loading...</div>
 				)}
-				<footer>
-					<Pagination
-						pageQuantity={
-							perPage && products
-								? products.count / +perPage < 1
-									? 1
-									: Math.ceil(products.count / +perPage)
-								: 1
-						}
-						currentPage={page ? +page : 1}
-					/>
-				</footer>
 			</main>
+
+			<footer>
+				<Pagination
+					elementsCount={products?.count ?? 0}
+					perPage={perPage}
+					currentPage={page}
+				/>
+			</footer>
 		</>
 	);
 };

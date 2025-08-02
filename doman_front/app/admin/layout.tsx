@@ -45,7 +45,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
 			</aside>
 
 			<div className={styles.content}>
-				<Paper elevation={3}>
+				<Paper style={{ height: "100%" }} elevation={3}>
 					{children}
 				</Paper>
 			</div>

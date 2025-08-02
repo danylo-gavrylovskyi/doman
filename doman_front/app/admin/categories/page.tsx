@@ -2,14 +2,10 @@
 
 import React from "react";
 import { useSearchParams } from "next/navigation";
-import slugify from "slugify";
-
-import { AdminPageLayout } from "@/modules/Admin/AdminPageLayout/AdminPageLayout";
 
 import { AdminCategory } from "@/components/Admin/AdminCategory/AdminCategory";
 
 import {
-	useAddCategory,
 	useDeleteCategory,
 	useEditCategory,
 	useGetCategoriesWithPagination,
@@ -19,76 +15,57 @@ import { Category } from "@/types/category.interface";
 import { ADMIN_PAGINATION_FALLBACK_PER_PAGE, PAGINATION_FALLBACK_PAGE } from "@/types/constants/paginationFallbackValues";
 
 import { sanitizePagination } from "@/utils/sanitizePagination";
+import { AdminHeader } from "@/components/Admin/AdminHeader/AdminHeader";
+import { Search } from "@/components/Search/Search";
+import styles from "./admin-categories.module.scss"
+import { Pagination } from "@/components/Pagination/Pagination";
 
 const Categories = () => {
+	const [inputValue, setInputValue] = React.useState<string>("");
+
 	const queryParams = useSearchParams();
 	const perPage = sanitizePagination(queryParams.get("perPage"), ADMIN_PAGINATION_FALLBACK_PER_PAGE)
 	const page = sanitizePagination(queryParams.get("page"), PAGINATION_FALLBACK_PAGE);
 
-	const [isAddingCategory, changeAddingMode] = React.useState<boolean>(false);
+	const { data: categories } = useGetCategoriesWithPagination({ page, perPage, inputValue });
 
-	const {
-		data: categories,
-		isLoading,
-		isError,
-	} = useGetCategoriesWithPagination({ page, perPage });
-
-	const { mutate: addCategory } = useAddCategory();
 	const { mutate: editCategory } = useEditCategory();
 	const { mutate: deleteCategory } = useDeleteCategory();
 
-	const onSaveCategory = (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
-
-		const title: string = (
-			(event.target as HTMLFormElement).elements.namedItem("title") as HTMLInputElement
-		).value;
-
-		const fileInput = (event.target as HTMLFormElement).elements.namedItem(
-			"image"
-		) as HTMLInputElement;
-
-		const image = fileInput?.files ? fileInput.files[0] : null;
-
-		const formData = new FormData();
-		formData.append("title", title);
-		formData.append("slug", slugify(title));
-		if (image === null) {
-			throw new Error("You didnt choose the file");
-		}
-		formData.append("image", image);
-
-		addCategory(formData);
-		changeAddingMode((prev) => !prev);
-	};
-
-	if (!categories || isLoading || isError) {
-		return <div>Loading...</div>;
-	}
-
 	return (
-		<AdminPageLayout
-			isAdding={isAddingCategory}
-			onSaveForm={onSaveCategory}
-			changeAddingMode={changeAddingMode}
-			isInputNeeded={true}
-			createBtnText="Додати категорію"
-			inputText="Назва нової категорії"
-			insertImgText="Завантажити обкладинку"
-			page={page}
-			perPage={perPage}
-			elementsCount={categories.count}>
-			<>
-				{categories.rows.map((category: Category) => (
-					<AdminCategory
-						key={category.id}
-						edit={editCategory}
-						deleteItem={deleteCategory}
-						{...category}
-					/>
-				))}
-			</>
-		</AdminPageLayout>
+		<>
+			<AdminHeader
+				addBtnText="Додати категорію"
+				perPage={perPage}
+				entityName="categories"
+			>
+				<Search inputValue={inputValue} onChangeInput={(e) => setInputValue(e.target.value)} />
+			</AdminHeader>
+
+			<div className={styles.content}>
+				{categories ? (
+					categories.rows.map((category: Category) => (
+						<AdminCategory
+							key={category.id}
+							edit={editCategory}
+							deleteItem={deleteCategory}
+							{...category}
+						/>
+					))
+				) : (
+					<div>Loading...</div>
+				)}
+
+			</div>
+
+			<footer>
+				<Pagination
+					elementsCount={categories?.count ?? 0}
+					perPage={perPage}
+					currentPage={page}
+				/>
+			</footer>
+		</>
 	);
 };
 

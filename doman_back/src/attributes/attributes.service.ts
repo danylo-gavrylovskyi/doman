@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
+import { Op } from "sequelize";
 
 import { Attribute } from "./attribute.model";
 
@@ -13,10 +14,15 @@ export class AttributesService {
 		return this.attributesRepository.findAll();
 	}
 
-	getAttributesWithPagination({ page = "1", perPage = "4" }: PaginatedEntityRequestDto) {
+	getAttributesWithPagination({ page = "1", perPage = "4", inputValue = "" }: PaginatedEntityRequestDto) {
 		return this.attributesRepository.findAndCountAll({
 			limit: +perPage,
 			offset: (+page - 1) * +perPage,
+			where: {
+				title: {
+					[Op.iLike]: `%${inputValue}%`,
+				}
+			}
 		});
 	}
 

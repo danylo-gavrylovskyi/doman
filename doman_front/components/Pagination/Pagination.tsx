@@ -5,11 +5,18 @@ import { useUpdateQueryParams } from "@/utils/updateQueryParams";
 import styles from "./pagination.module.scss";
 
 interface PaginationProps {
-	pageQuantity: number;
+	elementsCount: number;
+	perPage: number;
 	currentPage: number;
 }
 
-export const Pagination: React.FC<PaginationProps> = ({ pageQuantity, currentPage }) => {
+export const Pagination: React.FC<PaginationProps> = ({
+	elementsCount,
+	perPage = 5,
+	currentPage = 1
+}) => {
+	const pageQuantity = elementsCount / perPage < 1 ? 1 : Math.ceil(elementsCount / perPage)
+
 	const updateQueryParams = useUpdateQueryParams();
 
 	const getPreviousPage = () => {

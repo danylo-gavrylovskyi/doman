@@ -1,12 +1,13 @@
-import React from "react";
+import React, { ChangeEventHandler } from "react";
 import { MenuItem, TextField } from "@mui/material";
 
 import { Pagination } from "@/components/Pagination/Pagination";
+import { PerPageSelector } from "@/components/PerPageSelector/PerPageSelector";
+import { Search } from "@/components/Search/Search";
 
 import { Category } from "@/types/category.interface";
 
 import styles from "./AdminPageLayout.module.scss";
-import { PerPageSelector } from "@/components/PerPageSelector/PerPageSelector";
 
 interface AdminPageProps {
 	isAdding: boolean;
@@ -23,6 +24,8 @@ interface AdminPageProps {
 	page: number;
 	perPage: number;
 	elementsCount: number;
+	inputValue: string;
+	setInputValue: ChangeEventHandler<HTMLInputElement>;
 }
 
 export const AdminPageLayout = ({
@@ -40,6 +43,8 @@ export const AdminPageLayout = ({
 	page,
 	perPage,
 	elementsCount,
+	inputValue,
+	setInputValue
 }: AdminPageProps) => {
 	return (
 		<>
@@ -56,13 +61,17 @@ export const AdminPageLayout = ({
 						<PerPageSelector perPage={perPage} />
 					</div>
 
+					<div style={isAdding ? { display: "none" } : { display: "block" }}>
+						<Search inputValue={inputValue} onChangeInput={setInputValue} />
+					</div>
+
 					<button type="submit" style={isAdding ? { display: "block" } : { display: "none" }}>
 						Зберегти
 					</button>
 					<div
 						style={isAdding ? { display: "flex" } : { display: "none" }}
 						className={styles.creating}>
-						{isInputNeeded && <input name="title" placeholder={inputText}></input>}
+						{isInputNeeded && <input className={styles.input} name="title" placeholder={inputText}></input>}
 						{isSelectNeeded && (
 							<TextField
 								name="categoryId"
@@ -83,7 +92,7 @@ export const AdminPageLayout = ({
 								{insertImgText}
 							</label>
 						)}
-						<input name="image" id="categoryImg" type="file"></input>
+						<input className={styles.input} name="image" id="categoryImg" type="file"></input>
 					</div>
 				</form>
 			</header>

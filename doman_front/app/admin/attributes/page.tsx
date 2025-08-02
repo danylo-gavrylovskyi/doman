@@ -3,12 +3,9 @@
 import React from "react";
 import { useSearchParams } from "next/navigation";
 
-import { AdminPageLayout } from "@/modules/Admin/AdminPageLayout/AdminPageLayout";
-
 import { AdminAttribute } from "@/components/Admin/AdminAttribute/AdminAttribute";
 
 import {
-	useAddAttribute,
 	useDeleteAttribute,
 	useGetAttributesWithPagination,
 } from "@/hooks/attributes.hooks";
@@ -17,56 +14,55 @@ import { Attribute } from "@/types/attribute.interface";
 import { ADMIN_PAGINATION_FALLBACK_PER_PAGE, PAGINATION_FALLBACK_PAGE } from "@/types/constants/paginationFallbackValues";
 
 import { sanitizePagination } from "@/utils/sanitizePagination";
+import { AdminHeader } from "@/components/Admin/AdminHeader/AdminHeader";
+import { Pagination } from "@/components/Pagination/Pagination";
+
+import styles from "./admin-attributes.module.scss"
+import { Search } from "@/components/Search/Search";
 
 const Attributes = () => {
+	const [inputValue, setInputValue] = React.useState<string>("");
+
 	const queryParams = useSearchParams();
 	const perPage = sanitizePagination(queryParams.get("perPage"), ADMIN_PAGINATION_FALLBACK_PER_PAGE)
 	const page = sanitizePagination(queryParams.get("page"), PAGINATION_FALLBACK_PAGE);
 
-	const [isAddingAttribute, changeAddingMode] = React.useState<boolean>(false);
+	const { data: attributes } = useGetAttributesWithPagination({ page, perPage, inputValue });
 
-	const { data: attributes } = useGetAttributesWithPagination({ page, perPage });
-
-	const { mutate: addAttribute } = useAddAttribute();
 	const { mutate: deleteAttribute } = useDeleteAttribute();
 
-	const onSaveAttribute = (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
-
-		const title: string = (
-			(event.target as HTMLFormElement).elements.namedItem("title") as HTMLInputElement
-		).value;
-
-		addAttribute(title);
-		changeAddingMode((prev) => !prev);
-	};
-
-	if (!attributes) {
-		return <div>Loading...</div>;
-	}
-
 	return (
-		<AdminPageLayout
-			isAdding={isAddingAttribute}
-			onSaveForm={onSaveAttribute}
-			changeAddingMode={changeAddingMode}
-			isImageInputNeeded={false}
-			isInputNeeded={true}
-			inputText="Назва атрибуту"
-			createBtnText="Додати атрибут"
-			page={page}
-			perPage={perPage}
-			elementsCount={attributes.count}>
-			<>
-				{attributes.rows.map((attribute: Attribute) => (
-					<AdminAttribute
-						key={attribute.id}
-						deleteAttribute={deleteAttribute}
-						{...attribute}
-					/>
-				))}
-			</>
-		</AdminPageLayout>
+		<>
+			<AdminHeader
+				addBtnText="Додати новий атрибут"
+				perPage={perPage}
+				entityName="attributes"
+			>
+				<Search inputValue={inputValue} onChangeInput={(e) => setInputValue(e.target.value)} />
+			</AdminHeader>
+
+			<div className={styles.content}>
+				{attributes ?
+					(attributes.rows.map((attribute: Attribute) => (
+						<AdminAttribute
+							key={attribute.id}
+							deleteAttribute={deleteAttribute}
+							{...attribute}
+						/>
+					)))
+					:
+					(<div>Loading...</div>)
+				}
+			</div>
+
+			<footer>
+				<Pagination
+					elementsCount={attributes?.count ?? 0}
+					perPage={perPage}
+					currentPage={page}
+				/>
+			</footer>
+		</>
 	);
 };
 

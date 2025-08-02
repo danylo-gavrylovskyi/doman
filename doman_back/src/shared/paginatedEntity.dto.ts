@@ -6,6 +6,9 @@ export class PaginatedEntityRequestDto {
 
     @IsOptional()
     readonly perPage?: string;
+
+    @IsOptional()
+    readonly inputValue?: string
 }
 
 export class PaginatedEntityResponseDto<T> {

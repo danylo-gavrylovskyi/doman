@@ -1,5 +1,7 @@
 import { ChangeEventHandler } from "react";
 
+import styles from "./search.module.scss"
+
 export const Search = ({
 	onChangeInput,
 	inputValue,
@@ -7,10 +9,10 @@ export const Search = ({
 }: {
 	onChangeInput: ChangeEventHandler<HTMLInputElement>;
 	inputValue: string;
-	className: string;
+	className?: string;
 }) => {
 	return (
-		<div className={className}>
+		<div className={className ? className : styles.search}>
 			<input placeholder="Я шукаю..." onChange={onChangeInput} value={inputValue} />
 			<svg
 				fill="rgb(34, 34, 34);"

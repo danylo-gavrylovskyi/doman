@@ -1,5 +1,6 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
+import { Op } from "sequelize";
 import * as fs from "fs";
 import * as path from "path";
 
@@ -35,11 +36,16 @@ export class SubcategoriesService {
 	}
 
 	getSubcategoriesWithPagination(
-		{ page = "1", perPage = "4" }: PaginatedEntityRequestDto
+		{ page = "1", perPage = "4", inputValue = "" }: PaginatedEntityRequestDto
 	): Promise<PaginatedEntityResponseDto<Subcategory>> {
 		return this.subcategoryRepository.findAndCountAll({
 			limit: +perPage,
 			offset: (+page - 1) * +perPage,
+			where: {
+				title: {
+					[Op.iLike]: `%${inputValue}%`,
+				}
+			},
 			include: this.includeCategory,
 		});
 	}

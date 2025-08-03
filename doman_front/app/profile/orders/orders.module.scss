@@ -1,4 +1,25 @@
-.title{
+.title {
     font-size: 36px;
     font-weight: 700;
+
+    @media (max-width: 768px) {
+        font-size: 24px;
+        text-align: center;
+    }
+}
+
+.container {
+    width: 100%;
+
+    @media (max-width: 768px) {
+        width: 90%;
+    }
+}
+
+.order {
+    margin-bottom: 1%;
+
+    @media (max-width: 768px) {
+        margin-bottom: 4%;
+    }
 }

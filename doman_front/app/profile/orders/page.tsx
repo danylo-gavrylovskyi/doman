@@ -6,7 +6,6 @@ import { useSelector } from "react-redux";
 
 import {
 	useGetOrdersByPhoneNumberPagination,
-	useGetOrdersWithPagination,
 } from "@/hooks/orders.hook";
 
 import { RootState } from "@/redux/store";
@@ -42,25 +41,26 @@ const page = () => {
 		}
 	};
 
+	const options: Intl.DateTimeFormatOptions = {
+		year: "numeric",
+		month: "long",
+		day: "numeric",
+	};
+	const dateFormatter = new Intl.DateTimeFormat("uk-UA", options);
+
 	return (
-		<div style={{ width: "100%" }}>
+		<div className={styles.container}>
 			<p className={styles.title}>Мої замовлення</p>
 
 			{orders ? (
 				orders.rows.map((order, index) => {
-					const options: Intl.DateTimeFormatOptions = {
-						year: "numeric",
-						month: "long",
-						day: "numeric",
-					};
-					const dateFormatter = new Intl.DateTimeFormat("uk-UA", options);
 					const formattedDate = dateFormatter.format(new Date(order.createdAt));
 
 					return (
 						<div
 							onClick={() => toggleOrderExtension(index)}
 							key={order.id}
-							style={{ marginBottom: "1%" }}>
+							className={styles.order}>
 							{extendedOrders.includes(index) ? (
 								<ExtendedOrder
 									customer={currentUser}
@@ -87,14 +87,9 @@ const page = () => {
 			<footer>
 				{orders && orders?.count > 10 && (
 					<Pagination
-						pageQuantity={
-							perPage && orders
-								? orders.count / +perPage < 1
-									? 1
-									: Math.ceil(orders.count / +perPage)
-								: 1
-						}
-						currentPage={page ? +page : 1}
+						elementsCount={orders.count}
+						perPage={perPage}
+						currentPage={page}
 					/>
 				)}
 			</footer>

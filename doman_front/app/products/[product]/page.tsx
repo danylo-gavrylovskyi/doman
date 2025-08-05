@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
 import { Paper } from "@mui/material";
 import { useParams } from "next/navigation";
+import React from "react";
 import { useDispatch } from "react-redux";
 
 import { addToCart } from "@/redux/features/cartSlice";

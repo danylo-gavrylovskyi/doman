@@ -1,10 +1,11 @@
 'use client'
 
-import { useAddBanner } from '@/hooks/banners.hooks';
+import { useRouter } from 'next/navigation';
 import React from 'react'
 
+import { useAddBanner } from '@/hooks/banners.hooks';
+
 import styles from "./add-banner.module.scss"
-import { useRouter } from 'next/navigation';
 
 const AddBanner = () => {
     const { push } = useRouter();

@@ -1,8 +1,8 @@
 "use client";
 
+import { TextField } from "@mui/material";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { TextField } from "@mui/material";
 
 import { useGetCompanyDetails, useUpdateCompanyDetails } from "@/hooks/company-details.hooks";
 

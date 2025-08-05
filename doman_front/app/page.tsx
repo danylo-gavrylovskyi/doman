@@ -1,12 +1,11 @@
 import React from "react";
 
+import { BannersService } from "@/services/banners.service";
+import { CategoriesService } from "@/services/categories.service";
+
 import { AutoplaySlider } from "../modules/AutoplaySlider/AutoplaySlider";
 import { Categories } from "../modules/Categories/Categories";
 import { PopularItems } from "../modules/PopularItems/PopularItems";
-
-import { CategoriesService } from "@/services/categories.service";
-
-import { BannersService } from "@/services/banners.service";
 
 import styles from "./page.module.scss";
 

@@ -1,17 +1,17 @@
 "use client";
 
-import React from "react";
 import { useSearchParams } from "next/navigation";
+import React from "react";
 
 import { AdminBanner } from "@/components/Admin/AdminBanner/AdminBanner";
+import { AdminHeader } from "@/components/Admin/AdminHeader/AdminHeader";
+import { Pagination } from "@/components/Pagination/Pagination";
 
 import { useDeleteBanner, useGetBannersWithPagination } from "@/hooks/banners.hooks";
 
-import { ADMIN_PAGINATION_FALLBACK_PER_PAGE, PAGINATION_FALLBACK_PAGE } from "@/types/constants/paginationFallbackValues";
-
 import { sanitizePagination } from "@/utils/sanitizePagination";
-import { AdminHeader } from "@/components/Admin/AdminHeader/AdminHeader";
-import { Pagination } from "@/components/Pagination/Pagination";
+
+import { ADMIN_PAGINATION_FALLBACK_PER_PAGE, PAGINATION_FALLBACK_PAGE } from "@/types/constants/paginationFallbackValues";
 
 import styles from "./admin-banners.module.scss"
 

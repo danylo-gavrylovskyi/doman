@@ -1,30 +1,31 @@
 "use client";
 
-import React from "react";
 import { useParams, useSearchParams } from "next/navigation";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { RootState } from "@/redux/store";
 import { clearFilters, toggleFilter } from "@/redux/features/filterSlice";
+import { RootState } from "@/redux/store";
 
-import { useGetCategoryBySlug, useGetCategoryFilterAttributes } from "@/hooks/categories.hooks";
-import { useGetProductsWithPagination } from "@/hooks/products.hooks";
-
-import { Subcategory } from "@/types/category.interface";
-
-import { SkeletonPage } from "@/modules/SkeletonPage/SkeletonPage";
 import { Filter } from "@/modules/Filter/Filter";
+import { SkeletonPage } from "@/modules/SkeletonPage/SkeletonPage";
 
 import { CategoryCard } from "@/components/CategoryCard/CategoryCard";
 import { FilterBlock } from "@/components/FilterBlock/FilterBlock";
 import { Item } from "@/components/Item/Item";
 import { Pagination } from "@/components/Pagination/Pagination";
 
-import styles from "./CategoryPage.module.scss";
-import { PAGINATION_FALLBACK_PAGE, PAGINATION_FALLBACK_PER_PAGE } from "@/types/constants/paginationFallbackValues";
+import { useGetCategoryBySlug, useGetCategoryFilterAttributes } from "@/hooks/categories.hooks";
+import { useGetProductsWithPagination } from "@/hooks/products.hooks";
+
 import { sanitizePagination } from "@/utils/sanitizePagination";
 
-const page = () => {
+import { Subcategory } from "@/types/category.interface";
+import { PAGINATION_FALLBACK_PAGE, PAGINATION_FALLBACK_PER_PAGE } from "@/types/constants/paginationFallbackValues";
+
+import styles from "./CategoryPage.module.scss";
+
+const Categories = () => {
 	const dispatch = useDispatch();
 	const checkedAttributes = useSelector((state: RootState) => state.filter.checkedAttributes);
 
@@ -116,18 +117,13 @@ const page = () => {
 			</div>
 			<footer>
 				<Pagination
-					pageQuantity={
-						perPage
-							? products.count / +perPage < 1
-								? 1
-								: Math.round(products.count / +perPage)
-							: 1
-					}
-					currentPage={page ? +page : 1}
+					elementsCount={products.count}
+					perPage={perPage}
+					currentPage={page}
 				/>
 			</footer>
 		</div>
 	);
 };
 
-export default page;
+export default Categories;

@@ -1,21 +1,21 @@
 "use client";
 
-import React from "react";
 import { useSearchParams } from "next/navigation";
+import React from "react";
 
+import { AdminHeader } from "@/components/Admin/AdminHeader/AdminHeader";
 import { AdminProduct } from "@/components/Admin/AdminProduct";
 import { Pagination } from "@/components/Pagination/Pagination";
 import { Search } from "@/components/Search/Search";
 
 import { useExcelTable, useGetProductsWithPagination } from "@/hooks/products.hooks";
 
-import { Product } from "@/types/product.interface";
-import { ADMIN_PAGINATION_FALLBACK_PER_PAGE, PAGINATION_FALLBACK_PAGE } from "@/types/constants/paginationFallbackValues";
-
 import { sanitizePagination } from "@/utils/sanitizePagination";
 
+import { ADMIN_PAGINATION_FALLBACK_PER_PAGE, PAGINATION_FALLBACK_PAGE } from "@/types/constants/paginationFallbackValues";
+import { Product } from "@/types/product.interface";
+
 import styles from "./AdminProducts.module.scss";
-import { AdminHeader } from "@/components/Admin/AdminHeader/AdminHeader";
 
 const AdminProducts = () => {
 	const [inputValue, setInputValue] = React.useState<string>("");

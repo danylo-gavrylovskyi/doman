@@ -1,9 +1,9 @@
 "use client";
 
-import React from "react";
-import Link from "next/link";
 import { Paper } from "@mui/material";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
+import React from "react";
 
 import styles from "./AdminLayout.module.scss";
 
@@ -45,7 +45,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
 			</aside>
 
 			<div className={styles.content}>
-				<Paper style={{ height: "100%" }} elevation={3}>
+				<Paper className={styles.paper} elevation={3}>
 					{children}
 				</Paper>
 			</div>

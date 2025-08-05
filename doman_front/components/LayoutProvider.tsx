@@ -1,11 +1,11 @@
 "use client";
 
-import React from "react";
-import { usePathname } from "next/navigation";
-
-import { Header } from "@/modules/Header/Header";
-import { Footer } from "@/modules/Footer/Footer";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { usePathname } from "next/navigation";
+import React from "react";
+
+import { Footer } from "@/modules/Footer/Footer";
+import { Header } from "@/modules/Header/Header";
 
 export const queryClient = new QueryClient({
 	defaultOptions: {

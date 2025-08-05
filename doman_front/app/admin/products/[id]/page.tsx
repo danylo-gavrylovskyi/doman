@@ -1,18 +1,17 @@
 "use client";
 
-import React from "react";
 import { Checkbox, MenuItem, TextField } from "@mui/material";
 import { useRouter, useParams } from "next/navigation";
+import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
-import { useEditProduct, useGetProductById } from "@/hooks/products.hooks";
 import { useGetAttributes } from "@/hooks/attributes.hooks";
+import { useEditProduct, useGetProductById } from "@/hooks/products.hooks";
 import { useGetSubcategories } from "@/hooks/subcategories.hooks";
 
-import { Subcategory } from "@/types/category.interface";
 import { Attribute, AttributeIdValuePair } from "@/types/attribute.interface";
+import { Subcategory } from "@/types/category.interface";
 import { UpdateProduct } from "@/types/update-product.interface";
-
 
 import styles from "../new/AddProduct.module.scss";
 

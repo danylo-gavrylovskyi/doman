@@ -1,19 +1,20 @@
 "use client";
 
-import React from "react";
 import { MenuItem, TextField } from "@mui/material";
 import { useRouter } from "next/navigation";
-
-import { Subcategory } from "@/types/category.interface";
-import { Attribute, AttributeIdValuePair } from "@/types/attribute.interface";
-
-import styles from "./AddProduct.module.scss";
-import slugify from "slugify";
+import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useGetSubcategories } from "@/hooks/subcategories.hooks";
+import slugify from "slugify";
+
 import { useGetAttributes } from "@/hooks/attributes.hooks";
 import { useAddProduct } from "@/hooks/products.hooks";
+import { useGetSubcategories } from "@/hooks/subcategories.hooks";
+
+import { Attribute, AttributeIdValuePair } from "@/types/attribute.interface";
+import { Subcategory } from "@/types/category.interface";
 import { CreateProductForm } from "@/types/product.interface";
+
+import styles from "./AddProduct.module.scss";
 
 const AddProduct = () => {
 	const { push } = useRouter();

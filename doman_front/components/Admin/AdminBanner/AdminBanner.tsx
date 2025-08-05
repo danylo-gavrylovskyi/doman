@@ -1,6 +1,6 @@
-import React from "react";
 import { Button, Paper } from "@mui/material";
 import { UseMutateFunction } from "@tanstack/react-query";
+import React from "react";
 
 import styles from "./AdminBanner.module.scss";
 

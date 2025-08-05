@@ -1,14 +1,16 @@
 'use client'
 
+import { MenuItem, TextField } from '@mui/material';
+import { useRouter } from 'next/navigation';
 import React from 'react'
+import slugify from 'slugify';
+
+import { useGetCategories } from '@/hooks/categories.hooks';
+import { useAddSubcategory } from '@/hooks/subcategories.hooks';
+
+import { Category } from '@/types/category.interface';
 
 import styles from "./add-subcategory.module.scss"
-import { useRouter } from 'next/navigation';
-import { MenuItem, TextField } from '@mui/material';
-import { useGetCategories } from '@/hooks/categories.hooks';
-import { Category } from '@/types/category.interface';
-import { useAddSubcategory } from '@/hooks/subcategories.hooks';
-import slugify from 'slugify';
 
 const AddSubcategory = () => {
     const { push } = useRouter();

@@ -1,8 +1,7 @@
 import React from "react";
 
-import { OrderProps } from "./orderProps.interface";
-
 import styles from "./order.module.scss";
+import { OrderProps } from "./orderProps.interface";
 
 export const Order = ({ orderId, totalPrice, createdAt, orderProducts, height }: OrderProps) => {
 	return (

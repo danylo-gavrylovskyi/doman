@@ -1,23 +1,24 @@
 "use client";
 
-import React from "react";
-import { useSelector } from "react-redux";
-import { SubmitHandler, useForm } from "react-hook-form";
 import { Paper, TextField } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import React from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
 
-import { RootState, useAppDispatch } from "@/redux/store";
 import { clearCart } from "@/redux/features/cartSlice";
+import { RootState, useAppDispatch } from "@/redux/store";
 
 import { OrdersService } from "@/services/orders.service";
-import { Order } from "@/types/order.interface";
 
 import { getCartTotalPrice } from "@/utils/getCartTotalPrice";
 
+import { Order } from "@/types/order.interface";
+
 import styles from "./CheckoutPage.module.scss";
 
-const page = () => {
+const Checkout = () => {
 	const dispatch = useAppDispatch();
 	const { push } = useRouter();
 
@@ -26,10 +27,6 @@ const page = () => {
 
 	const totalPrice: number = getCartTotalPrice(cartProducts);
 	const productsQuantity: number = cartProducts.reduce((prev, cur) => prev + cur.quantity, 0);
-
-	if (!currentUser) {
-		return <div>Loading...</div>;
-	}
 
 	const {
 		register,
@@ -66,6 +63,10 @@ const page = () => {
 
 		push("/");
 	};
+
+	if (!currentUser) {
+		return <div>Loading...</div>;
+	}
 
 	return (
 		<div className={styles.container}>
@@ -112,4 +113,4 @@ const page = () => {
 	);
 };
 
-export default page;
+export default Checkout;

@@ -1,24 +1,24 @@
 "use client";
 
-import React from "react";
 import { useSearchParams } from "next/navigation";
+import React from "react";
 
 import { AdminAttribute } from "@/components/Admin/AdminAttribute/AdminAttribute";
+import { AdminHeader } from "@/components/Admin/AdminHeader/AdminHeader";
+import { Pagination } from "@/components/Pagination/Pagination";
+import { Search } from "@/components/Search/Search";
 
 import {
 	useDeleteAttribute,
 	useGetAttributesWithPagination,
 } from "@/hooks/attributes.hooks";
 
+import { sanitizePagination } from "@/utils/sanitizePagination";
+
 import { Attribute } from "@/types/attribute.interface";
 import { ADMIN_PAGINATION_FALLBACK_PER_PAGE, PAGINATION_FALLBACK_PAGE } from "@/types/constants/paginationFallbackValues";
 
-import { sanitizePagination } from "@/utils/sanitizePagination";
-import { AdminHeader } from "@/components/Admin/AdminHeader/AdminHeader";
-import { Pagination } from "@/components/Pagination/Pagination";
-
 import styles from "./admin-attributes.module.scss"
-import { Search } from "@/components/Search/Search";
 
 const Attributes = () => {
 	const [inputValue, setInputValue] = React.useState<string>("");

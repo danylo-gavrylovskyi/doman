@@ -1,27 +1,29 @@
 "use client";
 
-import React from "react";
 import { useParams, useSearchParams } from "next/navigation";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { RootState } from "@/redux/store";
 import { clearFilters, toggleFilter } from "@/redux/features/filterSlice";
-
-import { useGetSubcategoryBySlug, useGetSubcategoryFilterAttributes } from "@/hooks/subcategories.hooks";
-import { useGetProductsWithPagination } from "@/hooks/products.hooks";
+import { RootState } from "@/redux/store";
 
 import { Filter } from "@/modules/Filter/Filter";
 import { SkeletonPage } from "@/modules/SkeletonPage/SkeletonPage";
 
 import { FilterBlock } from "@/components/FilterBlock/FilterBlock";
 import { Item } from "@/components/Item/Item";
-
-import styles from "@/app/categories/[category]/CategoryPage.module.scss";
 import { Pagination } from "@/components/Pagination/Pagination";
+
+import { useGetProductsWithPagination } from "@/hooks/products.hooks";
+import { useGetSubcategoryBySlug, useGetSubcategoryFilterAttributes } from "@/hooks/subcategories.hooks";
+
 import { sanitizePagination } from "@/utils/sanitizePagination";
+
 import { PAGINATION_FALLBACK_PAGE, PAGINATION_FALLBACK_PER_PAGE } from "@/types/constants/paginationFallbackValues";
 
-const page = () => {
+import styles from "../../categories/[category]/CategoryPage.module.scss";
+
+const SubcategoryPage = () => {
 	const dispatch = useDispatch();
 	const checkedAttributes = useSelector((state: RootState) => state.filter.checkedAttributes);
 
@@ -99,18 +101,13 @@ const page = () => {
 			</div>
 			<footer>
 				<Pagination
-					pageQuantity={
-						perPage
-							? products.count / +perPage < 1
-								? 1
-								: Math.round(products.count / +perPage)
-							: 1
-					}
-					currentPage={page ? +page : 1}
+					elementsCount={products.count}
+					perPage={perPage}
+					currentPage={page}
 				/>
 			</footer>
 		</div>
 	);
 };
 
-export default page;
+export default SubcategoryPage;

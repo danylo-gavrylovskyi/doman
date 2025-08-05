@@ -1,15 +1,15 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useRouter } from "next/navigation";
 
-import { RootState } from "@/redux/store";
 import { logout } from "@/redux/features/authSlice";
+import { RootState } from "@/redux/store";
 
 import styles from "./styles.module.scss";
 
-const layout = ({ children }: { children: React.ReactNode }) => {
+const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
 	const dispatch = useDispatch();
 
 	const { push } = useRouter();
@@ -84,4 +84,4 @@ const layout = ({ children }: { children: React.ReactNode }) => {
 	);
 };
 
-export default layout;
+export default ProfileLayout;

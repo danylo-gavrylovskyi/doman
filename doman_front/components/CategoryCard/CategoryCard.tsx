@@ -1,10 +1,10 @@
-import React from "react";
 import { Paper } from "@mui/material";
+import Link from "next/link";
+import React from "react";
 
 import { Category } from "@/types/category.interface";
 
 import styles from "./CategoryCard.module.scss";
-import Link from "next/link";
 
 interface CategoryCardProps extends Omit<Category, "id"> {
 	imageFolder?: string;

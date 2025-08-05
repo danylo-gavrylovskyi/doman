@@ -1,12 +1,17 @@
-import "./globals.css";
-import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
+import { AuthProvider } from "@/providers/auth-provider/AuthProvider";
+
 import { ReduxProvider } from "@/redux/provider";
-import { FooterProvider, HeaderProvider, ReactQueryProvider } from "@/components/LayoutProvider";
+
 import { Cart } from "@/modules/Cart/Cart";
 import { HamburgerMenu } from "@/modules/HamburgerMenu/HamburgerMenu";
-import { AuthProvider } from "@/providers/auth-provider/AuthProvider";
+
+import { FooterProvider, HeaderProvider, ReactQueryProvider } from "@/components/LayoutProvider";
+
+import type { Metadata } from "next";
+
+import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 

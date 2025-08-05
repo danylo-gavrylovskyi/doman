@@ -1,11 +1,11 @@
 "use client";
 
-import React from "react";
 import { Paper } from "@mui/material";
 import Link from "next/link";
+import React from "react";
 
-import { useAppDispatch } from "@/redux/store";
 import { addToCart } from "@/redux/features/cartSlice";
+import { useAppDispatch } from "@/redux/store";
 
 import { Product } from "@/types/product.interface";
 

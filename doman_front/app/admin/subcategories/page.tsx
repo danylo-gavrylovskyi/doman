@@ -1,9 +1,12 @@
 "use client";
 
-import React from "react";
 import { useSearchParams } from "next/navigation";
+import React from "react";
 
 import { AdminCategory } from "@/components/Admin/AdminCategory/AdminCategory";
+import { AdminHeader } from "@/components/Admin/AdminHeader/AdminHeader";
+import { Pagination } from "@/components/Pagination/Pagination";
+import { Search } from "@/components/Search/Search";
 
 import {
 	useDeleteSubcategory,
@@ -11,15 +14,12 @@ import {
 	useGetSubcategoriesWithPagination,
 } from "@/hooks/subcategories.hooks";
 
+import { sanitizePagination } from "@/utils/sanitizePagination";
+
 import { Subcategory } from "@/types/category.interface";
 import { ADMIN_PAGINATION_FALLBACK_PER_PAGE, PAGINATION_FALLBACK_PAGE } from "@/types/constants/paginationFallbackValues";
 
-import { sanitizePagination } from "@/utils/sanitizePagination";
-
 import styles from "./admin-subcategories.module.scss"
-import { AdminHeader } from "@/components/Admin/AdminHeader/AdminHeader";
-import { Search } from "@/components/Search/Search";
-import { Pagination } from "@/components/Pagination/Pagination";
 
 const Subcategories = () => {
 	const [inputValue, setInputValue] = React.useState<string>("");

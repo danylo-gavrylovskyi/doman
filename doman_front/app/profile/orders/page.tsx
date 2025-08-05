@@ -1,24 +1,26 @@
 "use client";
 
-import React from "react";
 import { useSearchParams } from "next/navigation";
+import React from "react";
 import { useSelector } from "react-redux";
+
+import { RootState } from "@/redux/store";
+
+import { ExtendedOrder } from "@/components/Order/ExtendedOrder";
+import { Order } from "@/components/Order/Order";
+import { Pagination } from "@/components/Pagination/Pagination";
 
 import {
 	useGetOrdersByPhoneNumberPagination,
 } from "@/hooks/orders.hook";
 
-import { RootState } from "@/redux/store";
-
-import { Order } from "@/components/Order/Order";
-import { Pagination } from "@/components/Pagination/Pagination";
-import { ExtendedOrder } from "@/components/Order/ExtendedOrder";
-
-import styles from "./orders.module.scss";
 import { sanitizePagination } from "@/utils/sanitizePagination";
+
 import { PAGINATION_FALLBACK_PAGE, PAGINATION_FALLBACK_PER_PAGE } from "@/types/constants/paginationFallbackValues";
 
-const page = () => {
+import styles from "./orders.module.scss";
+
+const MyOrdersPage = () => {
 	const queryParams = useSearchParams();
 	const perPage = sanitizePagination(queryParams.get("perPage"), PAGINATION_FALLBACK_PER_PAGE)
 	const page = sanitizePagination(queryParams.get("page"), PAGINATION_FALLBACK_PAGE);
@@ -97,4 +99,4 @@ const page = () => {
 	);
 };
 
-export default page;
+export default MyOrdersPage;

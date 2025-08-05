@@ -1,11 +1,12 @@
 'use client'
 
+import { TextField } from '@mui/material';
+import { useRouter } from 'next/navigation';
 import React from 'react'
 
-import styles from "./add-attribute.module.scss"
-import { useRouter } from 'next/navigation';
 import { useAddAttribute } from '@/hooks/attributes.hooks';
-import { TextField } from '@mui/material';
+
+import styles from "./add-attribute.module.scss"
 
 const AddAttribute = () => {
     const { push } = useRouter();

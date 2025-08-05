@@ -1,12 +1,13 @@
 'use client'
 
+import { TextField } from '@mui/material';
+import { useRouter } from 'next/navigation';
 import React from 'react'
+import slugify from 'slugify';
+
+import { useAddCategory } from '@/hooks/categories.hooks';
 
 import styles from "./add-category.module.scss"
-import { useRouter } from 'next/navigation';
-import { TextField } from '@mui/material';
-import { useAddCategory } from '@/hooks/categories.hooks';
-import slugify from 'slugify';
 
 const AddCategory = () => {
     const { push } = useRouter();

@@ -1,6 +1,6 @@
-import React from "react";
 import { Button, Paper } from "@mui/material";
 import Link from "next/link";
+import React from "react";
 
 import { useDeleteProduct } from "@/hooks/products.hooks";
 

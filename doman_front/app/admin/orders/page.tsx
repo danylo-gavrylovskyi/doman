@@ -1,17 +1,17 @@
 "use client";
 
-import React from "react";
 import { useSearchParams } from "next/navigation";
+import React from "react";
+
+import { ExtendedOrder } from "@/components/Order/ExtendedOrder";
+import { Order } from "@/components/Order/Order";
+import { Pagination } from "@/components/Pagination/Pagination";
 
 import { useGetOrdersWithPagination } from "@/hooks/orders.hook";
 
-import { Order } from "@/components/Order/Order";
-import { Pagination } from "@/components/Pagination/Pagination";
-import { ExtendedOrder } from "@/components/Order/ExtendedOrder";
+import { sanitizePagination } from "@/utils/sanitizePagination";
 
 import { ADMIN_PAGINATION_FALLBACK_PER_PAGE, PAGINATION_FALLBACK_PAGE } from "@/types/constants/paginationFallbackValues";
-
-import { sanitizePagination } from "@/utils/sanitizePagination";
 
 import styles from "./adminOrders.module.scss";
 
@@ -82,14 +82,9 @@ const AdminOrders = () => {
 			<footer>
 				{orders && orders?.count > 10 && (
 					<Pagination
-						pageQuantity={
-							perPage && orders
-								? orders.count / +perPage < 1
-									? 1
-									: Math.ceil(orders.count / +perPage)
-								: 1
-						}
-						currentPage={page ? +page : 1}
+						elementsCount={orders.count}
+						perPage={perPage}
+						currentPage={page}
 					/>
 				)}
 			</footer>

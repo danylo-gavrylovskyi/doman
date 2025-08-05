@@ -1,9 +1,9 @@
-import React from "react";
 import { Checkbox, FormControlLabel, FormGroup, Paper } from "@mui/material";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { RootState } from "@/redux/store";
 import { toggleAttribute } from "@/redux/features/filterSlice";
+import { RootState } from "@/redux/store";
 
 import styles from "./FilterBlock.module.scss";
 

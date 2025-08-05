@@ -1,8 +1,7 @@
 import React from "react";
 
-import { ExtendedOrderProps } from "./orderProps.interface";
-
 import styles from "./order.module.scss";
+import { ExtendedOrderProps } from "./orderProps.interface";
 
 export const ExtendedOrder = ({
 	customer,

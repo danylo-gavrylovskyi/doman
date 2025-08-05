@@ -1,6 +1,6 @@
+import Link from "next/link";
 import React from "react";
 import { useDispatch } from "react-redux";
-import Link from "next/link";
 
 import { addToCart, removeFromCart, removeOneUnit, changeCartStatus } from "@/redux/features/cartSlice";
 

@@ -4,7 +4,7 @@ import { useSearchParams } from "next/navigation";
 import React from "react";
 
 import { AdminHeader } from "@/components/Admin/AdminHeader/AdminHeader";
-import { AdminProduct } from "@/components/Admin/AdminProduct";
+import { AdminProduct } from "@/components/Admin/AdminProduct/AdminProduct";
 import { Pagination } from "@/components/Pagination/Pagination";
 import { Search } from "@/components/Search/Search";
 

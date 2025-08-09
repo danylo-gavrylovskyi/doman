@@ -1,6 +1,7 @@
 "use client";
 
 import { Paper } from "@mui/material";
+import Image from "next/image";
 import { useParams } from "next/navigation";
 import React from "react";
 import { useDispatch } from "react-redux";
@@ -23,9 +24,20 @@ const ProductPage = () => {
 		<div className={styles.container}>
 			<div className={styles.wrapper}>
 				<Paper elevation={16} className={styles.paper}>
-					<img
+					<Image
 						src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/productsImages/${product.image}`}
-						alt={product.slug}></img>
+						alt={product.slug}
+						width={500}
+						height={400}
+						sizes="(max-width: 768px) 100vw, 500px"
+						style={{
+							width: '100%',
+							height: 'auto',
+							maxHeight: '400px',
+							objectFit: 'contain',
+							borderRadius: '10px'
+						}}
+					/>
 				</Paper>
 				<div className={styles.details}>
 					<p className={styles.title}>{product.title}</p>

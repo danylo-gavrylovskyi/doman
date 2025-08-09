@@ -1,83 +1,86 @@
 @import '../../app/variables.scss';
 
-.imgBg{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 30px;
-    border-radius: 10px;
-    cursor: pointer;
+.imgBg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  border-radius: 10px;
+  cursor: pointer;
 }
 
-.buyBtnAndPrice{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 18px;
-    font-weight: 600px;
-    margin: 20px;
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
 }
 
-.title{
-    a{
-        color: black;
-        &:hover{
-            color: $contrast-color;
-        }
+.buyBtnAndPrice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 20px;
+}
+
+.title {
+  a {
+    color: black;
+    &:hover {
+      color: $contrast-color;
     }
-    font-size: 18px;
-    font-weight: 600px;
-    margin: 0 20px;
-    transition: color .2s;
-    cursor: pointer;
+  }
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 20px;
+  transition: color 0.2s;
+  cursor: pointer;
 }
 
-.addToCart{
-    padding: 12px 22px;
-    border-radius: 50px;
-    border: 1px solid $base-color;
-    background-color: #fff;
+.addToCart {
+  padding: 12px 22px;
+  border-radius: 50px;
+  border: 1px solid $base-color;
+  background-color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  &:hover {
+    border-color: $contrast-color;
+    background-color: $contrast-color;
+    color: #fff;
+  }
+}
+
+@media (max-width: 500px) {
+  .addToCart {
+    padding: 8px 12px;
+  }
+  .title {
     font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    &:hover{
-        border-color: $contrast-color;
-        background-color: $contrast-color;
-        color: #fff;
-    }
+    margin-bottom: 20px;
+  }
+  .imgBg {
+    padding: 0;
+  }
+  .buyBtnAndPrice {
+    font-size: 16px;
+    margin: 10px;
+  }
 }
 
-@media(max-width: 500px){
-    .addToCart{
-        padding: 8px 12px;
-    }
-    .title{
-        font-size: 14px;
-        margin-bottom: 20px;
-    }
-    .imgBg{
-        padding: 0;
-        img{
-            margin: 10px;
-        }
-    }
-    .buyBtnAndPrice{
-        font-size: 16px;
-        margin: 10px;
-    }
-}
-
-.cardBackgroundTint{
-    display: block;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background: rgba(white ,0.7)
+.cardBackgroundTint {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(white, 0.7);
 }
 
 .notInStockText {
-    font-size: 14px;
+  font-size: 14px;
 }

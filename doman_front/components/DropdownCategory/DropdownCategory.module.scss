@@ -1,18 +1,36 @@
 @import '../../app/variables.scss';
 
-.container{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    background-color: #f5f6f6;
-    color: black;
-    cursor: pointer;
-    transition: color .2s;
-    img{
-        margin: 2% 0;
-    }
-    &:hover{
-        color: $contrast-color;
-    }
+.linkWrapper {
+  text-decoration: none;
+  color: inherit;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: #f5f6f6;
+  color: black;
+  cursor: pointer;
+  transition: color 0.2s;
+
+  p {
+    margin-left: 8px;
+  }
+
+  &:hover {
+    color: $contrast-color;
+  }
+}
+
+.imageWrapper {
+  position: relative;
+  width: 20%;
+  aspect-ratio: 1 / 1;
+  margin-left: 2%;
+
+  @media (max-width: 768px) {
+    width: 40%;
+  }
 }

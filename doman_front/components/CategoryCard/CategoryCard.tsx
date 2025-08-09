@@ -1,4 +1,5 @@
 import { Paper } from "@mui/material";
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
@@ -20,12 +21,19 @@ export const CategoryCard = ({
 		<Link
 			href={
 				imageFolder !== "categoriesImages" ? `/subcategories/${slug}` : `/categories/${slug}`
-			}>
+			}
+			className={styles.linkWrapper}
+		>
 			<Paper elevation={3} className={styles.container}>
-				<img
-					width={"20%"}
-					alt="category"
-					src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/${imageFolder}/${image}`}></img>
+				<div className={styles.imageWrapper}>
+					<Image
+						src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/${imageFolder}/${image}`}
+						alt={title}
+						fill
+						sizes="(max-width: 768px) 40vw, (max-width: 1200px) 20vw, 10vw"
+						style={{ objectFit: "contain" }}
+					/>
+				</div>
 				<span>{title}</span>
 			</Paper>
 		</Link>

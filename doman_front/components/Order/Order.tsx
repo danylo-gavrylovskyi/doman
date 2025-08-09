@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 
 import styles from "./order.module.scss";
@@ -14,11 +15,15 @@ export const Order = ({ orderId, totalPrice, createdAt, orderProducts, height }:
 
 			<div className={styles.orderedProductsImages}>
 				{orderProducts.map((orderProduct) => (
-					<img
-						key={orderProduct.id}
-						width="100%"
-						src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/productsImages/${orderProduct.product.image}`}
-						alt={orderProduct.product.slug}></img>
+					<div key={orderProduct.id} className={styles.imageWrapper}>
+						<Image
+							src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/productsImages/${orderProduct.product.image}`}
+							alt={orderProduct.product.slug}
+							fill
+							sizes="(max-width: 768px) 15vw, 5vw"
+							style={{ objectFit: "contain" }}
+						/>
+					</div>
 				))}
 			</div>
 

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useParams, useSearchParams } from "next/navigation";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -39,7 +40,7 @@ const Categories = () => {
 
 	React.useEffect(() => {
 		dispatch(clearFilters());
-	}, [categorySlug])
+	}, [categorySlug, dispatch])
 
 	const { data: products } = useGetProductsWithPagination({
 		page,
@@ -57,10 +58,17 @@ const Categories = () => {
 	return (
 		<div className={styles.container}>
 			<p className={styles.title}>
-				<img
-					width={"5%"}
-					alt="category"
+				<Image
+					alt={category.slug}
 					src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/categoriesImages/${category.image}`}
+					width={50}
+					height={50}
+					sizes="(max-width: 690px) 10vw, 50px"
+					style={{
+						width: "auto",
+						height: "auto",
+						maxWidth: "10%",
+					}}
 				/>
 				{category.title}
 			</p>

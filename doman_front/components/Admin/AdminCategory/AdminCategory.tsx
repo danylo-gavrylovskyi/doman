@@ -1,5 +1,6 @@
 import { Button, Paper } from "@mui/material";
 import { UseMutateFunction } from "@tanstack/react-query";
+import Image from "next/image";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
@@ -57,11 +58,15 @@ export const AdminCategory = ({
 
 	return (
 		<Paper elevation={3} className={styles.container}>
-			<img
-				style={isEditing ? { display: "none" } : { display: "block" }}
-				width={"8%"}
-				src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/${subcategoryParent ? "subcategoriesImages" : "categoriesImages"
-					}/${image}`}></img>
+			{!isEditing && (
+				<Image
+					src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/${subcategoryParent ? "subcategoriesImages" : "categoriesImages"}/${image}`}
+					alt={title}
+					width={80}
+					height={80}
+					style={{ objectFit: "contain" }}
+				/>
+			)}
 
 			<form
 				style={isEditing ? { display: "flex" } : {}}

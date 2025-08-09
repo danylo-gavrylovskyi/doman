@@ -1,6 +1,7 @@
 "use client";
 
 import { Paper } from "@mui/material";
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
@@ -15,40 +16,51 @@ export const Item = (product: Product) => {
 	const dispatch = useAppDispatch();
 
 	return (
-		<>
-			<Paper
-				elevation={3}
-				style={{ display: "flex", flexDirection: "column", position: "relative" }}>
-				<Link href={`/products/${product.slug}`}>
-					<section className={styles.imgBg}>
-						<img
-							width="100%"
+		<Paper
+			elevation={3}
+			style={{ display: "flex", flexDirection: "column", position: "relative" }}>
+			<Link href={`/products/${product.slug}`}>
+				<section className={styles.imgBg}>
+					<div className={styles.imageWrapper}>
+						<Image
 							src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/productsImages/${product.image}`}
-							alt="item"></img>
-					</section>
-				</Link>
-				<section>
-					<div className={styles.title}>
-						<Link href={`/products/${product.slug}`}>
-							<span>{product.title}</span>
-						</Link>
+							alt={product.title}
+							fill
+							sizes="(max-width: 500px) 100vw, (max-width: 1200px) 50vw, 33vw"
+							style={{ objectFit: "contain" }}
+						/>
 					</div>
-					<div className={styles.buyBtnAndPrice}>
-						<button onClick={() => dispatch(addToCart(product))} className={styles.addToCart}>
-							Додати
-						</button>
-						<span>{product.price}грн.</span>
-					</div>
-
-					{product.quantity <= 0 && <p className={styles.notInStockText}>Немає в наявності</p>}
 				</section>
+			</Link>
+
+			<section>
+				<div className={styles.title}>
+					<Link href={`/products/${product.slug}`}>
+						<span>{product.title}</span>
+					</Link>
+				</div>
+
+				<div className={styles.buyBtnAndPrice}>
+					<button
+						onClick={() => dispatch(addToCart(product))}
+						className={styles.addToCart}>
+						Додати
+					</button>
+					<span>{product.price}грн.</span>
+				</div>
 
 				{product.quantity <= 0 && (
-					<Link href={`/products/${product.slug}`}>
-						<div className={styles.cardBackgroundTint} data-testid="tint-overlay"></div>
-					</Link>
+					<p className={styles.notInStockText}>Немає в наявності</p>
 				)}
-			</Paper>
-		</>
+			</section>
+
+			{product.quantity <= 0 && (
+				<Link href={`/products/${product.slug}`}>
+					<div
+						className={styles.cardBackgroundTint}
+						data-testid="tint-overlay"></div>
+				</Link>
+			)}
+		</Paper>
 	);
 };

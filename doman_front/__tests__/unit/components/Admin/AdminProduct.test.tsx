@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 
-import { AdminProduct } from "@/components/Admin/AdminProduct";
+import { AdminProduct } from "@/components/Admin/AdminProduct/AdminProduct";
 
 import { useDeleteProduct } from "@/hooks/products.hooks";
 import { useGetSubcategories } from "@/hooks/subcategories.hooks";

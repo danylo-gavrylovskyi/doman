@@ -1,6 +1,7 @@
 "use client";
 
 import { Paper } from "@mui/material";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
@@ -25,7 +26,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
 			<aside className={styles.menu}>
 				<Link href="/">
 					<div className={styles.logo}>
-						<img width={"150px"} src="/logo.png" />
+						<Image alt="doman logo" width={150} height={40} src="/logo.png" />
 					</div>
 				</Link>
 				<div className={styles.sections}>

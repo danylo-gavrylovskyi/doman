@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 
 import styles from "./order.module.scss";
@@ -40,7 +41,7 @@ export const ExtendedOrder = ({
 					<span>{customer.email}</span>
 				</div>
 
-				<div>
+				<div className={styles.extendedOrderSummary}>
 					{orderProducts.map((orderProduct) => {
 						const { product } = orderProduct;
 						return (
@@ -48,10 +49,17 @@ export const ExtendedOrder = ({
 								key={product.id}
 								className={`${styles.flexRowAlignCenter} ${styles.orderProduct}`}>
 								<div style={{ display: "flex", width: "50%", alignItems: "center" }}>
-									<img
-										width="15%"
-										src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/productsImages/${product.image}`}
-										alt={product.slug}></img>
+									<div className={styles.extendedOrderImageWrapper}>
+										<Image
+											src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/productsImages/${product.image}`}
+											alt={product.slug}
+											fill
+											sizes="(max-width: 768px) 20vw, 15vw"
+											style={{ objectFit: "cover" }}
+										/>
+									</div>
+
+
 									<div style={{ marginLeft: "5%" }}>{product.title}</div>
 								</div>
 								<div>

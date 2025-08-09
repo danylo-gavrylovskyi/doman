@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { useDispatch } from "react-redux";
@@ -14,10 +15,16 @@ export const CartProductCard = (props: CartProduct) => {
 
 	return (
 		<div className={styles.container}>
-			<img
-				width={"25%"}
-				src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/productsImages/${image}`}
-				alt="product"></img>
+			<div className={styles.imageWrapper}>
+				<Image
+					src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/productsImages/${image}`}
+					alt={title}
+					fill
+					sizes="(max-width: 768px) 30vw, (max-width: 1200px) 20vw, 15vw"
+					style={{ objectFit: "contain" }}
+				/>
+			</div>
+
 			<div className={styles.infoAndControls}>
 				<div className={styles.titleAndClearBtns}>
 					<Link href={`/products/${slug}`} onClick={() => dispatch(changeCartStatus())}>

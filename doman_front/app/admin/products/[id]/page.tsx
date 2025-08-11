@@ -148,7 +148,7 @@ const UpdateProductPage = () => {
 						<section key={attribute.id}>
 							<TextField
 								label="Атрибут"
-								defaultValue={attribute?.title}
+								defaultValue={attribute.attribute?.title}
 								InputProps={{
 									readOnly: true,
 								}}

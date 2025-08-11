@@ -19,6 +19,7 @@ import { Product } from "./product.entity";
 import { AttributeIdValuePair } from "types/attribute-value-pair.interface";
 
 import { deleteImage } from "utils/deleteImage";
+import { Attribute } from "src/attributes/attribute.model";
 
 @Injectable()
 export class ProductsService {
@@ -86,7 +87,13 @@ export class ProductsService {
 	async getById(id: number): Promise<Product> {
 		const product = await this.productsRepository.findOne({
 			where: { id },
-			include: { all: true }
+			include: [
+				Subcategory,
+				{
+					model: ProductAttribute,
+					include: [Attribute]
+				}
+			]
 		})
 
 		if (!product) {
@@ -99,7 +106,13 @@ export class ProductsService {
 	async getBySlug(slug: string): Promise<Product> {
 		const product = await this.productsRepository.findOne({
 			where: { slug },
-			include: { all: true }
+			include: [
+				Subcategory,
+				{
+					model: ProductAttribute,
+					include: [Attribute]
+				}
+			]
 		});
 
 		if (!product) {

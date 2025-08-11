@@ -2,21 +2,18 @@
 
 .container {
   display: flex;
-  justify-content: center;
-  align-items: center;
   flex-direction: column;
-  height: 100%;
+  align-items: center;
   width: 100%;
   margin-top: 1%;
 
   footer {
-    margin-top: 5%;
+    margin-top: 10%;
     width: 100%;
   }
 }
 
-.title,
-.subcategories {
+.title {
   width: 90%;
   max-width: 1280px;
   font-size: 24px;
@@ -24,11 +21,19 @@
   display: flex;
   align-items: center;
   gap: 1%;
+
+  img {
+    height: auto;
+    max-width: 50px;
+  }
 }
 
 .subcategories {
+  width: 90%;
+  max-width: 1280px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 250px));
+  column-gap: 1%;
   row-gap: 5%;
 }
 
@@ -41,7 +46,7 @@
   max-width: 1280px;
   display: flex;
   flex-direction: row;
-  margin-top: 4%;
+  margin-top: 3%;
 }
 
 .filter {
@@ -55,60 +60,86 @@
   display: none;
   width: 90%;
   max-width: 1280px;
+
   button {
     color: white;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 20%;
     font-size: 18px;
-    padding: 1% 0;
+    padding: 0.8em 1.2em;
     gap: 5%;
     background-color: $contrast-color;
     border: 1px solid $contrast-color;
     border-radius: 5px;
+    width: 120px;
   }
 }
 
 .products {
+  width: 100%;
   display: grid;
-  grid-template-columns: repeat(4, minmax(250px, 1fr));
-  gap: 1%;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
 }
 
 @media (max-width: 1410px) {
   .products {
-    grid-template-columns: repeat(3, minmax(250px, 1fr));
+    grid-template-columns: repeat(3, minmax(200px, 1fr));
   }
 }
 
 @media (max-width: 960px) {
   .filterBtn {
     display: block;
+
     button {
-      width: 15%;
+      font-size: 16px;
+      padding: 0.6em 1em;
     }
   }
+
   .filter {
     display: none;
+  }
+
+  .products {
+    grid-template-columns: repeat(3, minmax(160px, 1fr));
   }
 }
 
 @media (max-width: 690px) {
-  .products,
-  .subcategories {
-    grid-template-columns: repeat(2, minmax(250px, 1fr));
+  .products {
+    grid-template-columns: repeat(2, minmax(140px, 1fr));
   }
+
+  .filterProd,
   .filterBtn {
-    margin-top: 5%;
-    display: block;
-    button {
-      width: 30%;
+    margin-top: 10%;
+  }
+
+  .filterBtn button {
+    font-size: 15px;
+    padding: 0.5em 0.8em;
+    min-width: 100px;
+    max-width: 160px;
+  }
+
+  .title {
+    font-size: 20px;
+    img {
+      max-width: 35px;
     }
   }
-  .title {
-    img {
-      width: 10%;
-    }
+}
+
+@media (max-width: 320px) {
+  .products {
+    grid-template-columns: 1fr;
+  }
+
+  .filterProd,
+  .filterBtn {
+    margin-top: 15%;
   }
 }

@@ -9,15 +9,14 @@ import { toggleHamburgerMenu } from "@/redux/features/headerSlice";
 import styles from "./HamburgerMenu.module.scss";
 import { fetchCategories } from "@/redux/features/admin/adminCategoriesSlice";
 import { CategoryCard } from "@/components/CategoryCard/CategoryCard";
+import { useGetCategories } from "@/hooks/categories.hooks";
 
 export const HamburgerMenu = () => {
 	const dispatch = useAppDispatch();
 	const isOpened = useSelector((state: RootState) => state.header.isHamburgerMenuOpened);
-	const categories = useSelector((state: RootState) => state.adminCategories.categories);
 
-	React.useEffect(() => {
-		dispatch(fetchCategories());
-	}, []);
+	const { data: categories } = useGetCategories();
+
 	return (
 		<>
 			<div
@@ -28,14 +27,21 @@ export const HamburgerMenu = () => {
 					<span>Каталог товарів</span>
 				</header>
 				<main>
-					{categories.map((category) => (
-						<CategoryCard
-							key={category.id}
-							slug={category.slug}
-							title={category.title}
-							image={category.image}
-						/>
-					))}
+					{
+						categories ?
+							categories.map((category) => (
+								<CategoryCard
+									key={category.id}
+									slug={category.slug}
+									title={category.title}
+									image={category.image}
+								/>
+							))
+							:
+							(
+								<div>Категорій наразі немає</div>
+							)
+					}
 				</main>
 			</div>
 		</>

@@ -24,6 +24,7 @@ import { DropdownCategory } from "@/components/DropdownCategory/DropdownCategory
 import { Search } from "@/components/Search/Search";
 
 import styles from "./Header.module.scss";
+import { useGetCategories } from "@/hooks/categories.hooks";
 
 export const Header: React.FC = () => {
 	const dispatch = useDispatch();
@@ -37,9 +38,7 @@ export const Header: React.FC = () => {
 	const isCategoriesClicked: boolean = useSelector(
 		(state: RootState) => state.home.isCategoriesClicked
 	);
-	const categories: Category[] = useSelector(
-		(state: RootState) => state.adminCategories.categories
-	);
+	const { data: categories } = useGetCategories();
 	const currentUser = useSelector((state: RootState) => state.auth.currentUser);
 
 	const { push } = useRouter();
@@ -86,14 +85,14 @@ export const Header: React.FC = () => {
 						style={!isCategoriesClicked ? { visibility: "hidden", opacity: "0" } : {}}
 						className={styles.categoriesDropdown}>
 						{
-							categories.length === 0 ?
-								(
-									<div>Категорій наразі немає</div>
-								)
-								:
+							categories ?
 								categories.map((category: Category) => (
 									<DropdownCategory key={category.id} {...category} />
 								))
+								:
+								(
+									<div>Категорій наразі немає</div>
+								)
 						}
 					</Paper>
 				</section>

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -16,7 +17,7 @@ export const AutoplaySlider = ({ banners }: { banners: string[] }) => {
 	const dispatch = useDispatch();
 
 	React.useEffect(() => {
-		const autoplaySlider = setInterval(() => dispatch(nextBanner(banners.length)), 6000);
+		const autoplaySlider = setInterval(() => dispatch(nextBanner(banners.length)), 7000);
 		return () => clearInterval(autoplaySlider);
 	}, []);
 
@@ -26,10 +27,19 @@ export const AutoplaySlider = ({ banners }: { banners: string[] }) => {
 
 	return (
 		<div className={styles.sliderImgContainer}>
-			<img
-				width={"100%"}
+			<Image
+				src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/banners/${banners[currentBanner]}`}
 				alt="banner"
-				src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/banners/${banners[currentBanner]}`}></img>
+				width={1280} // max width of your container
+				height={400} // approximate aspect ratio height
+				style={{
+					width: "100%",
+					height: "auto",
+					objectFit: "contain" // ensures the whole banner is visible
+				}}
+				priority
+			/>
+
 			<svg
 				onClick={() => dispatch(previousBanner())}
 				className={styles.leftArrow}
@@ -70,6 +80,7 @@ export const AutoplaySlider = ({ banners }: { banners: string[] }) => {
 					strokeLinejoin="round"
 				/>
 			</svg>
+
 			<div className={styles.controls}>
 				{banners.map((banner: string, index: number) => (
 					<button

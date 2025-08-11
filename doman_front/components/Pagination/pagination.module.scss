@@ -1,45 +1,78 @@
-@import "../../app/variables.scss";
+@import '../../app/variables.scss';
 
 .container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+
+  button {
     display: flex;
-    flex-direction: row;
+    align-items: center;
     justify-content: center;
-    button {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 3%;
-        padding: 10px;
-        border-radius: 50%;
-        background-color: transparent;
-        border: 1px solid transparent;
-        font-weight: 600;
-        font-size: 16px;
-        padding: 0;
-        transition: all 0.2s;
-        cursor: pointer;
-        &:not(:last-child) {
-            margin-right: 1%;
-        }
-        &:hover {
-            color: white;
-            background-color: $contrast-color;
-            border: 1px solid $contrast-color;
-        }
-        svg:hover {
-            path {
-                stroke: white;
-            }
-        }
+    min-width: 36px;
+    height: 36px;
+    padding: 0;
+    border-radius: 50%;
+    background-color: transparent;
+    border: 1px solid transparent;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.2s;
+    cursor: pointer;
+
+    &:hover {
+      color: white;
+      background-color: $contrast-color;
+      border: 1px solid $contrast-color;
     }
-    .activePage {
-        color: white;
-        background-color: $contrast-color;
-        border: 1px solid $contrast-color;
+
+    svg {
+      width: 18px;
+      height: 18px;
+
+      path {
+        transition: stroke 0.2s;
+      }
     }
+
+    svg:hover path {
+      stroke: white;
+    }
+  }
+
+  .activePage {
+    color: white;
+    background-color: $contrast-color;
+    border: 1px solid $contrast-color;
+  }
 }
 
 .disabledButton {
-    opacity: 0.5;
-    cursor: not-allowed;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .container {
+    gap: 6px;
+  }
+
+  .container button {
+    min-width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    gap: 4px;
+  }
+
+  .container button {
+    min-width: 28px;
+    height: 28px;
+    font-size: 13px;
+  }
 }

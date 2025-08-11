@@ -3,6 +3,11 @@ export interface Attribute {
 	title: string;
 	attributeId: number;
 	attributeValue: string;
+
+	attribute?: {
+		id: number,
+		title: string
+	}
 }
 
 export type AttributeIdValuePair = [attributeId: number, value: string];

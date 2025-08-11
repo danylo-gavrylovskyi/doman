@@ -23,6 +23,7 @@ const ProductPage = () => {
 	return (
 		<div className={styles.container}>
 			<div className={styles.wrapper}>
+				{/* Image */}
 				<Paper elevation={16} className={styles.paper}>
 					<Image
 						src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/productsImages/${product.image}`}
@@ -39,13 +40,35 @@ const ProductPage = () => {
 						}}
 					/>
 				</Paper>
+
+				{/* Main Details */}
 				<div className={styles.details}>
 					<p className={styles.title}>{product.title}</p>
-					<p className={styles.price}>{product.price}грн.</p>
+					<p className={styles.price}>{product.price} грн.</p>
+					<p className={`${styles.stock} ${product.quantity <= 0 && styles.out}`}>
+						{product.quantity > 0 ? `В наявності: ${product.quantity} шт.` : 'Немає в наявності'}
+					</p>
 					<p className={styles.descr}>{product.description}</p>
-					<button onClick={() => dispatch(addToCart(product))} className={styles.addToCart}>
+
+					<button
+						onClick={() => dispatch(addToCart(product))}
+						className={styles.addToCart}
+						disabled={product.quantity === 0}
+					>
 						Додати
 					</button>
+
+					{/* Extra details */}
+					<div className={styles.extraDetails}>
+						<h3>Характеристики</h3>
+						<ul>
+							{product.attributes?.map((productAttr) => (
+								<li key={productAttr.id}>
+									<strong>{productAttr.attribute?.title}:</strong> {productAttr.attributeValue}
+								</li>
+							))}
+						</ul>
+					</div>
 				</div>
 			</div>
 		</div>

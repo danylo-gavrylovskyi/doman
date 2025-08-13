@@ -87,14 +87,6 @@ export class CategoriesController {
 		return subcategories;
 	}
 
-	@ApiOperation({ summary: "Deleting category" })
-	@ApiResponse({ type: Number })
-	@Delete("/:id")
-	async delete(@Param("id") categoryId: number) {
-		await this.categoriesService.deleteCategory(categoryId);
-		return categoryId;
-	}
-
 	@ApiOperation({ summary: "Edit category" })
 	@ApiResponse({ type: Category })
 	@Patch("/:id")
@@ -104,14 +96,25 @@ export class CategoriesController {
 		@Body() dto: { title: string },
 		@UploadedFile() file?: Express.Multer.File
 	) {
+		let updatedCategory: Category;
+
 		if (file) {
-			const updatedCategory = await this.categoriesService.editCategory(categoryId, {
+			updatedCategory = await this.categoriesService.editCategory(categoryId, {
 				...dto,
 				image: file.filename,
 			});
 			return updatedCategory;
 		}
-		const updatedCategory = await this.categoriesService.editCategory(categoryId, { ...dto });
+		updatedCategory = await this.categoriesService.editCategory(categoryId, { ...dto });
+
 		return updatedCategory;
+	}
+
+	@ApiOperation({ summary: "Deleting category" })
+	@ApiResponse({ type: Number })
+	@Delete("/:id")
+	async delete(@Param("id") categoryId: number) {
+		await this.categoriesService.deleteCategory(categoryId);
+		return categoryId;
 	}
 }

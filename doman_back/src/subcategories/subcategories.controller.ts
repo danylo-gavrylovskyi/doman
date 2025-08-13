@@ -3,9 +3,6 @@ import {
 	Controller,
 	Delete,
 	Get,
-	HttpException,
-	HttpStatus,
-	InternalServerErrorException,
 	NotFoundException,
 	Param,
 	Patch,
@@ -36,46 +33,26 @@ export class SubcategoriesController {
 	@ApiResponse({ type: [Subcategory] })
 	@Get()
 	async getAll() {
-		try {
-			const subcategories = await this.subcategoriesService.getAllSubcategories();
-			return subcategories;
-		} catch (error) {
-			throw new HttpException(
-				"Error while fetching subcategories",
-				HttpStatus.INTERNAL_SERVER_ERROR
-			);
-		}
+		const subcategories = await this.subcategoriesService.getAllSubcategories();
+		return subcategories;
 	}
 
 	@ApiOperation({ description: "Getting all subcategories with pagination" })
 	@ApiResponse({ type: PaginatedEntityResponseDto<Subcategory> })
 	@Get("/pagination")
 	async getAllWithPagination(@Query() queryParams: PaginatedEntityRequestDto) {
-		try {
-			const subcategories = await this.subcategoriesService.getSubcategoriesWithPagination(
-				queryParams
-			);
-			return subcategories;
-		} catch (error) {
-			throw new InternalServerErrorException(
-				"Error while fetching all subcategories with pagination"
-			);
-		}
+		const subcategories = await this.subcategoriesService.getSubcategoriesWithPagination(
+			queryParams
+		);
+		return subcategories;
 	}
 
 	@ApiOperation({ summary: "Getting subcategory by slug" })
 	@ApiResponse({ type: Subcategory })
 	@Get("/slug/:slug")
 	async getBySlug(@Param("slug") slug: string) {
-		try {
-			const subcategory = await this.subcategoriesService.getSubcategoryBySlug(slug);
-			if (!subcategory) {
-				throw new NotFoundException("Subcategory not found");
-			}
-			return subcategory;
-		} catch (error) {
-			throw new InternalServerErrorException("Error while fetching subcategory by slug");
-		}
+		const subcategory = await this.subcategoriesService.getSubcategoryBySlug(slug);
+		return subcategory;
 	}
 
 	@ApiOperation({ summary: "Getting filter attributes for subcategory" })
@@ -94,55 +71,44 @@ export class SubcategoriesController {
 	@Post()
 	@UseInterceptors(FileInterceptor("image", imageStorage("subcategoriesImages")))
 	async add(@Body() dto: CreateSubcategoryDto, @UploadedFile() file: Express.Multer.File) {
-		try {
-			const category = await this.subcategoriesService.addSubcategory({
-				...dto,
-				image: file.filename,
-			});
-			return category;
-		} catch (error) {
-			throw new HttpException(
-				"Error while adding subcategory",
-				HttpStatus.INTERNAL_SERVER_ERROR
-			);
-		}
+		const subcategory = await this.subcategoriesService.addSubcategory({
+			...dto,
+			image: file.filename,
+		});
+		return subcategory;
 	}
 
-	@ApiOperation({ summary: "Deleting category" })
-	@ApiResponse({ type: Number })
-	@Delete("/:id")
-	async delete(@Param("id") categoryId: number) {
-		try {
-			await this.subcategoriesService.deleteCategory(categoryId);
-			return categoryId;
-		} catch (error) {
-			throw new HttpException("Error while deleting category", HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-
-	@ApiOperation({ summary: "Edit category" })
+	@ApiOperation({ summary: "Edit subcategory" })
 	@ApiResponse({ type: Subcategory })
 	@Patch("/:id")
 	@UseInterceptors(FileInterceptor("image", imageStorage("subcategoriesImages")))
 	async edit(
-		@Param("id") categoryId: number,
+		@Param("id") subcategoryId: number,
 		@Body() dto: { title: string },
 		@UploadedFile() file?: Express.Multer.File
 	) {
-		try {
-			if (file) {
-				const updatedCategory = await this.subcategoriesService.editCategory(categoryId, {
-					...dto,
-					image: file.filename,
-				});
-				return updatedCategory;
-			}
-			const updatedCategory = await this.subcategoriesService.editCategory(categoryId, {
+		let updatedSubcategory: Subcategory;
+
+		if (file) {
+			updatedSubcategory = await this.subcategoriesService.editSubcategory(subcategoryId, {
 				...dto,
+				image: file.filename,
 			});
-			return updatedCategory;
-		} catch (error) {
-			throw new HttpException("Error while editing category", HttpStatus.INTERNAL_SERVER_ERROR);
+			return updatedSubcategory;
 		}
+
+		updatedSubcategory = await this.subcategoriesService.editSubcategory(subcategoryId, {
+			...dto,
+		});
+
+		return updatedSubcategory;
+	}
+
+	@ApiOperation({ summary: "Deleting subcategory" })
+	@ApiResponse({ type: Number })
+	@Delete("/:id")
+	async delete(@Param("id") subcategoryId: number) {
+		await this.subcategoriesService.deleteSubcategory(subcategoryId);
+		return subcategoryId;
 	}
 }

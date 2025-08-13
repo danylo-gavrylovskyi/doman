@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
+import { Injectable, InternalServerErrorException, Logger, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
 import { Op } from "sequelize";
 import * as fs from "fs";
@@ -12,14 +12,18 @@ import { Attribute } from "src/attributes/attribute.model";
 import { CreateSubcategoryDto } from "./dto/createSubcategory.dto";
 import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/shared/paginatedEntity.dto";
 import { AttributeWithValuesDto } from "src/shared/attributeWithValues.dto";
+import { EditSubcategoryDto } from "./dto/editSubcategory.dto";
 
 import { Product } from "src/products/product.entity";
+
+import { deleteImage } from "utils/deleteImage";
 
 @Injectable()
 export class SubcategoriesService {
 	constructor(
 		@InjectModel(Subcategory) private subcategoryRepository: typeof Subcategory,
-		@InjectModel(Product) private productRepository: typeof Product
+		@InjectModel(Product) private productRepository: typeof Product,
+		private readonly logger: Logger
 	) { }
 
 	private readonly includeCategory = [
@@ -29,16 +33,26 @@ export class SubcategoriesService {
 		}
 	]
 
-	getAllSubcategories() {
-		return this.subcategoryRepository.findAll({
+	async getAllSubcategories(): Promise<Subcategory[]> {
+		this.logger.debug('Fetching all subcategories', SubcategoriesService.name);
+
+		const subcategories = await this.subcategoryRepository.findAll({
 			include: this.includeCategory
 		});
+		this.logger.log('Fetched all subcategories', SubcategoriesService.name);
+
+		return subcategories;
 	}
 
-	getSubcategoriesWithPagination(
+	async getSubcategoriesWithPagination(
 		{ page = "1", perPage = "4", inputValue = "" }: PaginatedEntityRequestDto
 	): Promise<PaginatedEntityResponseDto<Subcategory>> {
-		return this.subcategoryRepository.findAndCountAll({
+		this.logger.debug(
+			`Fetching subcategories with pagination: page=${page}, perPage=${perPage}, filter="${inputValue}"`,
+			SubcategoriesService.name
+		);
+
+		const paginatedSubcategories = await this.subcategoryRepository.findAndCountAll({
 			limit: +perPage,
 			offset: (+page - 1) * +perPage,
 			where: {
@@ -48,16 +62,35 @@ export class SubcategoriesService {
 			},
 			include: this.includeCategory,
 		});
+
+		this.logger.log(
+			`Fetched ${paginatedSubcategories.rows.length} subcategories (total: ${paginatedSubcategories.count}) for page=${page}`,
+			SubcategoriesService.name
+		);
+
+		return paginatedSubcategories;
 	}
 
-	getSubcategoryBySlug(slug: string) {
-		return this.subcategoryRepository.findOne({
+	async getSubcategoryBySlug(slug: string): Promise<Subcategory> {
+		this.logger.debug(`Fetching subcategory by slug="${slug}"`, SubcategoriesService.name);
+
+		const subcategory = await this.subcategoryRepository.findOne({
 			where: { slug },
 			include: this.includeCategory,
 		});
+
+		if (!subcategory) {
+			this.logger.warn(`Subcategory with slug="${slug}" not found`, SubcategoriesService.name);
+			throw new NotFoundException("Subcategory with such slug not found");
+		}
+
+		this.logger.log(`Fetched subcategory with slug="${slug}"`, SubcategoriesService.name);
+		return subcategory;
 	}
 
 	async getFilterAttributes(subcategoryId: number): Promise<AttributeWithValuesDto[]> {
+		this.logger.debug(`Fetching filter attributes for subcategoryId=${subcategoryId}`, SubcategoriesService.name);
+
 		const products = await this.productRepository.findAll({
 			where: { subcategoryId },
 			include: [
@@ -79,48 +112,59 @@ export class SubcategoriesService {
 			}
 		}
 
-		return Object.entries(attributeMap).map(([title, values]) => ({
+		const attributesWithValues = Object.entries(attributeMap).map(([title, values]) => ({
 			title,
 			values: Array.from(values)
 		}));
+
+		this.logger.log(`Fetched ${attributesWithValues.length} attributes for subcategoryId=${subcategoryId}`, SubcategoriesService.name);
+		return attributesWithValues;
 	}
 
-	addSubcategory(dto: CreateSubcategoryDto) {
-		return this.subcategoryRepository.create(dto);
+	async addSubcategory(dto: CreateSubcategoryDto): Promise<Subcategory> {
+		this.logger.debug(`Adding new subcategory with title="${dto.title}" and parentId="${dto.categoryId}"`, SubcategoriesService.name);
+
+		const subcategory = await this.subcategoryRepository.create(dto);
+		this.logger.log(`Created subcategory with title="${subcategory.title}" and parentId="${dto.categoryId}"`, SubcategoriesService.name);
+
+		return subcategory;
 	}
 
-	async deleteCategory(id: number) {
-		const category = await this.subcategoryRepository.findOne({ where: { id } });
-		if (!category) {
-			throw new NotFoundException("Category not found");
+	async editSubcategory(id: number, dto: EditSubcategoryDto): Promise<Subcategory> {
+		this.logger.debug(`Editing subcategory with id=${id}`, SubcategoriesService.name);
+
+		const subcategory = await this.subcategoryRepository.findOne({ where: { id } });
+		if (!subcategory) {
+			this.logger.warn(`Subcategory with id=${id} not found`, SubcategoriesService.name);
+			throw new NotFoundException("Subcategory with such id not found");
 		}
-		fs.unlink(
-			path.join(__dirname, "..", "..", "..", "uploads", "categoriesImages", category.image),
-			(err) => {
-				if (err) {
-					throw new InternalServerErrorException("Error while deleting image from folder");
-				}
-			}
-		);
-		return this.subcategoryRepository.destroy({ where: { id } });
-	}
 
-	async editCategory(id: number, dto) {
-		const category = await this.subcategoryRepository.findOne({ where: { id } });
-		if (!category) {
-			throw new NotFoundException("Category not found");
-		}
 		if (dto.image) {
-			fs.unlink(
-				path.join(__dirname, "..", "..", "..", "uploads", "categoriesImages", category.image),
-				(err) => {
-					if (err) {
-						throw new InternalServerErrorException("Error while deleting image from folder");
-					}
-				}
-			);
+			deleteImage("subcategoriesImages", subcategory.image);
 		}
-		await this.subcategoryRepository.update(dto, { where: { id } });
-		return this.subcategoryRepository.findOne({ where: { id } });
+
+		const [_, updatedSubcategory] = await this.subcategoryRepository.update(
+			dto,
+			{ where: { id }, returning: true }
+		);
+		this.logger.log(`Updated subcategory with id=${id}`, SubcategoriesService.name);
+
+		return updatedSubcategory[0];
+	}
+
+	async deleteSubcategory(id: number): Promise<boolean> {
+		this.logger.debug(`Deleting subcategory with id=${id}`, SubcategoriesService.name);
+
+		const subcategory = await this.subcategoryRepository.findOne({ where: { id } });
+		if (!subcategory) {
+			this.logger.warn(`Subcategory with id=${id} not found`, SubcategoriesService.name);
+			throw new NotFoundException("Subcategory with such id not found");
+		}
+
+		deleteImage("subcategoriesImages", subcategory.image);
+		const deletedCount = await this.subcategoryRepository.destroy({ where: { id } });
+
+		this.logger.log(`Deleted subcategory with id=${id}`, SubcategoriesService.name);
+		return deletedCount > 0;
 	}
 }

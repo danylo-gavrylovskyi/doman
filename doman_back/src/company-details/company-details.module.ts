@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { Logger, Module } from "@nestjs/common";
 import { SequelizeModule } from "@nestjs/sequelize";
 
 import { CompanyDetails } from "./company-details.model";
@@ -8,7 +8,7 @@ import { CompanyDetailsService } from "./company-details.service";
 
 @Module({
 	controllers: [CompanyDetailsController],
-	providers: [CompanyDetailsService],
+	providers: [CompanyDetailsService, Logger],
 	imports: [SequelizeModule.forFeature([CompanyDetails])],
 })
-export class CompanyDetailsModule {}
+export class CompanyDetailsModule { }

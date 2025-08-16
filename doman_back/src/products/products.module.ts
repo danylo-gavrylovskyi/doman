@@ -9,10 +9,14 @@ import { ProductAttributeService } from "src/product-attribute/product-attribute
 import { Product } from "./product.entity";
 import { Subcategory } from "src/subcategories/subcategory.model";
 import { ProductAttribute } from "src/product-attribute/product-attribute.model";
+import { ImagesModule } from "src/images/images.module";
 
 @Module({
 	controllers: [ProductsController],
 	providers: [ProductsService, ProductAttributeService, Logger],
-	imports: [SequelizeModule.forFeature([Product, Subcategory, ProductAttribute])],
+	imports: [
+		SequelizeModule.forFeature([Product, Subcategory, ProductAttribute]),
+		ImagesModule
+	],
 })
 export class ProductsModule { }

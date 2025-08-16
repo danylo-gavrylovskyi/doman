@@ -12,14 +12,15 @@ import { ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { FileInterceptor } from "@nestjs/platform-express";
 
 import { BannersService } from "./banners.service";
+import { ImagesService } from "src/images/images.service";
 
-import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/shared/paginatedEntity.dto";
-
-import { imageStorage } from "utils/imageStorage";
+import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/common/paginatedEntity.dto";
 
 @Controller("banners")
 export class BannersController {
-	constructor(private bannersService: BannersService) { }
+	constructor(
+		private bannersService: BannersService,
+	) { }
 
 	@ApiOperation({ summary: "Getting all banners" })
 	@ApiResponse({ type: [String] })
@@ -40,7 +41,7 @@ export class BannersController {
 	@ApiOperation({ summary: "Adding banner" })
 	@ApiResponse({ type: String })
 	@Post()
-	@UseInterceptors(FileInterceptor("banner", imageStorage("banners")))
+	@UseInterceptors(FileInterceptor("banner", ImagesService.getImageStorage("banners")))
 	add(@UploadedFile() banner: Express.Multer.File) {
 		return banner.filename;
 	}
@@ -48,8 +49,8 @@ export class BannersController {
 	@ApiOperation({ summary: "Deleting banner" })
 	@ApiResponse({ type: String })
 	@Delete("/:bannerUrl")
-	delete(@Param("bannerUrl") bannerUrl: string) {
-		this.bannersService.deleteBanner(bannerUrl);
+	async delete(@Param("bannerUrl") bannerUrl: string) {
+		await this.bannersService.deleteBanner(bannerUrl);
 		return bannerUrl;
 	}
 }

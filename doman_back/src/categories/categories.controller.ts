@@ -19,10 +19,9 @@ import { CategoriesService } from "./categories.service";
 import { Category } from "./category.model";
 import { Subcategory } from "src/subcategories/subcategory.model";
 
-import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/shared/paginatedEntity.dto";
-import { AttributeWithValuesDto } from "src/shared/attributeWithValues.dto";
-
-import { imageStorage } from "utils/imageStorage";
+import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/common/paginatedEntity.dto";
+import { AttributeWithValuesDto } from "src/common/attributeWithValues.dto";
+import { ImagesService } from "src/images/images.service";
 
 @ApiTags("Categories")
 @Controller("categories")
@@ -67,7 +66,7 @@ export class CategoriesController {
 	@ApiOperation({ summary: "Adding category" })
 	@ApiResponse({ type: Category })
 	@Post()
-	@UseInterceptors(FileInterceptor("image", imageStorage("categoriesImages")))
+	@UseInterceptors(FileInterceptor("image", ImagesService.getImageStorage("categoriesImages")))
 	async add(
 		@Body() dto: { title: string; slug: string },
 		@UploadedFile() file: Express.Multer.File
@@ -90,7 +89,7 @@ export class CategoriesController {
 	@ApiOperation({ summary: "Edit category" })
 	@ApiResponse({ type: Category })
 	@Patch("/:id")
-	@UseInterceptors(FileInterceptor("image", imageStorage("categoriesImages")))
+	@UseInterceptors(FileInterceptor("image", ImagesService.getImageStorage("categoriesImages")))
 	async edit(
 		@Param("id") categoryId: number,
 		@Body() dto: { title: string },

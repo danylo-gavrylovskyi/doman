@@ -18,15 +18,15 @@ import { FilteredProductsResponseDto } from "./dataTransferObjects/filteredProdu
 import { Product } from "./product.entity";
 
 import { AttributeIdValuePair } from "types/attribute-value-pair.interface";
-
-import { deleteImage } from "utils/deleteImage";
+import { ImagesService } from "src/images/images.service";
 
 @Injectable()
 export class ProductsService {
 	constructor(
 		@InjectModel(Product) private productsRepository: typeof Product,
 		private productAttributeService: ProductAttributeService,
-		private readonly logger: Logger
+		private readonly logger: Logger,
+		private readonly imagesService: ImagesService
 	) { }
 
 	async getProductsWithPagination(
@@ -262,7 +262,7 @@ export class ProductsService {
 				);
 			}
 
-			dto.image && deleteImage("productsImages", foundProduct.image);
+			dto.image && await this.imagesService.deleteImage("productsImages", foundProduct.image);
 			selfManagedTransaction && await transaction.commit();
 			this.logger.log(`Updated product id=${id}`, ProductsService.name);
 		} catch (error) {
@@ -282,7 +282,7 @@ export class ProductsService {
 		}
 
 		const deletedCount = await this.productsRepository.destroy({ where: { id } });
-		product.image && deleteImage("productsImages", product.image);
+		product.image && await this.imagesService.deleteImage("productsImages", product.image);
 
 		this.logger.log(`Deleted product with id=${id}`, ProductsService.name);
 		return deletedCount > 0;

@@ -4,7 +4,7 @@ import { Op } from "sequelize";
 
 import { Attribute } from "./attribute.model";
 
-import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/shared/paginatedEntity.dto";
+import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/common/paginatedEntity.dto";
 
 @Injectable()
 export class AttributesService {

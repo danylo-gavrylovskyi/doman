@@ -9,12 +9,11 @@ import { ProductAttribute } from "src/product-attribute/product-attribute.model"
 
 import { CreateCategoryDto } from "./dto/createCategory.dto";
 import { EditCategoryDto } from "./dto/editCategory.dto";
-import { AttributeWithValuesDto } from "src/shared/attributeWithValues.dto";
-import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/shared/paginatedEntity.dto";
+import { AttributeWithValuesDto } from "src/common/attributeWithValues.dto";
+import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/common/paginatedEntity.dto";
 
 import { Product } from "src/products/product.entity";
-
-import { deleteImage } from "utils/deleteImage";
+import { ImagesService } from "src/images/images.service";
 
 @Injectable()
 export class CategoriesService {
@@ -22,7 +21,8 @@ export class CategoriesService {
 		@InjectModel(Category) private categoryRepository: typeof Category,
 		@InjectModel(Subcategory) private subcategoryRepository: typeof Subcategory,
 		@InjectModel(Product) private productRepository: typeof Product,
-		private readonly logger: Logger
+		private readonly logger: Logger,
+		private readonly imagesService: ImagesService
 	) { }
 
 	async getAllCategories(): Promise<Category[]> {
@@ -144,7 +144,7 @@ export class CategoriesService {
 		}
 
 		if (dto.image) {
-			deleteImage("categoriesImages", category.image);
+			await this.imagesService.deleteImage("categoriesImages", category.image);
 		}
 
 		const [_, updatedCategory] = await this.categoryRepository.update(
@@ -165,7 +165,7 @@ export class CategoriesService {
 			throw new NotFoundException("Category with such id not found");
 		}
 
-		deleteImage("categoriesImages", category.image);
+		await this.imagesService.deleteImage("categoriesImages", category.image);
 		const deletedCount = await this.categoryRepository.destroy({ where: { id } });
 
 		this.logger.log(`Deleted category with id=${id}`, CategoriesService.name);

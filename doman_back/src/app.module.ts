@@ -22,6 +22,7 @@ import { ProductAttribute } from './product-attribute/product-attribute.model';
 import { OrderProduct } from './order-product/order-product.model';
 import { Order } from './orders/order.model';
 import { CompanyDetails } from './company-details/company-details.model';
+import { ImagesModule } from './images/images.module';
 
 @Module({
 	imports: [
@@ -58,6 +59,7 @@ import { CompanyDetails } from './company-details/company-details.model';
 		OrderProductModule,
 		AuthModule,
 		CompanyDetailsModule,
+		ImagesModule,
 	],
 	controllers: [],
 	providers: [],

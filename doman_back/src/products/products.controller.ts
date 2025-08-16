@@ -27,9 +27,7 @@ import { FilteredProductsResponseDto } from "./dataTransferObjects/filteredProdu
 import { Product } from "./product.entity";
 
 import { ProductMapper } from "./mappers/productMapper";
-
-import { imageStorage } from "utils/imageStorage";
-
+import { ImagesService } from "src/images/images.service";
 
 @ApiTags("Products")
 @Controller("products")
@@ -72,7 +70,7 @@ export class ProductsController {
 
 	@ApiOperation({ description: "Adding product" })
 	@ApiResponse({ type: Product })
-	@UseInterceptors(FileInterceptor("image", imageStorage("productsImages")))
+	@UseInterceptors(FileInterceptor("image", ImagesService.getImageStorage("productsImages")))
 	@Post()
 	async add(@Body() dto: ProductCreateModel, @UploadedFile() image: Express.Multer.File) {
 		const productCreateDto = ProductMapper.toProductCreateDto(dto, image.filename);
@@ -82,7 +80,7 @@ export class ProductsController {
 
 	@ApiOperation({ description: "Adding products from excel table" })
 	@ApiResponse({ type: [Product] })
-	@UseInterceptors(FileInterceptor("file", imageStorage("excel")))
+	@UseInterceptors(FileInterceptor("file", ImagesService.getImageStorage("excel")))
 	@Post("/excel")
 	async loadProductsFromTable(@UploadedFile() file: Express.Multer.File) {
 		const products: Product[] = await this.productsService.loadProductsViaExcel(file.filename);
@@ -91,7 +89,7 @@ export class ProductsController {
 
 	@ApiOperation({ description: "Updating product" })
 	@ApiResponse({ type: Product })
-	@UseInterceptors(FileInterceptor("image", imageStorage("productsImages")))
+	@UseInterceptors(FileInterceptor("image", ImagesService.getImageStorage("productsImages")))
 	@HttpCode(204)
 	@Patch("/:id")
 	async update(

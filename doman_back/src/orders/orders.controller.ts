@@ -13,7 +13,7 @@ import { OrdersService } from "./orders.service";
 import { Order } from "./order.model";
 
 import { CreateOrderDto } from "./createOrder.dto";
-import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/shared/paginatedEntity.dto";
+import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/common/paginatedEntity.dto";
 
 @ApiTags("Orders")
 @Controller("orders")

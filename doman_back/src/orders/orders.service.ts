@@ -9,7 +9,7 @@ import { OrderProduct } from "src/order-product/order-product.model";
 
 import { CreateOrderDto } from "./createOrder.dto";
 import { GetByPhoneNumberPaginationDto } from "./getByPhoneNumberPagination.dto";
-import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/shared/paginatedEntity.dto";
+import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/common/paginatedEntity.dto";
 
 import { Product } from "src/products/product.entity";
 

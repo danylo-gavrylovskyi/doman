@@ -1,8 +1,6 @@
-import { Injectable, InternalServerErrorException, Logger, NotFoundException } from "@nestjs/common";
+import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
 import { Op } from "sequelize";
-import * as fs from "fs";
-import * as path from "path";
 
 import { Subcategory } from "./subcategory.model";
 import { Category } from "src/categories/category.model";
@@ -10,20 +8,20 @@ import { ProductAttribute } from "src/product-attribute/product-attribute.model"
 import { Attribute } from "src/attributes/attribute.model";
 
 import { CreateSubcategoryDto } from "./dto/createSubcategory.dto";
-import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/shared/paginatedEntity.dto";
-import { AttributeWithValuesDto } from "src/shared/attributeWithValues.dto";
+import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/common/paginatedEntity.dto";
+import { AttributeWithValuesDto } from "src/common/attributeWithValues.dto";
 import { EditSubcategoryDto } from "./dto/editSubcategory.dto";
 
 import { Product } from "src/products/product.entity";
-
-import { deleteImage } from "utils/deleteImage";
+import { ImagesService } from "src/images/images.service";
 
 @Injectable()
 export class SubcategoriesService {
 	constructor(
 		@InjectModel(Subcategory) private subcategoryRepository: typeof Subcategory,
 		@InjectModel(Product) private productRepository: typeof Product,
-		private readonly logger: Logger
+		private readonly logger: Logger,
+		private readonly imagesService: ImagesService
 	) { }
 
 	private readonly includeCategory = [
@@ -140,7 +138,7 @@ export class SubcategoriesService {
 		}
 
 		if (dto.image) {
-			deleteImage("subcategoriesImages", subcategory.image);
+			await this.imagesService.deleteImage("subcategoriesImages", subcategory.image);
 		}
 
 		const [_, updatedSubcategory] = await this.subcategoryRepository.update(
@@ -161,7 +159,7 @@ export class SubcategoriesService {
 			throw new NotFoundException("Subcategory with such id not found");
 		}
 
-		deleteImage("subcategoriesImages", subcategory.image);
+		await this.imagesService.deleteImage("subcategoriesImages", subcategory.image);
 		const deletedCount = await this.subcategoryRepository.destroy({ where: { id } });
 
 		this.logger.log(`Deleted subcategory with id=${id}`, SubcategoriesService.name);

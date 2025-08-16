@@ -17,12 +17,11 @@ import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { SubcategoriesService } from "./subcategories.service";
 
 import { CreateSubcategoryDto } from "./dto/createSubcategory.dto";
-import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/shared/paginatedEntity.dto";
-import { AttributeWithValuesDto } from "src/shared/attributeWithValues.dto";
+import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/common/paginatedEntity.dto";
+import { AttributeWithValuesDto } from "src/common/attributeWithValues.dto";
 
 import { Subcategory } from "./subcategory.model";
-
-import { imageStorage } from "utils/imageStorage";
+import { ImagesService } from "src/images/images.service";
 
 @ApiTags("Subcategories")
 @Controller("subcategories")
@@ -69,7 +68,7 @@ export class SubcategoriesController {
 	@ApiOperation({ summary: "Adding subcategory" })
 	@ApiResponse({ type: Subcategory })
 	@Post()
-	@UseInterceptors(FileInterceptor("image", imageStorage("subcategoriesImages")))
+	@UseInterceptors(FileInterceptor("image", ImagesService.getImageStorage("subcategoriesImages")))
 	async add(@Body() dto: CreateSubcategoryDto, @UploadedFile() file: Express.Multer.File) {
 		const subcategory = await this.subcategoriesService.addSubcategory({
 			...dto,
@@ -81,7 +80,7 @@ export class SubcategoriesController {
 	@ApiOperation({ summary: "Edit subcategory" })
 	@ApiResponse({ type: Subcategory })
 	@Patch("/:id")
-	@UseInterceptors(FileInterceptor("image", imageStorage("subcategoriesImages")))
+	@UseInterceptors(FileInterceptor("image", ImagesService.getImageStorage("subcategoriesImages")))
 	async edit(
 		@Param("id") subcategoryId: number,
 		@Body() dto: { title: string },

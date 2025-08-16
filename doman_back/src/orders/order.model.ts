@@ -10,7 +10,7 @@ interface OrderCreationAttr {
 	totalPrice: number;
 }
 
-@Table({ tableName: "orders" })
+@Table({ tableName: "orders", indexes: [{ fields: ["email"] }] })
 export class Order extends Model<Order, OrderCreationAttr> {
 	@ApiProperty({ example: 1, description: "Unique identifier" })
 	@Column({

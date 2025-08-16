@@ -19,7 +19,7 @@ interface SubcategoryCreationAttr {
 	categoryId: number;
 }
 
-@Table({ tableName: "subcategories" })
+@Table({ tableName: "subcategories", indexes: [{ fields: ["categoryId"] }] })
 export class Subcategory extends Model<Subcategory, SubcategoryCreationAttr> {
 	@ApiProperty({ example: 1, description: "Unique identifier" })
 	@Column({

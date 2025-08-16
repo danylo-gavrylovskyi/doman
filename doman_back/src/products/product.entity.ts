@@ -24,7 +24,7 @@ interface ProductCreationAttr {
 	isPopular: boolean;
 }
 
-@Table({ tableName: "products" })
+@Table({ tableName: "products", indexes: [{ fields: ["subcategoryId"] }] })
 export class Product extends Model<Product, ProductCreationAttr> {
 	@ApiProperty({ example: 1, description: "Unique identifier" })
 	@Column({

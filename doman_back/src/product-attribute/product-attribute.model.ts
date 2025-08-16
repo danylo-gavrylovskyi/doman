@@ -7,7 +7,13 @@ interface ProductAttributeCreationAttr {
 	attributeValue: string;
 }
 
-@Table({ tableName: "product-attributes" })
+@Table({
+	tableName: "product-attributes",
+	indexes: [
+		{ fields: ["productId"] },
+		{ fields: ["attributeId", "attributeValue"] }
+	]
+})
 export class ProductAttribute extends Model<ProductAttribute, ProductAttributeCreationAttr> {
 	@ApiProperty({ example: 1, description: "Unique identifier" })
 	@Column({

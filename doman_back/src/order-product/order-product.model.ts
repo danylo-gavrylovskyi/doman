@@ -10,7 +10,13 @@ interface OrderProductCreationAttr {
 	quantity: number;
 }
 
-@Table({ tableName: "order-product" })
+@Table({
+	tableName: "order-product",
+	indexes: [
+		{ fields: ["orderId"] },
+		{ fields: ["productId"] }
+	]
+})
 export class OrderProduct extends Model<OrderProduct, OrderProductCreationAttr> {
 	@ApiProperty({ example: 1, description: "Unique identifier" })
 	@Column({

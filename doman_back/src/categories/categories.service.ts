@@ -7,12 +7,12 @@ import { Subcategory } from "src/subcategories/subcategory.model";
 import { Attribute } from "src/attributes/attribute.model";
 import { ProductAttribute } from "src/product-attribute/product-attribute.model";
 
-import { CreateCategoryDto } from "./dto/createCategory.dto";
-import { EditCategoryDto } from "./dto/editCategory.dto";
-import { AttributeWithValuesDto } from "src/common/attributeWithValues.dto";
-import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/common/paginatedEntity.dto";
+import { CreateCategoryDto } from "./dto/create-category.dto";
+import { UpdateCategoryDto } from "./dto/update-category.dto";
+import { AttributeWithValuesDto } from "src/common/dto/attributeWithValues.dto";
+import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/common/dto/paginatedEntity.dto";
 
-import { Product } from "src/products/product.entity";
+import { Product } from "src/products/product.model";
 import { ImagesService } from "src/images/images.service";
 
 @Injectable()
@@ -134,7 +134,7 @@ export class CategoriesService {
 		return category;
 	}
 
-	async editCategory(id: number, dto: EditCategoryDto): Promise<Category> {
+	async editCategory(id: number, dto: UpdateCategoryDto): Promise<Category> {
 		this.logger.debug(`Editing category with id=${id}`, CategoriesService.name);
 
 		const category = await this.categoryRepository.findOne({ where: { id } });

@@ -15,13 +15,14 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 
 import { SubcategoriesService } from "./subcategories.service";
-
-import { CreateSubcategoryDto } from "./dto/createSubcategory.dto";
-import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/common/paginatedEntity.dto";
-import { AttributeWithValuesDto } from "src/common/attributeWithValues.dto";
+import { ImagesService } from "src/images/images.service";
 
 import { Subcategory } from "./subcategory.model";
-import { ImagesService } from "src/images/images.service";
+
+import { CreateSubcategoryDto } from "./dto/create-subcategory.dto";
+import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/common/dto/paginatedEntity.dto";
+import { AttributeWithValuesDto } from "src/common/dto/attributeWithValues.dto";
+import { UpdateSubcategoryDto } from "./dto/update-subcategory.dto";
 
 @ApiTags("Subcategories")
 @Controller("subcategories")
@@ -69,10 +70,10 @@ export class SubcategoriesController {
 	@ApiResponse({ type: Subcategory })
 	@Post()
 	@UseInterceptors(FileInterceptor("image", ImagesService.getImageStorage("subcategoriesImages")))
-	async add(@Body() dto: CreateSubcategoryDto, @UploadedFile() file: Express.Multer.File) {
+	async add(@Body() dto: CreateSubcategoryDto, @UploadedFile() image: Express.Multer.File) {
 		const subcategory = await this.subcategoriesService.addSubcategory({
 			...dto,
-			image: file.filename,
+			image: image.filename,
 		});
 		return subcategory;
 	}
@@ -83,22 +84,24 @@ export class SubcategoriesController {
 	@UseInterceptors(FileInterceptor("image", ImagesService.getImageStorage("subcategoriesImages")))
 	async edit(
 		@Param("id") subcategoryId: number,
-		@Body() dto: { title: string },
-		@UploadedFile() file?: Express.Multer.File
+		@Body() dto: UpdateSubcategoryDto,
+		@UploadedFile() image?: Express.Multer.File
 	) {
 		let updatedSubcategory: Subcategory;
+		console.log(image)
 
-		if (file) {
+
+		if (image) {
 			updatedSubcategory = await this.subcategoriesService.editSubcategory(subcategoryId, {
 				...dto,
-				image: file.filename,
+				image: image.filename,
 			});
-			return updatedSubcategory;
 		}
-
-		updatedSubcategory = await this.subcategoriesService.editSubcategory(subcategoryId, {
-			...dto,
-		});
+		else {
+			updatedSubcategory = await this.subcategoriesService.editSubcategory(subcategoryId, {
+				...dto,
+			});
+		}
 
 		return updatedSubcategory;
 	}

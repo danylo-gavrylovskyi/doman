@@ -32,31 +32,30 @@ export class Product extends Model<Product, ProductCreationAttr> {
 		autoIncrement: true,
 		unique: true,
 		primaryKey: true,
-		allowNull: false,
 	})
 	id: number;
 
 	@ApiProperty({ example: "12343afdf232", description: "Product article" })
-	@Column({ type: DataType.STRING, allowNull: false, unique: true })
+	@Column({ type: DataType.STRING, unique: true })
 	article: string;
 
 	@ApiProperty({ example: "КОТЕЛ ТВЕРДОПАЛИВНИЙ EDELMET 33 КВТ", description: "Product name" })
-	@Column({ type: DataType.STRING, allowNull: false, unique: true })
+	@Column({ type: DataType.STRING, unique: true })
 	title: string;
 
 	@ApiProperty({ example: "smesitel-dlya-kuhni", description: "Product slug" })
-	@Column({ type: DataType.STRING, allowNull: true, unique: true })
+	@Column({ type: DataType.STRING, unique: true })
 	slug: string;
 
 	@ApiProperty({
 		example: "Радіатори виготовлені з холоднокатної сталі товщиною 1,5 мм",
 		description: "Product description",
 	})
-	@Column({ type: DataType.TEXT, allowNull: true, unique: false })
+	@Column({ type: DataType.TEXT, unique: false })
 	description: string;
 
 	@ApiProperty({ example: 236, description: "Product quantity" })
-	@Column({ type: DataType.INTEGER, allowNull: true, unique: false })
+	@Column({ type: DataType.INTEGER, unique: false })
 	quantity: number;
 
 	@ApiProperty({
@@ -67,16 +66,16 @@ export class Product extends Model<Product, ProductCreationAttr> {
 	image: string;
 
 	@ApiProperty({ example: 1289, description: "Product price" })
-	@Column({ type: DataType.DECIMAL, allowNull: false, unique: false })
+	@Column({ type: DataType.DECIMAL, unique: false })
 	price: number;
 
 	@ApiProperty({ example: true, description: "Is this product popular" })
-	@Column({ type: DataType.BOOLEAN, allowNull: false, unique: false, defaultValue: false })
+	@Column({ type: DataType.BOOLEAN, unique: false, defaultValue: false })
 	isPopular: boolean;
 
 	@ApiProperty({ example: 1, description: "To which subcategory this product belongs to" })
 	@ForeignKey(() => Subcategory)
-	@Column({ type: DataType.INTEGER, allowNull: true, unique: false })
+	@Column({ type: DataType.INTEGER, unique: false })
 	subcategoryId: number;
 
 	@BelongsTo(() => Subcategory)

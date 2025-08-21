@@ -5,7 +5,7 @@ import { SequelizeModule } from "@nestjs/sequelize";
 
 import { Category } from "./category.model";
 import { Subcategory } from "src/subcategories/subcategory.model";
-import { Product } from "src/products/product.entity";
+import { Product } from "src/products/product.model";
 import { ImagesModule } from "src/images/images.module";
 
 @Module({

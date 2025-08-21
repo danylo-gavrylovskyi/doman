@@ -5,7 +5,7 @@ import { OrderProductService } from "./order-product.service";
 
 import { OrderProduct } from "./order-product.model";
 
-import { CreateOrderProductDto } from "./createOrder-product.dto";
+import { CreateOrderProductDto } from "./dto/create-order-product.dto";
 
 @ApiTags("Order-product")
 @Controller("order-product")

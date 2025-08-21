@@ -8,7 +8,7 @@ interface CompanyDetailsCreationAttr {
 	phone_number1: string;
 	phone_number2: string;
 	email: string;
-	adress: string;
+	address: string;
 	facebook_link: string;
 	instagram_link: string;
 }
@@ -57,7 +57,7 @@ export class CompanyDetails extends Model<CompanyDetails, CompanyDetailsCreation
 		example: "093 111 1111",
 		description: "Company phone number 2",
 	})
-	@Column({ type: DataType.STRING, allowNull: false, unique: true })
+	@Column({ type: DataType.STRING, unique: true })
 	phone_number2: string;
 
 	@ApiProperty({
@@ -72,7 +72,7 @@ export class CompanyDetails extends Model<CompanyDetails, CompanyDetailsCreation
 		description: "Company adress",
 	})
 	@Column({ type: DataType.STRING, allowNull: false, unique: true })
-	adress: string;
+	address: string;
 
 	@ApiProperty({
 		example: "https://www.facebook.com/company",

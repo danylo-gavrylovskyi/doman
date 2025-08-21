@@ -8,7 +8,7 @@ import { SubcategoriesService } from "./subcategories.service";
 import { Subcategory } from "./subcategory.model";
 import { Category } from "src/categories/category.model";
 
-import { Product } from "src/products/product.entity";
+import { Product } from "src/products/product.model";
 import { ImagesModule } from "src/images/images.module";
 
 @Module({

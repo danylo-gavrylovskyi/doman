@@ -25,7 +25,7 @@ export class CompanyDetailsService {
 		this.logger.debug('Creating or updating company details', CompanyDetailsService.name);
 
 		const [companyDetails, isCreated] = await this.companyDetailsRepo.findOrCreate({
-			where: { id: 1 }, // id 1 because we have only one row for company details in this table
+			where: { id: 1 },
 			defaults: dto,
 		});
 

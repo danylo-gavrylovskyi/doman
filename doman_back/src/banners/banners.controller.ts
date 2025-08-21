@@ -14,7 +14,7 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { BannersService } from "./banners.service";
 import { ImagesService } from "src/images/images.service";
 
-import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/common/paginatedEntity.dto";
+import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/common/dto/paginatedEntity.dto";
 
 @Controller("banners")
 export class BannersController {

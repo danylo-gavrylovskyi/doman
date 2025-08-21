@@ -13,8 +13,7 @@ import { AttributesService } from "./attributes.service";
 
 import { Attribute } from "./attribute.model";
 
-import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/common/paginatedEntity.dto";
-
+import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/common/dto/paginatedEntity.dto";
 
 @ApiTags("Attributes")
 @Controller("attributes")

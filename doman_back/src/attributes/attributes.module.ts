@@ -4,7 +4,7 @@ import { AttributesService } from "./attributes.service";
 import { SequelizeModule } from "@nestjs/sequelize";
 
 import { Attribute } from "./attribute.model";
-import { Product } from "src/products/product.entity";
+import { Product } from "src/products/product.model";
 import { ProductAttribute } from "src/product-attribute/product-attribute.model";
 
 @Module({

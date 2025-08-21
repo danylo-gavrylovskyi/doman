@@ -2,18 +2,18 @@ import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
 import { Op } from "sequelize";
 
+import { ImagesService } from "src/images/images.service";
+
 import { Subcategory } from "./subcategory.model";
 import { Category } from "src/categories/category.model";
 import { ProductAttribute } from "src/product-attribute/product-attribute.model";
 import { Attribute } from "src/attributes/attribute.model";
+import { Product } from "src/products/product.model";
 
-import { CreateSubcategoryDto } from "./dto/createSubcategory.dto";
-import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/common/paginatedEntity.dto";
-import { AttributeWithValuesDto } from "src/common/attributeWithValues.dto";
-import { EditSubcategoryDto } from "./dto/editSubcategory.dto";
-
-import { Product } from "src/products/product.entity";
-import { ImagesService } from "src/images/images.service";
+import { CreateSubcategoryDto } from "./dto/create-subcategory.dto";
+import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/common/dto/paginatedEntity.dto";
+import { AttributeWithValuesDto } from "src/common/dto/attributeWithValues.dto";
+import { UpdateSubcategoryDto } from "./dto/update-subcategory.dto";
 
 @Injectable()
 export class SubcategoriesService {
@@ -128,7 +128,7 @@ export class SubcategoriesService {
 		return subcategory;
 	}
 
-	async editSubcategory(id: number, dto: EditSubcategoryDto): Promise<Subcategory> {
+	async editSubcategory(id: number, dto: UpdateSubcategoryDto): Promise<Subcategory> {
 		this.logger.debug(`Editing subcategory with id=${id}`, SubcategoriesService.name);
 
 		const subcategory = await this.subcategoryRepository.findOne({ where: { id } });
@@ -146,6 +146,7 @@ export class SubcategoriesService {
 			{ where: { id }, returning: true }
 		);
 		this.logger.log(`Updated subcategory with id=${id}`, SubcategoriesService.name);
+
 
 		return updatedSubcategory[0];
 	}

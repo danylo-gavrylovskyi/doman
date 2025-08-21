@@ -15,13 +15,13 @@ import {
 import { FileInterceptor } from "@nestjs/platform-express";
 
 import { CategoriesService } from "./categories.service";
+import { ImagesService } from "src/images/images.service";
 
 import { Category } from "./category.model";
 import { Subcategory } from "src/subcategories/subcategory.model";
 
-import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/common/paginatedEntity.dto";
-import { AttributeWithValuesDto } from "src/common/attributeWithValues.dto";
-import { ImagesService } from "src/images/images.service";
+import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/common/dto/paginatedEntity.dto";
+import { AttributeWithValuesDto } from "src/common/dto/attributeWithValues.dto";
 
 @ApiTags("Categories")
 @Controller("categories")

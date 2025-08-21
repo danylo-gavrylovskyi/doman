@@ -4,7 +4,7 @@ import { Transaction } from "sequelize";
 
 import { OrderProduct } from "./order-product.model";
 
-import { CreateOrderProductDto } from "./createOrder-product.dto";
+import { CreateOrderProductDto } from "./dto/create-order-product.dto";
 
 @Injectable()
 export class OrderProductService {

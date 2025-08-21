@@ -5,20 +5,19 @@ import * as path from "path";
 import * as XLSX from "xlsx";
 
 import { ProductAttributeService } from "src/product-attribute/product-attribute.service";
+import { ImagesService } from "src/images/images.service";
 
 import { Subcategory } from "src/subcategories/subcategory.model";
 import { ProductAttribute } from "src/product-attribute/product-attribute.model";
 import { Attribute } from "src/attributes/attribute.model";
+import { Product } from "./product.model";
 
-import { ProductCreateDto } from "./dataTransferObjects/productCreate.dto";
-import { ProductUpdateDto } from "./dataTransferObjects/productUpdate.dto";
-import { FilteredProductsRequestDto } from "./dataTransferObjects/filteredProductsRequest.dto";
-import { FilteredProductsResponseDto } from "./dataTransferObjects/filteredProductsResponse.dto";
+import { GetFilteredProductsDto } from "./dto/get-filtered-products.dto";
+import { PaginatedEntityResponseDto } from "src/common/dto/paginatedEntity.dto";
+import { CreateProductDto } from "./dto/create-product.dto";
+import { UpdateProductDto } from "./dto/update-product.dto";
 
-import { Product } from "./product.entity";
-
-import { AttributeIdValuePair } from "types/attribute-value-pair.interface";
-import { ImagesService } from "src/images/images.service";
+import { AttributeIdValuePair } from "src/products/types/attribute-value-pair.type";
 
 @Injectable()
 export class ProductsService {
@@ -31,14 +30,14 @@ export class ProductsService {
 
 	async getProductsWithPagination(
 		{
-			page = "1",
-			perPage = "4",
+			page = 1,
+			perPage = 4,
 			inputValue = "",
 			categoryId,
 			subcategoryId,
 			...filterParams
-		}: FilteredProductsRequestDto
-	): Promise<FilteredProductsResponseDto> {
+		}: GetFilteredProductsDto
+	): Promise<PaginatedEntityResponseDto<Product>> {
 		this.logger.debug(`Fetching products with pagination: page=${page}, perPage=${perPage}, filter="${inputValue}"`, ProductsService.name);
 
 		const whereClause: WhereOptions<Product> = {
@@ -142,7 +141,7 @@ export class ProductsService {
 		return product;
 	}
 
-	async addProduct(dto: ProductCreateDto): Promise<Product> {
+	async addProduct(dto: CreateProductDto): Promise<Product> {
 		this.logger.debug(
 			`Adding new product with
 			title="${dto.title}",
@@ -221,7 +220,7 @@ export class ProductsService {
 		}
 	}
 
-	async updateProduct(id: number, dto: ProductUpdateDto, transaction?: Transaction): Promise<void> {
+	async updateProduct(id: number, dto: UpdateProductDto, transaction?: Transaction): Promise<void> {
 		this.logger.debug(`Updating product with id=${id}`, ProductsService.name);
 
 		const selfManagedTransaction = !transaction;
@@ -264,7 +263,7 @@ export class ProductsService {
 
 			dto.image && await this.imagesService.deleteImage("productsImages", foundProduct.image);
 			selfManagedTransaction && await transaction.commit();
-			this.logger.log(`Updated product id=${id}`, ProductsService.name);
+			this.logger.log(`Updated product with id=${id}`, ProductsService.name);
 		} catch (error) {
 			selfManagedTransaction && await transaction.rollback();
 			this.logger.error(`Failed to update product id=${id}: ${error.message}`, error.stack, ProductsService.name);

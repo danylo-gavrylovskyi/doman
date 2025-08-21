@@ -16,18 +16,14 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { FindOptions } from "sequelize";
 
 import { ProductsService } from "./products.service";
-
-import { ProductCreateModel } from "./models/productCreate.model";
-import { ProductUpdateModel } from "./models/productUpdate.model";
-
-import { ProductUpdateDto } from "./dataTransferObjects/productUpdate.dto";
-import { FilteredProductsRequestDto } from "./dataTransferObjects/filteredProductsRequest.dto";
-import { FilteredProductsResponseDto } from "./dataTransferObjects/filteredProductsResponse.dto";
-
-import { Product } from "./product.entity";
-
-import { ProductMapper } from "./mappers/productMapper";
 import { ImagesService } from "src/images/images.service";
+
+import { Product } from "./product.model";
+
+import { PaginatedEntityResponseDto } from "src/common/dto/paginatedEntity.dto";
+import { GetFilteredProductsDto } from "./dto/get-filtered-products.dto";
+import { CreateProductDto } from "./dto/create-product.dto";
+import { UpdateProductDto } from "./dto/update-product.dto";
 
 @ApiTags("Products")
 @Controller("products")
@@ -45,9 +41,9 @@ export class ProductsController {
 	}
 
 	@ApiOperation({ description: "Getting all products with pagination" })
-	@ApiResponse({ type: FilteredProductsResponseDto })
+	@ApiResponse({ type: PaginatedEntityResponseDto<Product> })
 	@Get()
-	async getAllWithPagination(@Query() queryParams: FilteredProductsRequestDto) {
+	async getAllWithPagination(@Query() queryParams: GetFilteredProductsDto) {
 		const products = await this.productsService.getProductsWithPagination(queryParams);
 		return products;
 	}
@@ -72,9 +68,11 @@ export class ProductsController {
 	@ApiResponse({ type: Product })
 	@UseInterceptors(FileInterceptor("image", ImagesService.getImageStorage("productsImages")))
 	@Post()
-	async add(@Body() dto: ProductCreateModel, @UploadedFile() image: Express.Multer.File) {
-		const productCreateDto = ProductMapper.toProductCreateDto(dto, image.filename);
-		const product = await this.productsService.addProduct(productCreateDto);
+	async add(
+		@Body() dto: CreateProductDto,
+		@UploadedFile() image: Express.Multer.File
+	) {
+		const product = await this.productsService.addProduct({ ...dto, image: image.filename });
 		return product;
 	}
 
@@ -94,11 +92,10 @@ export class ProductsController {
 	@Patch("/:id")
 	async update(
 		@Param("id") productId: number,
-		@Body() dto: ProductUpdateModel,
+		@Body() dto: UpdateProductDto,
 		@UploadedFile() image: Express.Multer.File
 	) {
-		const updateProductDto: ProductUpdateDto = ProductMapper.toProductUpdateDto(dto, image ? image.filename : undefined);
-		await this.productsService.updateProduct(productId, updateProductDto);
+		await this.productsService.updateProduct(productId, { ...dto, image: image?.filename });
 	}
 
 	@ApiOperation({ description: "Deleting product" })

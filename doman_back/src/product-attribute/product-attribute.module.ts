@@ -3,7 +3,7 @@ import { SequelizeModule } from "@nestjs/sequelize";
 
 import { ProductAttribute } from "./product-attribute.model";
 import { Attribute } from "src/attributes/attribute.model";
-import { Product } from "src/products/product.entity";
+import { Product } from "src/products/product.model";
 import { ProductAttributeService } from "./product-attribute.service";
 import { ProductAttributeController } from "./product-attribute.controller";
 

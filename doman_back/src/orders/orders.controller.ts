@@ -12,8 +12,8 @@ import { OrdersService } from "./orders.service";
 
 import { Order } from "./order.model";
 
-import { CreateOrderDto } from "./createOrder.dto";
-import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/common/paginatedEntity.dto";
+import { CreateOrderDto } from "./dto/create-order.dto";
+import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/common/dto/paginatedEntity.dto";
 
 @ApiTags("Orders")
 @Controller("orders")

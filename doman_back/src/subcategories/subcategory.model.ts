@@ -10,7 +10,7 @@ import {
 } from "sequelize-typescript";
 
 import { Category } from "src/categories/category.model";
-import { Product } from "src/products/product.entity";
+import { Product } from "src/products/product.model";
 
 interface SubcategoryCreationAttr {
 	title: string;
@@ -43,7 +43,7 @@ export class Subcategory extends Model<Subcategory, SubcategoryCreationAttr> {
 		example: "62771c51-3b8b-453a-9aca-2cb439c0b5b6.jpg",
 		description: "Subcategory image",
 	})
-	@Column({ type: DataType.STRING, allowNull: false, unique: true })
+	@Column({ type: DataType.STRING, allowNull: true, unique: true })
 	image: string;
 
 	@ApiProperty({ example: "1", description: "To which category this subcategory belongs to" })

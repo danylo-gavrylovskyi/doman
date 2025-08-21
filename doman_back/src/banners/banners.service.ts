@@ -2,7 +2,7 @@ import { Injectable, InternalServerErrorException, Logger } from "@nestjs/common
 
 import { ImagesService } from "src/images/images.service";
 
-import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/common/paginatedEntity.dto";
+import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/common/dto/paginatedEntity.dto";
 
 @Injectable()
 export class BannersService {

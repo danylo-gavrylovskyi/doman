@@ -4,7 +4,7 @@ import { Transaction } from "sequelize";
 
 import { ProductAttribute } from "./product-attribute.model";
 
-import { CreateProductAttributeDto } from "./dto/CreateProductAttribute.dto";
+import { CreateProductAttributeDto } from "./dto/create-product-attribute.dto";
 
 @Injectable()
 export class ProductAttributeService {

@@ -7,11 +7,11 @@ import { OrderProductService } from "src/order-product/order-product.service";
 import { Order } from "./order.model";
 import { OrderProduct } from "src/order-product/order-product.model";
 
-import { CreateOrderDto } from "./createOrder.dto";
-import { GetByPhoneNumberPaginationDto } from "./getByPhoneNumberPagination.dto";
-import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/common/paginatedEntity.dto";
+import { CreateOrderDto } from "./dto/create-order.dto";
+import { GetByPhoneNumberPaginationDto } from "./dto/get-by-phone-number-pagination.dto";
+import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/common/dto/paginatedEntity.dto";
 
-import { Product } from "src/products/product.entity";
+import { Product } from "src/products/product.model";
 
 @Injectable()
 export class OrdersService {
@@ -41,7 +41,7 @@ export class OrdersService {
 				dto.orderedProducts.map(op =>
 					this.orderProductService.createOrderProduct({
 						orderId: order.id,
-						productId: op.product.id,
+						productId: op.productId,
 						quantity: op.quantity,
 					}, transaction)
 				)

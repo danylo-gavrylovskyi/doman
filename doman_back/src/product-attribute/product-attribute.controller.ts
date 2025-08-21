@@ -1,5 +1,5 @@
 import { Body, Controller, Post } from "@nestjs/common";
-import { CreateProductAttributeDto } from "./dto/CreateProductAttribute.dto";
+import { CreateProductAttributeDto } from "./dto/create-product-attribute.dto";
 import { ProductAttributeService } from "./product-attribute.service";
 
 @Controller("product-attribute")

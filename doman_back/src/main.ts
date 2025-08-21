@@ -7,6 +7,7 @@ import * as session from "express-session";
 import * as passport from "passport";
 
 import { AppModule } from "./app.module";
+import { ValidationPipe } from "@nestjs/common";
 
 async function bootstrap() {
 	const PORT = process.env.PORT || 4000;
@@ -14,13 +15,13 @@ async function bootstrap() {
 		logger: ['log', 'warn', 'error', 'debug'],
 	});
 
-	app.enableCors();
-
-	app.use("/uploads", express.static(path.join(__dirname, "..", "..", "uploads")));
-
 	const config = new DocumentBuilder().setTitle("Doman").build();
 	const document = SwaggerModule.createDocument(app, config);
 	SwaggerModule.setup("/api/docs", app, document);
+
+	app.enableCors();
+
+	app.use("/uploads", express.static(path.resolve(process.cwd(), "uploads")));
 
 	app.use(
 		session({
@@ -29,6 +30,14 @@ async function bootstrap() {
 			saveUninitialized: false,
 		})
 	);
+
+	app.useGlobalPipes(
+		new ValidationPipe({
+			transform: true,
+			whitelist: true,
+			forbidNonWhitelisted: true
+		})
+	)
 
 	app.use(passport.initialize());
 	app.use(passport.session());

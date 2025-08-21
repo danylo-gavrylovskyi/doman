@@ -69,6 +69,23 @@ export class SubcategoriesService {
 		return paginatedSubcategories;
 	}
 
+	async getSubcategoryById(id: number): Promise<Subcategory> {
+		this.logger.debug(`Fetching subcategory by id="${id}"`, SubcategoriesService.name);
+
+		const subcategory = await this.subcategoryRepository.findOne({
+			where: { id },
+			include: this.includeCategory,
+		});
+
+		if (!subcategory) {
+			this.logger.warn(`Subcategory with id="${id}" not found`, SubcategoriesService.name);
+			throw new NotFoundException("Subcategory with such id not found");
+		}
+
+		this.logger.log(`Fetched subcategory with id="${id}"`, SubcategoriesService.name);
+		return subcategory;
+	}
+
 	async getSubcategoryBySlug(slug: string): Promise<Subcategory> {
 		this.logger.debug(`Fetching subcategory by slug="${slug}"`, SubcategoriesService.name);
 

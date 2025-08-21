@@ -2,18 +2,18 @@ import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
 import { Op } from "sequelize";
 
+import { ImagesService } from "src/images/images.service";
+
 import { Category } from "./category.model";
 import { Subcategory } from "src/subcategories/subcategory.model";
 import { Attribute } from "src/attributes/attribute.model";
 import { ProductAttribute } from "src/product-attribute/product-attribute.model";
+import { Product } from "src/products/product.model";
 
 import { CreateCategoryDto } from "./dto/create-category.dto";
 import { UpdateCategoryDto } from "./dto/update-category.dto";
 import { AttributeWithValuesDto } from "src/common/dto/attributeWithValues.dto";
 import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/common/dto/paginatedEntity.dto";
-
-import { Product } from "src/products/product.model";
-import { ImagesService } from "src/images/images.service";
 
 @Injectable()
 export class CategoriesService {
@@ -79,6 +79,23 @@ export class CategoriesService {
 		}
 
 		this.logger.log(`Fetched category with slug="${slug}"`, CategoriesService.name);
+		return category;
+	}
+
+	async getCategoryById(id: number): Promise<Category> {
+		this.logger.debug(`Fetching category by id="${id}"`, CategoriesService.name);
+
+		const category = await this.categoryRepository.findOne({
+			where: { id },
+			include: { all: true },
+		});
+
+		if (!category) {
+			this.logger.warn(`Category with id="${id}" not found`, CategoriesService.name);
+			throw new NotFoundException("Category with such id not found");
+		}
+
+		this.logger.log(`Fetched category with id="${id}"`, CategoriesService.name);
 		return category;
 	}
 

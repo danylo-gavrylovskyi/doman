@@ -8,7 +8,7 @@ import styles from "./HeaderProducts.module.scss";
 
 export const HeaderProduct = (product: Product) => {
 	return (
-		<Link href={`products/${product.slug}`}>
+		<Link href={`/products/${product.slug}`}>
 			<Paper elevation={3} className={styles.container}>
 				<img
 					width={"20%"}

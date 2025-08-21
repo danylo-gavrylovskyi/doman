@@ -7,11 +7,16 @@ import { Product } from "@/types/product.interface";
 
 import styles from "./HeaderProducts.module.scss";
 
-export const HeaderProducts = ({ products }: { products: Product[] }) => {
+interface HeaderProductsProps {
+	products: Product[],
+	clearInputValue: () => void
+}
+
+export const HeaderProducts = ({ products, clearInputValue }: HeaderProductsProps) => {
 	return (
 		<>
-			<div className={styles.darkBg}></div>
-			<Paper className={styles.paper}>
+			<div onClick={clearInputValue} className={styles.darkBg}></div>
+			<Paper onClick={clearInputValue} className={styles.paper}>
 				{products.map((product) => (
 					<HeaderProduct key={product.id} {...product} />
 				))}

@@ -25,6 +25,11 @@ export const CategoriesService = {
 		return data;
 	},
 
+	async getById(id: number): Promise<Category> {
+		const { data } = await customAxios.get(`${ApiRoutes.Categories}/${id}`);
+		return data;
+	},
+
 	async getFilterAttributes(categoryId: number): Promise<AttributeWithValues[]> {
 		const { data } = await customAxios.get(`${ApiRoutes.Categories}/${categoryId}/attributes`);
 		return data;

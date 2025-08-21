@@ -44,6 +44,14 @@ export class CategoriesController {
 		return categories;
 	}
 
+	@ApiOperation({ summary: "Getting category by id" })
+	@ApiResponse({ type: Category })
+	@Get("/:id")
+	async getById(@Param("id") id: number) {
+		const category = await this.categoriesService.getCategoryById(id);
+		return category;
+	}
+
 	@ApiOperation({ summary: "Getting category by slug" })
 	@ApiResponse({ type: Category })
 	@Get("/slug/:slug")

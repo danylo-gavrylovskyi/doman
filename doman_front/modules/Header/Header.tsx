@@ -108,7 +108,7 @@ export const Header: React.FC = () => {
 					clearInput={clearInput}
 				/>
 
-				{inputValue && <HeaderProducts products={products} />}
+				{inputValue && <HeaderProducts products={products} clearInputValue={() => setInputValue("")} />}
 
 				<section className={`${styles.centerFlex} ${styles.userBtns}`}>
 					<svg

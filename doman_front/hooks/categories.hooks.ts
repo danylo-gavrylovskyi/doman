@@ -29,6 +29,10 @@ export const useGetCategoryBySlug = (slug: string) => {
 	return useQuery([GET_CATEGORIES_KEY, slug], () => CategoriesService.getBySlug(slug));
 };
 
+export const useGetCategoryById = (id: number) => {
+	return useQuery([GET_CATEGORIES_KEY, id], () => CategoriesService.getById(id));
+};
+
 export const useGetCategoryFilterAttributes = (categoryId?: number, options?: UseQueryOptions<AttributeWithValues[], unknown, AttributeWithValues[], [string, typeof categoryId]>) => {
 	return useQuery(
 		[GET_CATEGORY_FILTER_ATTRIBUTES_KEY, categoryId],

@@ -10,7 +10,6 @@ import { Search } from "@/components/Search/Search";
 
 import {
 	useDeleteCategory,
-	useEditCategory,
 	useGetCategoriesWithPagination,
 } from "@/hooks/categories.hooks";
 
@@ -30,7 +29,6 @@ const Categories = () => {
 
 	const { data: categories } = useGetCategoriesWithPagination({ page, perPage, inputValue });
 
-	const { mutate: editCategory } = useEditCategory();
 	const { mutate: deleteCategory } = useDeleteCategory();
 
 	return (
@@ -48,7 +46,7 @@ const Categories = () => {
 					categories.rows.map((category: Category) => (
 						<AdminCategory
 							key={category.id}
-							edit={editCategory}
+							linkToUpdatePage={`/admin/categories/${category.id}`}
 							deleteItem={deleteCategory}
 							{...category}
 						/>

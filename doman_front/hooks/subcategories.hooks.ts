@@ -29,6 +29,10 @@ export const useGetSubcategoryBySlug = (slug: string) => {
 	return useQuery([GET_SUBCATEGORIES_KEY, slug], () => SubcategoriesService.getBySlug(slug));
 };
 
+export const useGetSubcategoryById = (id: number) => {
+	return useQuery([GET_SUBCATEGORIES_KEY, id], () => SubcategoriesService.getById(id));
+};
+
 export const useGetSubcategoryFilterAttributes = (subcategoryId?: number, options?: UseQueryOptions<AttributeWithValues[], unknown, AttributeWithValues[], [string, typeof subcategoryId]>) => {
 	return useQuery(
 		[GET_SUBCATEGORY_FILTER_ATTRIBUTES_KEY, subcategoryId],

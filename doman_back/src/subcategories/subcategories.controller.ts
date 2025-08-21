@@ -47,6 +47,14 @@ export class SubcategoriesController {
 		return subcategories;
 	}
 
+	@ApiOperation({ summary: "Getting subcategory by id" })
+	@ApiResponse({ type: Subcategory })
+	@Get("/:id")
+	async getById(@Param("id") id: number) {
+		const subcategory = await this.subcategoriesService.getSubcategoryById(id);
+		return subcategory;
+	}
+
 	@ApiOperation({ summary: "Getting subcategory by slug" })
 	@ApiResponse({ type: Subcategory })
 	@Get("/slug/:slug")

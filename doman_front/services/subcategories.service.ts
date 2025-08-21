@@ -25,6 +25,11 @@ export const SubcategoriesService = {
 		return data;
 	},
 
+	async getById(id: number): Promise<Subcategory> {
+		const { data } = await customAxios.get(`${ApiRoutes.Subcategories}/${id}`);
+		return data;
+	},
+
 	async getFilterAttributes(subcategoryId: number): Promise<AttributeWithValues[]> {
 		const { data } = await customAxios.get(`${ApiRoutes.Subcategories}/${subcategoryId}/attributes`);
 		return data;

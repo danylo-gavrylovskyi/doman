@@ -10,7 +10,6 @@ import { Search } from "@/components/Search/Search";
 
 import {
 	useDeleteSubcategory,
-	useEditSubcategory,
 	useGetSubcategoriesWithPagination,
 } from "@/hooks/subcategories.hooks";
 
@@ -30,7 +29,6 @@ const Subcategories = () => {
 
 	const { data: subcategories } = useGetSubcategoriesWithPagination({ page, perPage, inputValue });
 
-	const editSubcategory = useEditSubcategory();
 	const deleteSubcategory = useDeleteSubcategory();
 
 	return (
@@ -48,7 +46,7 @@ const Subcategories = () => {
 					subcategories.rows.map((subcategory: Subcategory) => (
 						<AdminCategory
 							key={subcategory.id}
-							edit={editSubcategory}
+							linkToUpdatePage={`/admin/subcategories/${subcategory.id}`}
 							deleteItem={deleteSubcategory}
 							subcategoryParent={subcategory.category}
 							{...subcategory}

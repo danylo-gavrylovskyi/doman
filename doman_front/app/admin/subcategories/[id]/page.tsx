@@ -1,24 +1,25 @@
 'use client'
 
 import { MenuItem, TextField } from '@mui/material';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import React from 'react'
-import slugify from 'slugify';
 
 import { useGetCategories } from '@/hooks/categories.hooks';
-import { useAddSubcategory } from '@/hooks/subcategories.hooks';
+import { useEditSubcategory, useGetSubcategoryById } from '@/hooks/subcategories.hooks';
 
 import { Category } from '@/types/category.interface';
 
-import styles from "./add-subcategory.module.scss"
+import styles from "../new/add-subcategory.module.scss"
 
-const AddSubcategory = () => {
+const UpdateSubcategory = () => {
     const { push } = useRouter();
+    const { id } = useParams();
 
+    const { data: subcategory } = useGetSubcategoryById(Number(id));
     const { data: categories } = useGetCategories();
-    const addSubcategory = useAddSubcategory();
+    const updateSubcategory = useEditSubcategory();
 
-    const onSaveSubcategory = (event: React.FormEvent<HTMLFormElement>) => {
+    const onUpdateSubcategory = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         const categoryId: string = (
@@ -35,27 +36,27 @@ const AddSubcategory = () => {
         const image = fileInput?.files ? fileInput.files[0] : null;
 
         const formData = new FormData();
-        formData.append("title", title);
-        formData.append("slug", slugify(title));
-        formData.append("categoryId", categoryId);
-        if (image === null) {
-            throw new Error("You didn't choose the file");
-        }
-        formData.append("image", image);
+        if (title) formData.append("title", title);
+        if (categoryId) formData.append("categoryId", categoryId);
+        if (image) formData.append("image", image);
 
-        addSubcategory(formData);
+        updateSubcategory({ id: Number(id), formData });
         push("/admin/subcategories");
     };
 
+    if (!subcategory) {
+        return <div>Loading subcategory...</div>
+    }
+
     return (
         <>
-            <header className={styles.heading}>Додавання підкатегорії</header>
+            <header className={styles.heading}>Редагування підкатегорії</header>
 
-            <form onSubmit={onSaveSubcategory} className={styles.form} aria-label="add subcategory form">
+            <form onSubmit={onUpdateSubcategory} className={styles.form} aria-label="add subcategory form">
 
                 <div className={styles.row}>
                     <section style={{ width: "35dvw" }}>
-                        <TextField name="title" fullWidth label="Назва" />
+                        <TextField defaultValue={subcategory.title} name="title" fullWidth label="Назва" />
                     </section>
 
                     <section>
@@ -64,7 +65,7 @@ const AddSubcategory = () => {
                             className={styles.select}
                             select
                             label="Категорія"
-                            defaultValue=""
+                            defaultValue={subcategory.categoryId}
                             style={{ minWidth: "10dvw" }}
                         >
                             {categories?.length ? (
@@ -96,4 +97,4 @@ const AddSubcategory = () => {
     )
 }
 
-export default AddSubcategory;
+export default UpdateSubcategory;

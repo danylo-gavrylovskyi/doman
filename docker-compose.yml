@@ -21,6 +21,8 @@ services:
             - PASS=${PASS}
             - FROM=${FROM}
             - TO=${TO}
+            - FRONTEND_URL=${FRONTEND_URL}
+            - REVALIDATE_SECRET=${REVALIDATE_SECRET}
         restart: on-failure
         networks:
             - doman-network
@@ -35,6 +37,8 @@ services:
                 condition: service_started
         environment:
             - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+            - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
+            - REVALIDATE_SECRET=${REVALIDATE_SECRET}
         restart: on-failure
         networks:
             - doman-network

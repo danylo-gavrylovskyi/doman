@@ -1,13 +1,22 @@
-"use client";
-
 import React from "react";
 
-import { useGetCompanyDetails } from "@/hooks/company-details.hooks";
+import { SITE } from "@/config/seo.config";
 
-const ReturnsAndExchanges = () => {
-	const content = useGetCompanyDetails().data?.returns_and_exchanges_content;
+import { ReturnsAndExchangesContent } from "./ReturnsAndExchangesContent";
 
-	return <div style={{ height: "60vh" }}>{content}</div>;
+import type { Metadata } from "next";
+
+
+export const metadata: Metadata = {
+	title: "Повернення та обмін",
+	description: `Умови повернення та обміну товарів в інтернет-магазині ${SITE.name}.`,
+	alternates: { canonical: "/returns-and-exchanges" },
+	openGraph: {
+		title: `Повернення та обмін | ${SITE.name}`,
+		url: `${SITE.url}/returns-and-exchanges`,
+	},
 };
 
-export default ReturnsAndExchanges;
+export default function ReturnsAndExchangesPage() {
+	return <ReturnsAndExchangesContent />;
+}

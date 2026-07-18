@@ -14,6 +14,7 @@ import { FileInterceptor } from "@nestjs/platform-express";
 
 import { BannersService } from "./banners.service";
 import { ImagesService } from "src/images/images.service";
+import { RevalidationService } from "src/revalidation/revalidation.service";
 
 import { Auth } from "src/auth/decorators/auth.decorator";
 
@@ -23,6 +24,7 @@ import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/commo
 export class BannersController {
 	constructor(
 		private bannersService: BannersService,
+		private revalidationService: RevalidationService,
 	) { }
 
 	@ApiOperation({ summary: "Getting all banners" })
@@ -50,6 +52,7 @@ export class BannersController {
 		if (!banner) {
 			throw new BadRequestException("Banner image is required");
 		}
+		void this.revalidationService.revalidateBanners();
 		return banner.filename;
 	}
 

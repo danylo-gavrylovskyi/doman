@@ -10,13 +10,15 @@ import { Category } from "src/categories/category.model";
 
 import { Product } from "src/products/product.model";
 import { ImagesModule } from "src/images/images.module";
+import { RevalidationModule } from "src/revalidation/revalidation.module";
 
 @Module({
 	controllers: [SubcategoriesController],
 	providers: [SubcategoriesService, Logger],
 	imports: [
 		SequelizeModule.forFeature([Subcategory, Category, Product]),
-		ImagesModule
+		ImagesModule,
+		RevalidationModule
 	],
 })
 export class SubcategoriesModule { }

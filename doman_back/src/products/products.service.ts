@@ -6,6 +6,7 @@ import * as XLSX from "xlsx";
 
 import { ProductAttributeService } from "src/product-attribute/product-attribute.service";
 import { ImagesService } from "src/images/images.service";
+import { RevalidationService } from "src/revalidation/revalidation.service";
 
 import { Subcategory } from "src/subcategories/subcategory.model";
 import { ProductAttribute } from "src/product-attribute/product-attribute.model";
@@ -25,7 +26,8 @@ export class ProductsService {
 		@InjectModel(Product) private productsRepository: typeof Product,
 		private productAttributeService: ProductAttributeService,
 		private readonly logger: Logger,
-		private readonly imagesService: ImagesService
+		private readonly imagesService: ImagesService,
+		private readonly revalidationService: RevalidationService
 	) { }
 
 	async getProductsWithPagination(
@@ -174,6 +176,7 @@ export class ProductsService {
 				ProductsService.name
 			)
 
+			void this.revalidationService.revalidateProducts();
 			return product;
 		})
 	}
@@ -212,6 +215,7 @@ export class ProductsService {
 
 			await transaction.commit();
 			this.logger.log(`Successfully loaded ${xlData.length} products from ${filename}`, ProductsService.name);
+			void this.revalidationService.revalidateProducts();
 			return xlData;
 		} catch (error) {
 			await transaction.rollback();
@@ -264,6 +268,7 @@ export class ProductsService {
 			dto.image && await this.imagesService.deleteImage("productsImages", foundProduct.image);
 			selfManagedTransaction && await transaction.commit();
 			this.logger.log(`Updated product with id=${id}`, ProductsService.name);
+			if (selfManagedTransaction) void this.revalidationService.revalidateProducts();
 		} catch (error) {
 			selfManagedTransaction && await transaction.rollback();
 			this.logger.error(`Failed to update product id=${id}: ${error.message}`, error.stack, ProductsService.name);
@@ -284,6 +289,7 @@ export class ProductsService {
 		product.image && await this.imagesService.deleteImage("productsImages", product.image);
 
 		this.logger.log(`Deleted product with id=${id}`, ProductsService.name);
+		void this.revalidationService.revalidateProducts();
 		return deletedCount > 0;
 	}
 

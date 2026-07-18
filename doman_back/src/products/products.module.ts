@@ -2,6 +2,7 @@ import { Logger, Module } from "@nestjs/common";
 import { SequelizeModule } from "@nestjs/sequelize";
 
 import { ImagesModule } from "src/images/images.module";
+import { RevalidationModule } from "src/revalidation/revalidation.module";
 
 import { ProductsController } from "./products.controller";
 
@@ -17,7 +18,8 @@ import { ProductAttribute } from "src/product-attribute/product-attribute.model"
 	providers: [ProductsService, ProductAttributeService, Logger],
 	imports: [
 		SequelizeModule.forFeature([Product, Subcategory, ProductAttribute]),
-		ImagesModule
+		ImagesModule,
+		RevalidationModule
 	],
 })
 export class ProductsModule { }

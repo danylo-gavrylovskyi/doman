@@ -1,121 +1,132 @@
-"use client";
-
 import Image from "next/image";
-import { useParams, useSearchParams } from "next/navigation";
+import { notFound } from "next/navigation";
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
 
-import { clearFilters, toggleFilter } from "@/redux/features/filterSlice";
-import { RootState } from "@/redux/store";
+import { SITE, absoluteUrl, uploadUrl } from "@/config/seo.config";
 
-import { Filter } from "@/modules/Filter/Filter";
-import { SkeletonPage } from "@/modules/SkeletonPage/SkeletonPage";
+import { SubcategoriesService } from "@/services/subcategories.service";
 
-import { FilterBlock } from "@/components/FilterBlock/FilterBlock";
-import { Item } from "@/components/Item/Item";
-import { Pagination } from "@/components/Pagination/Pagination";
+import { JsonLd } from "@/components/JsonLd";
 
-import { useGetProductsWithPagination } from "@/hooks/products.hooks";
-import { useGetSubcategoryBySlug, useGetSubcategoryFilterAttributes } from "@/hooks/subcategories.hooks";
+import { Subcategory } from "@/types/category.interface";
 
-import { sanitizePagination } from "@/utils/sanitizePagination";
-
-import { PAGINATION_FALLBACK_PAGE, PAGINATION_FALLBACK_PER_PAGE } from "@/types/constants/paginationFallbackValues";
 
 import styles from "../../categories/[category]/CategoryPage.module.scss";
 
-const SubcategoryPage = () => {
-	const dispatch = useDispatch();
-	const checkedAttributes = useSelector((state: RootState) => state.filter.checkedAttributes);
+import { SubcategoryListing } from "./SubcategoryListing";
 
-	const subcategorySlug: string = useParams().subcategory as string;
-	const queryParams = useSearchParams();
-	const perPage = sanitizePagination(queryParams.get("perPage"), PAGINATION_FALLBACK_PER_PAGE)
-	const page = sanitizePagination(queryParams.get("page"), PAGINATION_FALLBACK_PAGE);
+import type { Metadata } from "next";
 
-	React.useEffect(() => {
-		dispatch(clearFilters());
-	}, [subcategorySlug, dispatch])
+// ISR: cache the rendered page and refresh in the background.
+export const revalidate = 300;
 
-	const { data: subcategory } = useGetSubcategoryBySlug(subcategorySlug);
-	const { data: products } = useGetProductsWithPagination({
-		page,
-		perPage,
-		subcategoryId: subcategory?.id,
-		filterParams: checkedAttributes
-	}, { enabled: !!subcategory?.id });
+interface SubcategoryPageProps {
+	params: { subcategory: string };
+}
 
-	const { data: filterAttributes } = useGetSubcategoryFilterAttributes(subcategory?.id);
-
-	if (!subcategory || !products || !filterAttributes) {
-		return <SkeletonPage />;
+const getSubcategory = async (slug: string): Promise<Subcategory | null> => {
+	try {
+		return await SubcategoriesService.getBySlug(slug);
+	} catch {
+		return null;
 	}
+};
+
+export async function generateMetadata({ params }: SubcategoryPageProps): Promise<Metadata> {
+	const subcategory = await getSubcategory(params.subcategory);
+
+	if (!subcategory) {
+		return { title: "Підкатегорію не знайдено", robots: { index: false, follow: false } };
+	}
+
+	const description = `${subcategory.title} — купуйте в інтернет-магазині ${SITE.name}. Широкий вибір товарів, доступні ціни та доставка по Україні.`;
+	const image = uploadUrl("subcategoriesImages", subcategory.image);
+	const canonical = `/subcategories/${subcategory.slug}`;
+
+	return {
+		title: subcategory.title,
+		description,
+		alternates: { canonical },
+		openGraph: {
+			title: subcategory.title,
+			description,
+			url: absoluteUrl(canonical),
+			images: image ? [{ url: image, alt: subcategory.title }] : undefined,
+		},
+	};
+}
+
+export async function generateStaticParams() {
+	try {
+		const subcategories = await SubcategoriesService.getAll();
+		return subcategories.map((subcategory) => ({ subcategory: subcategory.slug }));
+	} catch {
+		return [];
+	}
+}
+
+export default async function SubcategoryPage({ params }: SubcategoryPageProps) {
+	const subcategory = await getSubcategory(params.subcategory);
+
+	if (!subcategory) {
+		notFound();
+	}
+
+	const image = uploadUrl("subcategoriesImages", subcategory.image);
+	const canonical = absoluteUrl(`/subcategories/${subcategory.slug}`);
+
+	const breadcrumbJsonLd = {
+		"@context": "https://schema.org",
+		"@type": "BreadcrumbList",
+		itemListElement: [
+			{ "@type": "ListItem", position: 1, name: "Головна", item: SITE.url },
+			...(subcategory.category
+				? [
+						{
+							"@type": "ListItem",
+							position: 2,
+							name: subcategory.category.title,
+							item: absoluteUrl(`/categories/${subcategory.category.slug}`),
+						},
+				  ]
+				: []),
+			{
+				"@type": "ListItem",
+				position: subcategory.category ? 3 : 2,
+				name: subcategory.title,
+				item: canonical,
+			},
+		],
+	};
+
+	const collectionJsonLd = {
+		"@context": "https://schema.org",
+		"@type": "CollectionPage",
+		name: subcategory.title,
+		url: canonical,
+		inLanguage: "uk-UA",
+	};
 
 	return (
 		<div className={styles.container}>
-			<p className={styles.title}>
-				<Image
-					alt={subcategory.slug}
-					src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/subcategoriesImages/${subcategory.image}`}
-					width={50}
-					height={50}
-					sizes="(max-width: 690px) 10vw, 50px"
-					style={{
-						width: "auto",
-						height: "auto",
-						maxWidth: "10%",
-					}}
-				/>
+			<JsonLd data={breadcrumbJsonLd} />
+			<JsonLd data={collectionJsonLd} />
+
+			<h1 className={styles.title}>
+				{image && (
+					<Image
+						alt={subcategory.title}
+						src={image}
+						width={50}
+						height={50}
+						sizes="(max-width: 690px) 10vw, 50px"
+						style={{ width: "auto", height: "auto", maxWidth: "10%" }}
+					/>
+				)}
 				{subcategory.title}
-			</p>
-			<div className={styles.filterBtn}>
-				<button onClick={() => dispatch(toggleFilter())}>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="25%"
-						viewBox="0 0 64 64"
-						strokeWidth="3"
-						stroke="#ffffff"
-						fill="none">
-						<line x1="50.69" y1="32" x2="56.32" y2="32" />
-						<line x1="7.68" y1="32" x2="38.69" y2="32" />
-						<line x1="26.54" y1="15.97" x2="56.32" y2="15.97" />
-						<line x1="7.68" y1="15.97" x2="14.56" y2="15.97" />
-						<line x1="35" y1="48.03" x2="56.32" y2="48.03" />
-						<line x1="7.68" y1="48.03" x2="23" y2="48.03" />
-						<circle cx="20.55" cy="15.66" r="6" />
-						<circle cx="44.69" cy="32" r="6" />
-						<circle cx="29" cy="48.03" r="6" />
-					</svg>
-					Фільтр
-				</button>
-			</div>
-			<Filter attributesWithValues={filterAttributes} />
-			<div className={styles.filterProd}>
-				<aside className={styles.filter}>
-					{filterAttributes.map((attributeWithValues) => (
-						<FilterBlock
-							key={attributeWithValues.title}
-							attributeName={attributeWithValues.title}
-							attributeValues={attributeWithValues.values}
-						/>
-					))}
-				</aside>
-				<main className={styles.products}>
-					{products.rows.map((product) => (
-						<Item key={product.id} {...product} />
-					))}
-				</main>
-			</div>
-			<footer>
-				<Pagination
-					elementsCount={products.count}
-					perPage={perPage}
-					currentPage={page}
-				/>
-			</footer>
+			</h1>
+
+			<SubcategoryListing subcategoryId={subcategory.id} />
 		</div>
 	);
-};
-
-export default SubcategoryPage;
+}

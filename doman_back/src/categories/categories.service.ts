@@ -3,6 +3,7 @@ import { InjectModel } from "@nestjs/sequelize";
 import { Op } from "sequelize";
 
 import { ImagesService } from "src/images/images.service";
+import { RevalidationService } from "src/revalidation/revalidation.service";
 
 import { Category } from "./category.model";
 import { Subcategory } from "src/subcategories/subcategory.model";
@@ -22,7 +23,8 @@ export class CategoriesService {
 		@InjectModel(Subcategory) private subcategoryRepository: typeof Subcategory,
 		@InjectModel(Product) private productRepository: typeof Product,
 		private readonly logger: Logger,
-		private readonly imagesService: ImagesService
+		private readonly imagesService: ImagesService,
+		private readonly revalidationService: RevalidationService
 	) { }
 
 	async getAllCategories(): Promise<Category[]> {
@@ -148,6 +150,7 @@ export class CategoriesService {
 		const category = await this.categoryRepository.create(dto);
 		this.logger.log(`Created category with title="${category.title}"`, CategoriesService.name);
 
+		void this.revalidationService.revalidateCategories();
 		return category;
 	}
 
@@ -170,6 +173,7 @@ export class CategoriesService {
 		);
 		this.logger.log(`Updated category with id=${id}`, CategoriesService.name);
 
+		void this.revalidationService.revalidateCategories();
 		return updatedCategory[0];
 	}
 
@@ -186,6 +190,7 @@ export class CategoriesService {
 		const deletedCount = await this.categoryRepository.destroy({ where: { id } });
 
 		this.logger.log(`Deleted category with id=${id}`, CategoriesService.name);
+		void this.revalidationService.revalidateCategories();
 		return deletedCount > 0;
 	}
 }

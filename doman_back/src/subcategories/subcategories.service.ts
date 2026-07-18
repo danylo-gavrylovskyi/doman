@@ -3,6 +3,7 @@ import { InjectModel } from "@nestjs/sequelize";
 import { Op } from "sequelize";
 
 import { ImagesService } from "src/images/images.service";
+import { RevalidationService } from "src/revalidation/revalidation.service";
 
 import { Subcategory } from "./subcategory.model";
 import { Category } from "src/categories/category.model";
@@ -21,7 +22,8 @@ export class SubcategoriesService {
 		@InjectModel(Subcategory) private subcategoryRepository: typeof Subcategory,
 		@InjectModel(Product) private productRepository: typeof Product,
 		private readonly logger: Logger,
-		private readonly imagesService: ImagesService
+		private readonly imagesService: ImagesService,
+		private readonly revalidationService: RevalidationService
 	) { }
 
 	private readonly includeCategory = [
@@ -142,6 +144,7 @@ export class SubcategoriesService {
 		const subcategory = await this.subcategoryRepository.create(dto);
 		this.logger.log(`Created subcategory with title="${subcategory.title}" and parentId="${dto.categoryId}"`, SubcategoriesService.name);
 
+		void this.revalidationService.revalidateSubcategories();
 		return subcategory;
 	}
 
@@ -164,7 +167,7 @@ export class SubcategoriesService {
 		);
 		this.logger.log(`Updated subcategory with id=${id}`, SubcategoriesService.name);
 
-
+		void this.revalidationService.revalidateSubcategories();
 		return updatedSubcategory[0];
 	}
 
@@ -181,6 +184,7 @@ export class SubcategoriesService {
 		const deletedCount = await this.subcategoryRepository.destroy({ where: { id } });
 
 		this.logger.log(`Deleted subcategory with id=${id}`, SubcategoriesService.name);
+		void this.revalidationService.revalidateSubcategories();
 		return deletedCount > 0;
 	}
 }

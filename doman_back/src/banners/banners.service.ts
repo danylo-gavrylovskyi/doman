@@ -1,6 +1,7 @@
 import { Injectable, InternalServerErrorException, Logger } from "@nestjs/common";
 
 import { ImagesService } from "src/images/images.service";
+import { RevalidationService } from "src/revalidation/revalidation.service";
 
 import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/common/dto/paginatedEntity.dto";
 
@@ -8,7 +9,8 @@ import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/commo
 export class BannersService {
 	constructor(
 		private readonly logger: Logger,
-		private readonly imagesService: ImagesService
+		private readonly imagesService: ImagesService,
+		private readonly revalidationService: RevalidationService
 	) { }
 
 	async getAllBanners(): Promise<string[]> {
@@ -45,5 +47,6 @@ export class BannersService {
 
 	async deleteBanner(bannerUrl: string): Promise<void> {
 		await this.imagesService.deleteImage("banners", bannerUrl)
+		void this.revalidationService.revalidateBanners();
 	}
 }

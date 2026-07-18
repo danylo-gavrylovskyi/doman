@@ -1,13 +1,22 @@
-"use client";
-
 import React from "react";
 
-import { useGetCompanyDetails } from "@/hooks/company-details.hooks";
+import { SITE } from "@/config/seo.config";
 
-const AboutCompany = () => {
-	const content = useGetCompanyDetails().data?.about_company_content;
+import { AboutCompanyContent } from "./AboutCompanyContent";
 
-	return <div style={{ height: "60vh" }}>{content}</div>;
+import type { Metadata } from "next";
+
+
+export const metadata: Metadata = {
+	title: "Про компанію",
+	description: `Дізнайтеся більше про компанію ${SITE.name} — наш асортимент, цінності та переваги.`,
+	alternates: { canonical: "/about-company" },
+	openGraph: {
+		title: `Про компанію | ${SITE.name}`,
+		url: `${SITE.url}/about-company`,
+	},
 };
 
-export default AboutCompany;
+export default function AboutCompanyPage() {
+	return <AboutCompanyContent />;
+}

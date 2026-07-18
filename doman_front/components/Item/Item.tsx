@@ -5,6 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
+import { uploadUrl } from "@/config/seo.config";
+
 import { addToCart } from "@/redux/features/cartSlice";
 import { useAppDispatch } from "@/redux/store";
 
@@ -23,7 +25,7 @@ export const Item = (product: Product) => {
 				<section className={styles.imgBg}>
 					<div className={styles.imageWrapper}>
 						<Image
-							src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/productsImages/${product.image}`}
+							src={uploadUrl("productsImages", product.image) ?? ""}
 							alt={product.title}
 							fill
 							sizes="(max-width: 500px) 100vw, (max-width: 1200px) 50vw, 33vw"

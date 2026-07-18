@@ -3,6 +3,8 @@ import { UseMutateFunction } from "@tanstack/react-query";
 import Image from "next/image";
 import React from "react";
 
+import { uploadUrl } from "@/config/seo.config";
+
 import styles from "./AdminBanner.module.scss";
 
 interface AdminBannerProps {
@@ -14,7 +16,7 @@ export const AdminBanner = ({ bannerUrl, deleteBanner }: AdminBannerProps) => {
 	return (
 		<Paper elevation={3} className={styles.container}>
 			<Image
-				src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/banners/${bannerUrl}`}
+				src={uploadUrl("banners", bannerUrl) ?? ""}
 				alt="Banner"
 				width={800}
 				height={200}

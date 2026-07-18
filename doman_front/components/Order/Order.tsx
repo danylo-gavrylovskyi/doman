@@ -1,6 +1,8 @@
 import Image from "next/image";
 import React from "react";
 
+import { uploadUrl } from "@/config/seo.config";
+
 import styles from "./order.module.scss";
 import { OrderProps } from "./orderProps.interface";
 
@@ -17,7 +19,7 @@ export const Order = ({ orderId, totalPrice, createdAt, orderProducts, height }:
 				{orderProducts.map((orderProduct) => (
 					<div key={orderProduct.id} className={styles.imageWrapper}>
 						<Image
-							src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/productsImages/${orderProduct.product.image}`}
+							src={uploadUrl("productsImages", orderProduct.product.image) ?? ""}
 							alt={orderProduct.product.slug}
 							fill
 							sizes="(max-width: 768px) 15vw, 5vw"

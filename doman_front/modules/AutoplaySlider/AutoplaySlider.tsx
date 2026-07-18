@@ -10,6 +10,7 @@ import {
 	previousBanner,
 	setCurrentBanner,
 } from "@/redux/features/admin/adminGeneralSlice";
+import { uploadUrl } from "@/config/seo.config";
 
 import styles from "./AutoplaySlider.module.scss";
 
@@ -28,7 +29,7 @@ export const AutoplaySlider = ({ banners }: { banners: string[] }) => {
 	return (
 		<div className={styles.sliderImgContainer}>
 			<Image
-				src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/banners/${banners[currentBanner]}`}
+				src={uploadUrl("banners", banners[currentBanner]) ?? ""}
 				alt="banner"
 				width={1280} // max width of your container
 				height={400} // approximate aspect ratio height

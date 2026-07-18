@@ -1,7 +1,6 @@
 import { Injectable, InternalServerErrorException, Logger, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
 import { FindOptions, Op, QueryTypes, Transaction, WhereOptions } from "sequelize";
-import * as path from "path";
 import * as XLSX from "xlsx";
 
 import { ProductAttributeService } from "src/product-attribute/product-attribute.service";
@@ -181,10 +180,10 @@ export class ProductsService {
 		})
 	}
 
-	async loadProductsViaExcel(filename: string): Promise<Product[]> {
-		this.logger.debug(`Loading products from excel file: ${filename}`, ProductsService.name);
+	async loadProductsViaExcel(fileBuffer: Buffer): Promise<Product[]> {
+		this.logger.debug(`Loading products from uploaded excel file`, ProductsService.name);
 
-		const workbook = XLSX.readFile(path.resolve(process.cwd(), "uploads", "excel", filename));
+		const workbook = XLSX.read(fileBuffer, { type: "buffer" });
 		const sheetNameList = workbook.SheetNames;
 		const xlData: Product[] = XLSX.utils.sheet_to_json(workbook.Sheets[sheetNameList[0]]);
 
@@ -214,12 +213,12 @@ export class ProductsService {
 			}
 
 			await transaction.commit();
-			this.logger.log(`Successfully loaded ${xlData.length} products from ${filename}`, ProductsService.name);
+			this.logger.log(`Successfully loaded ${xlData.length} products from excel`, ProductsService.name);
 			void this.revalidationService.revalidateProducts();
 			return xlData;
 		} catch (error) {
 			await transaction.rollback();
-			this.logger.error(`Failed to load products from ${filename}: ${error.message}`, error.stack, ProductsService.name);
+			this.logger.error(`Failed to load products from excel: ${error.message}`, error.stack, ProductsService.name);
 			throw new InternalServerErrorException("Error while loading products from excel file");
 		}
 	}

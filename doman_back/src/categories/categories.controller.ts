@@ -29,7 +29,10 @@ import { AttributeWithValuesDto } from "src/common/dto/attributeWithValues.dto";
 @ApiTags("Categories")
 @Controller("categories")
 export class CategoriesController {
-	constructor(private categoriesService: CategoriesService) { }
+	constructor(
+		private categoriesService: CategoriesService,
+		private imagesService: ImagesService,
+	) { }
 
 	@ApiOperation({ summary: "Getting all categories" })
 	@ApiResponse({ type: [Category] })
@@ -78,7 +81,7 @@ export class CategoriesController {
 	@ApiResponse({ type: Category })
 	@Auth("admin")
 	@Post()
-	@UseInterceptors(FileInterceptor("image", ImagesService.getImageStorage("categoriesImages")))
+	@UseInterceptors(FileInterceptor("image", ImagesService.getUploadOptions()))
 	async add(
 		@Body() dto: { title: string; slug: string },
 		@UploadedFile() file: Express.Multer.File
@@ -86,9 +89,10 @@ export class CategoriesController {
 		if (!file) {
 			throw new BadRequestException("Category image is required");
 		}
+		const filename = await this.imagesService.uploadImage("categoriesImages", file);
 		const category = await this.categoriesService.addCategory({
 			...dto,
-			image: file.filename,
+			image: filename,
 		});
 		return category;
 	}
@@ -105,7 +109,7 @@ export class CategoriesController {
 	@ApiResponse({ type: Category })
 	@Auth("admin")
 	@Patch("/:id")
-	@UseInterceptors(FileInterceptor("image", ImagesService.getImageStorage("categoriesImages")))
+	@UseInterceptors(FileInterceptor("image", ImagesService.getUploadOptions()))
 	async edit(
 		@Param("id") categoryId: number,
 		@Body() dto: { title: string },
@@ -114,9 +118,10 @@ export class CategoriesController {
 		let updatedCategory: Category;
 
 		if (file) {
+			const filename = await this.imagesService.uploadImage("categoriesImages", file);
 			updatedCategory = await this.categoriesService.editCategory(categoryId, {
 				...dto,
-				image: file.filename,
+				image: filename,
 			});
 			return updatedCategory;
 		}

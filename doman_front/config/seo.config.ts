@@ -17,8 +17,17 @@ export const SITE = {
 
 export const absoluteUrl = (path = "") => `${SITE.url}${path.startsWith("/") ? path : `/${path}`}`;
 
-/** Builds an absolute URL to an uploaded image served by the backend. */
+/**
+ * Public base URL for uploaded images. In production this points at the object
+ * storage bucket / CDN (NEXT_PUBLIC_UPLOADS_URL). Falls back to the API's
+ * /uploads path for local setups that still serve images from the backend.
+ */
+export const UPLOADS_BASE = stripTrailingSlash(
+	process.env.NEXT_PUBLIC_UPLOADS_URL || `${process.env.NEXT_PUBLIC_API_URL}/uploads`
+);
+
+/** Builds an absolute URL to an uploaded image. Returns undefined when no file. */
 export const uploadUrl = (folder: string, filename?: string | null) => {
 	if (!filename) return undefined;
-	return `${process.env.NEXT_PUBLIC_API_URL}/uploads/${folder}/${filename}`;
+	return `${UPLOADS_BASE}/${folder}/${filename}`;
 };

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Paper } from "@mui/material";
 
 import { Product } from "@/types/product.interface";
+import { uploadUrl } from "@/config/seo.config";
 
 import styles from "./HeaderProducts.module.scss";
 
@@ -13,7 +14,7 @@ export const HeaderProduct = (product: Product) => {
 				<img
 					width={"20%"}
 					alt="product"
-					src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/productsImages/${product.image}`}></img>
+					src={uploadUrl("productsImages", product.image)}></img>
 				<div>
 					<p>{product.title}</p>
 					<p>{product.price}грн.</p>

@@ -3,6 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
+import { uploadUrl } from "@/config/seo.config";
+
 import { useDeleteProduct } from "@/hooks/products.hooks";
 
 import { Product } from "@/types/product.interface";
@@ -24,7 +26,7 @@ export const AdminProduct = ({
 		<Paper elevation={3} className={styles.container}>
 			<div style={{ width: "15%", minWidth: 80, position: "relative", height: 90 }}>
 				<Image
-					src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/productsImages/${image}`}
+					src={uploadUrl("productsImages", image) ?? ""}
 					alt={title}
 					fill
 					style={{ objectFit: "contain" }}

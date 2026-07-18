@@ -3,6 +3,8 @@ import Link from "next/link";
 import React from "react";
 import { useDispatch } from "react-redux";
 
+import { uploadUrl } from "@/config/seo.config";
+
 import { addToCart, removeFromCart, removeOneUnit, changeCartStatus } from "@/redux/features/cartSlice";
 
 import { CartProduct } from "@/types/product.interface";
@@ -17,7 +19,7 @@ export const CartProductCard = (props: CartProduct) => {
 		<div className={styles.container}>
 			<div className={styles.imageWrapper}>
 				<Image
-					src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/productsImages/${image}`}
+					src={uploadUrl("productsImages", image) ?? ""}
 					alt={title}
 					fill
 					sizes="(max-width: 768px) 30vw, (max-width: 1200px) 20vw, 15vw"

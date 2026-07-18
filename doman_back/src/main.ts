@@ -1,8 +1,6 @@
 import { NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 
-import * as express from "express";
-import * as path from "path";
 import helmet from "helmet";
 
 import { AppModule } from "./app.module";
@@ -21,7 +19,7 @@ async function bootstrap() {
 	const document = SwaggerModule.createDocument(app, config);
 	SwaggerModule.setup("/api/docs", app, document);
 
-	app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
+	app.use(helmet());
 
 	const allowedOrigins = (process.env.CORS_ORIGINS || process.env.FRONTEND_URL || "")
 		.split(",")
@@ -32,8 +30,6 @@ async function bootstrap() {
 		origin: allowedOrigins.length > 0 ? allowedOrigins : true,
 		credentials: true,
 	});
-
-	app.use("/uploads", express.static(path.resolve(process.cwd(), "uploads")));
 
 	app.useGlobalPipes(
 		new ValidationPipe({

@@ -33,6 +33,7 @@ import { UpdateProductDto } from "./dto/update-product.dto";
 export class ProductsController {
 	constructor(
 		private productsService: ProductsService,
+		private imagesService: ImagesService,
 	) { }
 
 	@ApiOperation({ description: "Getting all products" })
@@ -71,7 +72,7 @@ export class ProductsController {
 	@ApiOperation({ description: "Adding product" })
 	@ApiResponse({ type: Product })
 	@Auth("admin")
-	@UseInterceptors(FileInterceptor("image", ImagesService.getImageStorage("productsImages")))
+	@UseInterceptors(FileInterceptor("image", ImagesService.getUploadOptions()))
 	@Post()
 	async add(
 		@Body() dto: CreateProductDto,
@@ -80,24 +81,28 @@ export class ProductsController {
 		if (!image) {
 			throw new BadRequestException("Product image is required");
 		}
-		const product = await this.productsService.addProduct({ ...dto, image: image.filename });
+		const filename = await this.imagesService.uploadImage("productsImages", image);
+		const product = await this.productsService.addProduct({ ...dto, image: filename });
 		return product;
 	}
 
 	@ApiOperation({ description: "Adding products from excel table" })
 	@ApiResponse({ type: [Product] })
 	@Auth("admin")
-	@UseInterceptors(FileInterceptor("file", ImagesService.getImageStorage("excel")))
+	@UseInterceptors(FileInterceptor("file", ImagesService.getUploadOptions()))
 	@Post("/excel")
 	async loadProductsFromTable(@UploadedFile() file: Express.Multer.File) {
-		const products: Product[] = await this.productsService.loadProductsViaExcel(file.filename);
+		if (!file) {
+			throw new BadRequestException("Excel file is required");
+		}
+		const products: Product[] = await this.productsService.loadProductsViaExcel(file.buffer);
 		return products;
 	}
 
 	@ApiOperation({ description: "Updating product" })
 	@ApiResponse({ type: Product })
 	@Auth("admin")
-	@UseInterceptors(FileInterceptor("image", ImagesService.getImageStorage("productsImages")))
+	@UseInterceptors(FileInterceptor("image", ImagesService.getUploadOptions()))
 	@HttpCode(204)
 	@Patch("/:id")
 	async update(
@@ -105,7 +110,8 @@ export class ProductsController {
 		@Body() dto: UpdateProductDto,
 		@UploadedFile() image: Express.Multer.File
 	) {
-		await this.productsService.updateProduct(productId, { ...dto, image: image?.filename });
+		const filename = image ? await this.imagesService.uploadImage("productsImages", image) : undefined;
+		await this.productsService.updateProduct(productId, { ...dto, image: filename });
 	}
 
 	@ApiOperation({ description: "Deleting product" })

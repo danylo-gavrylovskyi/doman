@@ -24,6 +24,7 @@ import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/commo
 export class BannersController {
 	constructor(
 		private bannersService: BannersService,
+		private imagesService: ImagesService,
 		private revalidationService: RevalidationService,
 	) { }
 
@@ -47,13 +48,14 @@ export class BannersController {
 	@ApiResponse({ type: String })
 	@Auth("admin")
 	@Post()
-	@UseInterceptors(FileInterceptor("banner", ImagesService.getImageStorage("banners")))
-	add(@UploadedFile() banner: Express.Multer.File) {
+	@UseInterceptors(FileInterceptor("banner", ImagesService.getUploadOptions()))
+	async add(@UploadedFile() banner: Express.Multer.File) {
 		if (!banner) {
 			throw new BadRequestException("Banner image is required");
 		}
+		const filename = await this.imagesService.uploadImage("banners", banner);
 		void this.revalidationService.revalidateBanners();
-		return banner.filename;
+		return filename;
 	}
 
 	@ApiOperation({ summary: "Deleting banner" })

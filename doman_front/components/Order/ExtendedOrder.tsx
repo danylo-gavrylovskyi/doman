@@ -1,6 +1,8 @@
 import Image from "next/image";
 import React from "react";
 
+import { uploadUrl } from "@/config/seo.config";
+
 import styles from "./order.module.scss";
 import { ExtendedOrderProps } from "./orderProps.interface";
 
@@ -51,7 +53,7 @@ export const ExtendedOrder = ({
 								<div style={{ display: "flex", width: "50%", alignItems: "center" }}>
 									<div className={styles.extendedOrderImageWrapper}>
 										<Image
-											src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/productsImages/${product.image}`}
+											src={uploadUrl("productsImages", product.image) ?? ""}
 											alt={product.slug}
 											fill
 											sizes="(max-width: 768px) 20vw, 15vw"

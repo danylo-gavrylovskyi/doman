@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
+import { uploadUrl } from "@/config/seo.config";
+
 import { Category } from "@/types/category.interface";
 
 import styles from "./AdminCategory.module.scss";
@@ -28,7 +30,7 @@ export const AdminCategory = ({
 	return (
 		<Paper elevation={3} className={styles.container}>
 			<Image
-				src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/${subcategoryParent ? "subcategoriesImages" : "categoriesImages"}/${image}`}
+				src={uploadUrl(subcategoryParent ? "subcategoriesImages" : "categoriesImages", image) ?? ""}
 				alt={title}
 				width={80}
 				height={80}

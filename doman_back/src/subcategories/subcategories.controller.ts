@@ -30,7 +30,10 @@ import { UpdateSubcategoryDto } from "./dto/update-subcategory.dto";
 @ApiTags("Subcategories")
 @Controller("subcategories")
 export class SubcategoriesController {
-	constructor(private subcategoriesService: SubcategoriesService) { }
+	constructor(
+		private subcategoriesService: SubcategoriesService,
+		private imagesService: ImagesService,
+	) { }
 
 	@ApiOperation({ summary: "Getting all subcategories" })
 	@ApiResponse({ type: [Subcategory] })
@@ -81,14 +84,15 @@ export class SubcategoriesController {
 	@ApiResponse({ type: Subcategory })
 	@Auth("admin")
 	@Post()
-	@UseInterceptors(FileInterceptor("image", ImagesService.getImageStorage("subcategoriesImages")))
+	@UseInterceptors(FileInterceptor("image", ImagesService.getUploadOptions()))
 	async add(@Body() dto: CreateSubcategoryDto, @UploadedFile() image: Express.Multer.File) {
 		if (!image) {
 			throw new BadRequestException("Subcategory image is required");
 		}
+		const filename = await this.imagesService.uploadImage("subcategoriesImages", image);
 		const subcategory = await this.subcategoriesService.addSubcategory({
 			...dto,
-			image: image.filename,
+			image: filename,
 		});
 		return subcategory;
 	}
@@ -97,7 +101,7 @@ export class SubcategoriesController {
 	@ApiResponse({ type: Subcategory })
 	@Auth("admin")
 	@Patch("/:id")
-	@UseInterceptors(FileInterceptor("image", ImagesService.getImageStorage("subcategoriesImages")))
+	@UseInterceptors(FileInterceptor("image", ImagesService.getUploadOptions()))
 	async edit(
 		@Param("id") subcategoryId: number,
 		@Body() dto: UpdateSubcategoryDto,
@@ -106,9 +110,10 @@ export class SubcategoriesController {
 		let updatedSubcategory: Subcategory;
 
 		if (image) {
+			const filename = await this.imagesService.uploadImage("subcategoriesImages", image);
 			updatedSubcategory = await this.subcategoriesService.editSubcategory(subcategoryId, {
 				...dto,
-				image: image.filename,
+				image: filename,
 			});
 		}
 		else {

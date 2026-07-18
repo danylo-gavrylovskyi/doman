@@ -28,16 +28,23 @@ export const Registration = ({
 
 	const dispatch = useAppDispatch();
 
+	const [authError, setAuthError] = React.useState<string | null>(null);
+
 	const onSubmit: SubmitHandler<{
 		firstName: string;
 		lastName: string;
 		email: string;
 		phoneNumber: string;
 		password: string;
-	}> = (values) => {
+	}> = async (values) => {
 		const user: User = { ...values, isAdmin: false }
-		dispatch(registration(user));
-		closeAuth(false);
+		try {
+			setAuthError(null);
+			await dispatch(registration(user)).unwrap();
+			closeAuth(false);
+		} catch {
+			setAuthError("Не вдалося зареєструватися. Можливо, така ел. пошта вже існує");
+		}
 	};
 
 	return (
@@ -86,6 +93,7 @@ export const Registration = ({
 					error={Boolean(errors.password?.message)}
 					type="password"
 					label="Придумайте пароль"></TextField>
+				{authError && <p className={styles.authError}>{authError}</p>}
 				<button type="submit" className={styles.login}>
 					Зареєструватися
 				</button>

@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { ConfigModule } from '@nestjs/config';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 import { ProductsModule } from './products/products.module';
 import { CategoriesModule } from './categories/categories.module';
@@ -29,6 +31,12 @@ import { ImagesModule } from './images/images.module';
 		ConfigModule.forRoot({
 			envFilePath: '.env',
 		}),
+		ThrottlerModule.forRoot([
+			{
+				ttl: 60000,
+				limit: 100,
+			},
+		]),
 		SequelizeModule.forRoot({
 			dialect: 'postgres',
 			host: process.env.POSTGRES_HOST,
@@ -47,6 +55,7 @@ import { ImagesModule } from './images/images.module';
 				CompanyDetails,
 			],
 			autoLoadModels: true,
+			synchronize: false,
 		}),
 		ProductsModule,
 		CategoriesModule,
@@ -62,6 +71,11 @@ import { ImagesModule } from './images/images.module';
 		ImagesModule,
 	],
 	controllers: [],
-	providers: [],
+	providers: [
+		{
+			provide: APP_GUARD,
+			useClass: ThrottlerGuard,
+		},
+	],
 })
 export class AppModule { }

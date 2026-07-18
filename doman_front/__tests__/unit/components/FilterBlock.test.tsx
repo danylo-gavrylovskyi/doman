@@ -41,6 +41,8 @@ describe("FilterBlock (Unit)", () => {
         render(<FilterBlock {...filterProps}></FilterBlock>);
 
         fireEvent.click(screen.getByLabelText(filterProps.attributeValues[0]))
-        expect(mockDispatch).toHaveBeenCalledWith(toggleAttribute(filterProps.attributeValues[0]))
+        expect(mockDispatch).toHaveBeenCalledWith(
+            toggleAttribute({ title: filterProps.attributeName, value: filterProps.attributeValues[0] })
+        )
     })
 })

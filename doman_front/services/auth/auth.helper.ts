@@ -7,11 +7,6 @@ export const getAccessToken = () => {
 	return accessToken || null;
 };
 
-export const getUserFromStorage = () => {
-	const user = localStorage.getItem("user");
-	return JSON.parse(user || "[]");
-};
-
 export const saveTokensStorage = (data: Tokens) => {
 	Cookies.set("accessToken", data.accessToken);
 	Cookies.set("refreshToken", data.refreshToken);

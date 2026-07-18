@@ -10,6 +10,8 @@ import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 
 import { OrdersService } from "./orders.service";
 
+import { Auth } from "src/auth/decorators/auth.decorator";
+
 import { Order } from "./order.model";
 
 import { CreateOrderDto } from "./dto/create-order.dto";
@@ -30,6 +32,7 @@ export class OrdersController {
 
 	@ApiOperation({ description: "Getting all orders with pagination" })
 	@ApiResponse({ type: PaginatedEntityResponseDto<Order> })
+	@Auth("admin")
 	@Get()
 	async getAllWithPagination(@Query() queryParams: PaginatedEntityRequestDto) {
 		const orders = await this.ordersService.getOrdersWithPagination(queryParams);
@@ -38,6 +41,7 @@ export class OrdersController {
 
 	@ApiOperation({ description: "Getting orders by phone number with pagination" })
 	@ApiResponse({ type: PaginatedEntityResponseDto<Order> })
+	@Auth()
 	@Get("/:phoneNumber")
 	async getByPhoneNumberPagination(
 		@Query() queryParams: PaginatedEntityRequestDto,

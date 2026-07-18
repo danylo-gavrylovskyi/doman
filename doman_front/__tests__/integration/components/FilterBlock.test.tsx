@@ -6,24 +6,33 @@ import filterReducer from "@/redux/features/filterSlice";
 
 import { FilterBlock } from "@/components/FilterBlock/FilterBlock";
 
+const ATTRIBUTE_NAME = "Test Attribute";
+
+const makeStore = () =>
+    configureStore({
+        reducer: { filter: filterReducer },
+        preloadedState: {
+            filter: {
+                isOpened: false,
+                checkedAttributes: [{ title: ATTRIBUTE_NAME, values: ["Value 1"] }],
+            },
+        },
+    });
+
+const getCheckedValues = (store: ReturnType<typeof makeStore>) =>
+    store.getState().filter.checkedAttributes.find((attr) => attr.title === ATTRIBUTE_NAME)?.values ?? [];
+
 describe("FilterBlock (Integration)", () => {
-    let store: ReturnType<typeof configureStore>;
+    let store: ReturnType<typeof makeStore>;
 
     beforeEach(() => {
-        store = configureStore({
-            reducer: { filter: filterReducer },
-            preloadedState: {
-                filter: {
-                    checkedAttributes: ["Value 1"]
-                }
-            }
-        });
+        store = makeStore();
     })
 
     it("renders checked attributes from state", () => {
         render(
             <Provider store={store}>
-                <FilterBlock attributeName="Test Attribute" attributeValues={["Value 1"]} />
+                <FilterBlock attributeName={ATTRIBUTE_NAME} attributeValues={["Value 1"]} />
             </Provider>
         )
 
@@ -33,26 +42,26 @@ describe("FilterBlock (Integration)", () => {
     it("removes checked attribute from Redux state when toggled", () => {
         render(
             <Provider store={store}>
-                <FilterBlock attributeName="Test Attribute" attributeValues={["Value 1"]} />
+                <FilterBlock attributeName={ATTRIBUTE_NAME} attributeValues={["Value 1"]} />
             </Provider>
         );
 
         fireEvent.click(screen.getByLabelText("Value 1"));
 
-        expect(store.getState().filter.checkedAttributes).not.toContain("Value 1");
+        expect(getCheckedValues(store)).not.toContain("Value 1");
         expect(screen.getByLabelText("Value 1")).not.toBeChecked()
     });
 
     it("updates Redux state when attribute checked", () => {
         render(
             <Provider store={store}>
-                <FilterBlock attributeName="Test Attribute" attributeValues={["Value 1", "Value 2"]} />
+                <FilterBlock attributeName={ATTRIBUTE_NAME} attributeValues={["Value 1", "Value 2"]} />
             </Provider>
         );
 
         fireEvent.click(screen.getByLabelText("Value 2"))
 
-        expect(store.getState().filter.checkedAttributes).toContain("Value 2")
+        expect(getCheckedValues(store)).toContain("Value 2")
         expect(screen.getByLabelText("Value 2")).toBeChecked()
     })
 });

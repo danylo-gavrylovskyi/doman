@@ -1,4 +1,5 @@
 import {
+	BadRequestException,
 	Body,
 	Controller,
 	Delete,
@@ -16,6 +17,8 @@ import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 
 import { SubcategoriesService } from "./subcategories.service";
 import { ImagesService } from "src/images/images.service";
+
+import { Auth } from "src/auth/decorators/auth.decorator";
 
 import { Subcategory } from "./subcategory.model";
 
@@ -76,9 +79,13 @@ export class SubcategoriesController {
 
 	@ApiOperation({ summary: "Adding subcategory" })
 	@ApiResponse({ type: Subcategory })
+	@Auth("admin")
 	@Post()
 	@UseInterceptors(FileInterceptor("image", ImagesService.getImageStorage("subcategoriesImages")))
 	async add(@Body() dto: CreateSubcategoryDto, @UploadedFile() image: Express.Multer.File) {
+		if (!image) {
+			throw new BadRequestException("Subcategory image is required");
+		}
 		const subcategory = await this.subcategoriesService.addSubcategory({
 			...dto,
 			image: image.filename,
@@ -88,6 +95,7 @@ export class SubcategoriesController {
 
 	@ApiOperation({ summary: "Edit subcategory" })
 	@ApiResponse({ type: Subcategory })
+	@Auth("admin")
 	@Patch("/:id")
 	@UseInterceptors(FileInterceptor("image", ImagesService.getImageStorage("subcategoriesImages")))
 	async edit(
@@ -96,8 +104,6 @@ export class SubcategoriesController {
 		@UploadedFile() image?: Express.Multer.File
 	) {
 		let updatedSubcategory: Subcategory;
-		console.log(image)
-
 
 		if (image) {
 			updatedSubcategory = await this.subcategoriesService.editSubcategory(subcategoryId, {
@@ -116,6 +122,7 @@ export class SubcategoriesController {
 
 	@ApiOperation({ summary: "Deleting subcategory" })
 	@ApiResponse({ type: Number })
+	@Auth("admin")
 	@Delete("/:id")
 	async delete(@Param("id") subcategoryId: number) {
 		await this.subcategoriesService.deleteSubcategory(subcategoryId);

@@ -8,19 +8,22 @@ import { CartProductCard } from "@/components/CartProductCard/CartProductCard";
 
 import { mockCartProduct } from "@/__tests__/mocks/product";
 
+const makeStore = () =>
+    configureStore({
+        reducer: { cart: cartReducer },
+        preloadedState: {
+            cart: {
+                cartProducts: [mockCartProduct],
+                isOpened: false,
+            },
+        },
+    });
+
 describe("CartProductCard (Integration)", () => {
-    let store: ReturnType<typeof configureStore>
+    let store: ReturnType<typeof makeStore>
 
     beforeEach(() => {
-        store = configureStore({
-            reducer: { cart: cartReducer },
-            preloadedState: {
-                cart: {
-                    cartProducts: [mockCartProduct],
-                    isOpened: false
-                }
-            }
-        })
+        store = makeStore()
     })
 
     it("decrements product quantity in Redux state when '-' is clicked", () => {
@@ -32,7 +35,7 @@ describe("CartProductCard (Integration)", () => {
 
         fireEvent.click(screen.getByText('-'))
         const cartProducts = store.getState().cart.cartProducts
-        const newProductQuantity = cartProducts.find(obj => obj.product.id === mockCartProduct.product.id).quantity
+        const newProductQuantity = cartProducts.find(obj => obj.product.id === mockCartProduct.product.id)?.quantity
 
         expect(newProductQuantity).toBe(mockCartProduct.quantity - 1)
     })
@@ -61,7 +64,7 @@ describe("CartProductCard (Integration)", () => {
 
         fireEvent.click(screen.getByText('+'))
         const cartProducts = store.getState().cart.cartProducts
-        const newProductQuantity = cartProducts.find(obj => obj.product.id === mockCartProduct.product.id).quantity
+        const newProductQuantity = cartProducts.find(obj => obj.product.id === mockCartProduct.product.id)?.quantity
 
         expect(newProductQuantity).toBe(mockCartProduct.quantity + 1)
     })

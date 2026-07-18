@@ -22,9 +22,16 @@ export const Login = ({
 
 	const dispatch = useAppDispatch();
 
-	const onSubmit: SubmitHandler<{ email: string; password: string }> = (values) => {
-		dispatch(login(values));
-		closeAuth(false);
+	const [authError, setAuthError] = React.useState<string | null>(null);
+
+	const onSubmit: SubmitHandler<{ email: string; password: string }> = async (values) => {
+		try {
+			setAuthError(null);
+			await dispatch(login(values)).unwrap();
+			closeAuth(false);
+		} catch {
+			setAuthError("Невірна ел. пошта або пароль");
+		}
 	};
 
 	return (
@@ -51,6 +58,7 @@ export const Login = ({
 					error={Boolean(errors.password?.message)}
 					type="password"
 					label="Пароль"></TextField>
+				{authError && <p className={styles.authError}>{authError}</p>}
 				<button type="submit" className={styles.login}>
 					Увійти
 				</button>

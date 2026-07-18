@@ -11,6 +11,8 @@ import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 
 import { AttributesService } from "./attributes.service";
 
+import { Auth } from "src/auth/decorators/auth.decorator";
+
 import { Attribute } from "./attribute.model";
 
 import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/common/dto/paginatedEntity.dto";
@@ -38,6 +40,7 @@ export class AttributesController {
 
 	@ApiOperation({ description: "Adding new attribute" })
 	@ApiResponse({ type: Attribute })
+	@Auth("admin")
 	@Post()
 	async add(@Body() title: string) {
 		const attribute = await this.attributesService.addAttribute(title);
@@ -46,6 +49,7 @@ export class AttributesController {
 
 	@ApiOperation({ description: "Deleting attribute" })
 	@ApiResponse({ type: Number })
+	@Auth("admin")
 	@Delete("/:id")
 	async delete(@Param() dto: { id: number }) {
 		await this.attributesService.deleteAttribute(dto.id);

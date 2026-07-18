@@ -1,8 +1,8 @@
 import { Button, Paper } from "@mui/material";
 import { UseMutateFunction } from "@tanstack/react-query";
 import Image from "next/image";
-import React from "react";
 import Link from "next/link";
+import React from "react";
 
 import { Category } from "@/types/category.interface";
 

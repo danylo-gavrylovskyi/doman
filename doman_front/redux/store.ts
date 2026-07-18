@@ -7,10 +7,6 @@ import homeSlice from "./features/homeSlice";
 import filterSlice from "./features/filterSlice";
 import headerSlice from "./features/headerSlice";
 import adminGeneralSlice from "./features/admin/adminGeneralSlice";
-import adminCategoriesSlice from "./features/admin/adminCategoriesSlice";
-import adminSubcategoriesSlice from "./features/admin/adminSubcategoriesSlice";
-import adminAttributesSlice from "./features/admin/adminAttributesSlice";
-import adminProductsSlice from "./features/admin/adminProductsSlice";
 import authSlice from "./features/authSlice";
 
 const isClient = typeof window !== "undefined";
@@ -22,10 +18,6 @@ const combinedReducers = combineReducers({
 	header: headerSlice,
 	auth: authSlice,
 	adminGeneral: adminGeneralSlice,
-	adminCategories: adminCategoriesSlice,
-	adminSubcategories: adminSubcategoriesSlice,
-	adminAttributes: adminAttributesSlice,
-	adminProducts: adminProductsSlice,
 });
 
 let mainReducer = combinedReducers;

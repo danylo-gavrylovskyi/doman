@@ -18,7 +18,7 @@ describe("Pagination (Integration)", () => {
     })
 
     it("updates query params when clicking the next button", () => {
-        render(<Pagination pageQuantity={5} currentPage={2} />)
+        render(<Pagination elementsCount={5} perPage={1} currentPage={2} />)
 
         const nextButton = screen.getAllByRole("button")[6]; // assuming first and last are nav buttons
 
@@ -27,14 +27,14 @@ describe("Pagination (Integration)", () => {
     })
 
     it("updates query params when clicking the previous button", () => {
-        render(<Pagination pageQuantity={5} currentPage={3} />);
+        render(<Pagination elementsCount={5} perPage={1} currentPage={3} />);
 
         fireEvent.click(screen.getAllByRole("button")[0]);
         expect(queryUpdate).toEqual({ key: "page", value: 2 });
     });
 
     it("updates query params when clicking a specific page number", () => {
-        render(<Pagination pageQuantity={5} currentPage={1} />);
+        render(<Pagination elementsCount={5} perPage={1} currentPage={1} />);
 
         fireEvent.click(screen.getByText("4"));
         expect(queryUpdate).toEqual({ key: "page", value: 4 });

@@ -3,8 +3,7 @@ import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 
 import * as express from "express";
 import * as path from "path";
-import * as session from "express-session";
-import * as passport from "passport";
+import helmet from "helmet";
 
 import { AppModule } from "./app.module";
 import { ValidationPipe } from "@nestjs/common";
@@ -15,21 +14,26 @@ async function bootstrap() {
 		logger: ['log', 'warn', 'error', 'debug'],
 	});
 
-	const config = new DocumentBuilder().setTitle("Doman").build();
+	const config = new DocumentBuilder()
+		.setTitle("Doman")
+		.addBearerAuth()
+		.build();
 	const document = SwaggerModule.createDocument(app, config);
 	SwaggerModule.setup("/api/docs", app, document);
 
-	app.enableCors();
+	app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
+
+	const allowedOrigins = (process.env.CORS_ORIGINS || process.env.FRONTEND_URL || "")
+		.split(",")
+		.map((origin) => origin.trim())
+		.filter(Boolean);
+
+	app.enableCors({
+		origin: allowedOrigins.length > 0 ? allowedOrigins : true,
+		credentials: true,
+	});
 
 	app.use("/uploads", express.static(path.resolve(process.cwd(), "uploads")));
-
-	app.use(
-		session({
-			secret: process.env.PRIVATE_KEY,
-			resave: false,
-			saveUninitialized: false,
-		})
-	);
 
 	app.useGlobalPipes(
 		new ValidationPipe({
@@ -38,9 +42,6 @@ async function bootstrap() {
 			forbidNonWhitelisted: true
 		})
 	)
-
-	app.use(passport.initialize());
-	app.use(passport.session());
 
 	await app.listen(PORT, () => console.log(`Server started on port = ${PORT}`));
 }

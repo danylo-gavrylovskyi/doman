@@ -6,6 +6,7 @@ import {
 	UnauthorizedException,
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
+import { ConfigService } from "@nestjs/config";
 import * as bcrypt from "bcrypt";
 
 import { AuthDto } from "./dto/auth.dto";
@@ -17,8 +18,16 @@ export class AuthService {
 	constructor(
 		private usersService: UsersService,
 		private jwt: JwtService,
+		private readonly configService: ConfigService,
 		private readonly logger: Logger
 	) { }
+
+	private getRefreshSecret(): string {
+		return (
+			this.configService.get<string>("JWT_REFRESH_SECRET") ||
+			this.configService.get<string>("JWT_SECRET")
+		);
+	}
 
 	async register(dto: AuthDto) {
 		this.logger.debug(`Checking if user exists: email=${dto.email}`, AuthService.name);
@@ -50,22 +59,33 @@ export class AuthService {
 		};
 	}
 
-	async getNewTokens(refreshToken: string): Promise<{
-		accessToken: string;
-		refreshToken: string;
-	}> {
+	async getNewTokens(refreshToken: string) {
 		this.logger.debug(`Verifying refresh token`, AuthService.name);
-		const result = await this.jwt.verifyAsync(refreshToken);
 
-		if (!result) {
+		let result: { id: number; type?: string };
+		try {
+			result = await this.jwt.verifyAsync(refreshToken, {
+				secret: this.getRefreshSecret(),
+			});
+		} catch {
 			this.logger.warn(`Invalid refresh token`, AuthService.name);
+			throw new UnauthorizedException("Invalid refresh token");
+		}
+
+		if (result.type !== "refresh") {
+			this.logger.warn(`Token is not a refresh token`, AuthService.name);
 			throw new UnauthorizedException("Invalid refresh token");
 		}
 
 		this.logger.debug(`Fetching user for refresh token (userId=${result.id})`, AuthService.name);
 		const user = await this.usersService.findOne({ where: { id: result.id } });
 
-		const tokens = this.issueTokens(user.id);
+		if (!user) {
+			this.logger.warn(`Refresh failed: user not found (userId=${result.id})`, AuthService.name);
+			throw new UnauthorizedException("User no longer exists");
+		}
+
+		const tokens = await this.issueTokens(user.id);
 		this.logger.log(`Issued new tokens for userId=${user.id}`, AuthService.name);
 
 		return {
@@ -89,15 +109,15 @@ export class AuthService {
 	}
 
 	private async issueTokens(userId: number) {
-		const data = { id: userId };
+		const accessToken = this.jwt.sign(
+			{ id: userId, type: "access" },
+			{ expiresIn: "1h" }
+		);
 
-		const accessToken = this.jwt.sign(data, {
-			expiresIn: "1h",
-		});
-
-		const refreshToken = this.jwt.sign(data, {
-			expiresIn: "7d",
-		});
+		const refreshToken = this.jwt.sign(
+			{ id: userId, type: "refresh" },
+			{ expiresIn: "7d", secret: this.getRefreshSecret() }
+		);
 
 		return { accessToken, refreshToken };
 	}

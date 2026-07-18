@@ -2,22 +2,22 @@
 
 import { useRouter } from "next/navigation";
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 import { logout } from "@/redux/features/authSlice";
-import { RootState } from "@/redux/store";
+import { RootState, useAppDispatch } from "@/redux/store";
 
 import styles from "./styles.module.scss";
 
 const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 
 	const { push } = useRouter();
 
 	const currentUser = useSelector((state: RootState) => state.auth.currentUser);
 
-	const exit = () => {
-		dispatch(logout());
+	const exit = async () => {
+		await dispatch(logout());
 		push("/");
 	};
 

@@ -7,7 +7,6 @@ import { RootState, useAppDispatch } from "@/redux/store";
 import { toggleHamburgerMenu } from "@/redux/features/headerSlice";
 
 import styles from "./HamburgerMenu.module.scss";
-import { fetchCategories } from "@/redux/features/admin/adminCategoriesSlice";
 import { CategoryCard } from "@/components/CategoryCard/CategoryCard";
 import { useGetCategories } from "@/hooks/categories.hooks";
 

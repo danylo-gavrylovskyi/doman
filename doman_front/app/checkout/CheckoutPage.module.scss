@@ -52,14 +52,34 @@
 }
 
 .backBtn {
-    button {
-        width: 100%;
-        height: 100%;
-        background-color: transparent;
-        color: $contrast-color;
-        &:hover {
-            background-color: $contrast-color;
-            color: white;
-        }
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4% 0;
+    font-size: 20px;
+    font-weight: 600;
+    border: 2px solid $contrast-color;
+    border-radius: 5px;
+    background-color: transparent;
+    color: $contrast-color;
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+    &:hover {
+        background-color: $contrast-color;
+        color: white;
     }
+}
+
+.submitError {
+    grid-column: 1 / -1;
+    color: #d32f2f;
+    font-size: 0.9rem;
+    margin: 0;
+    text-align: center;
+}
+
+.form button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }

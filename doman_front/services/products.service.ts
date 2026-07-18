@@ -8,8 +8,8 @@ import customAxios from "@/utils/axios";
 export const ProductsService = {
 	async getAllWithPagination(queryParams?: Pagination): Promise<PaginationProducts> {
 		const searchParams = new URLSearchParams();
-		if (queryParams?.page) searchParams.append('page', queryParams.page);
-		if (queryParams?.perPage) searchParams.append('perPage', queryParams.perPage);
+		if (queryParams?.page) searchParams.append('page', queryParams.page.toString());
+		if (queryParams?.perPage) searchParams.append('perPage', queryParams.perPage.toString());
 		if (queryParams?.inputValue) searchParams.append('inputValue', queryParams.inputValue);
 		if (queryParams?.categoryId) searchParams.append('categoryId', queryParams.categoryId.toString());
 		if (queryParams?.subcategoryId) searchParams.append('subcategoryId', queryParams.subcategoryId.toString());

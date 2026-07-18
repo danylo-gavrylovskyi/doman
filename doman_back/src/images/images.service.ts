@@ -27,6 +27,9 @@ export class ImagesService {
                     callback(null, `${filename}${extension}`);
                 },
             }),
+            limits: {
+                fileSize: 10 * 1024 * 1024,
+            },
             fileFilter: (req, file, callback) => {
                 const allowed = ['.png', '.jpg', '.jpeg', '.webp', '.xlsx', '.xls'];
 

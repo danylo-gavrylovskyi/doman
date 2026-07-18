@@ -181,7 +181,7 @@ export class ProductsService {
 	async loadProductsViaExcel(filename: string): Promise<Product[]> {
 		this.logger.debug(`Loading products from excel file: ${filename}`, ProductsService.name);
 
-		const workbook = XLSX.readFile(path.join(__dirname, "..", "..", "..", "uploads", "excel", filename));
+		const workbook = XLSX.readFile(path.resolve(process.cwd(), "uploads", "excel", filename));
 		const sheetNameList = workbook.SheetNames;
 		const xlData: Product[] = XLSX.utils.sheet_to_json(workbook.Sheets[sheetNameList[0]]);
 
@@ -210,7 +210,7 @@ export class ProductsService {
 				}
 			}
 
-			transaction.commit();
+			await transaction.commit();
 			this.logger.log(`Successfully loaded ${xlData.length} products from ${filename}`, ProductsService.name);
 			return xlData;
 		} catch (error) {

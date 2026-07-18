@@ -30,9 +30,18 @@ export const Header: React.FC = () => {
 	const dispatch = useDispatch();
 
 	const [inputValue, setInputValue] = React.useState<string>("");
+	const [debouncedValue, setDebouncedValue] = React.useState<string>("");
 	const [isAuthClicked, toggleAuth] = React.useState<boolean>(false);
 
-	const { data } = useGetProductsWithPagination({ inputValue });
+	React.useEffect(() => {
+		const timeout = setTimeout(() => setDebouncedValue(inputValue), 300);
+		return () => clearTimeout(timeout);
+	}, [inputValue]);
+
+	const { data } = useGetProductsWithPagination(
+		{ inputValue: debouncedValue },
+		{ enabled: Boolean(debouncedValue) }
+	);
 	const products: Product[] = data?.rows ?? [];
 
 	const isCategoriesClicked: boolean = useSelector(

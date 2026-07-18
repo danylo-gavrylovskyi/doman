@@ -10,6 +10,7 @@ import {
 	Patch,
 	Query,
 	HttpCode,
+	BadRequestException,
 } from "@nestjs/common";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { FileInterceptor } from "@nestjs/platform-express";
@@ -17,6 +18,8 @@ import { FindOptions } from "sequelize";
 
 import { ProductsService } from "./products.service";
 import { ImagesService } from "src/images/images.service";
+
+import { Auth } from "src/auth/decorators/auth.decorator";
 
 import { Product } from "./product.model";
 
@@ -34,6 +37,7 @@ export class ProductsController {
 
 	@ApiOperation({ description: "Getting all products" })
 	@ApiResponse({ type: [Product] })
+	@Auth("admin")
 	@Get("/admin")
 	async getAll(@Query() findOptions: FindOptions<Product>) {
 		const products = await this.productsService.getAllProducts(findOptions);
@@ -66,18 +70,23 @@ export class ProductsController {
 
 	@ApiOperation({ description: "Adding product" })
 	@ApiResponse({ type: Product })
+	@Auth("admin")
 	@UseInterceptors(FileInterceptor("image", ImagesService.getImageStorage("productsImages")))
 	@Post()
 	async add(
 		@Body() dto: CreateProductDto,
 		@UploadedFile() image: Express.Multer.File
 	) {
+		if (!image) {
+			throw new BadRequestException("Product image is required");
+		}
 		const product = await this.productsService.addProduct({ ...dto, image: image.filename });
 		return product;
 	}
 
 	@ApiOperation({ description: "Adding products from excel table" })
 	@ApiResponse({ type: [Product] })
+	@Auth("admin")
 	@UseInterceptors(FileInterceptor("file", ImagesService.getImageStorage("excel")))
 	@Post("/excel")
 	async loadProductsFromTable(@UploadedFile() file: Express.Multer.File) {
@@ -87,6 +96,7 @@ export class ProductsController {
 
 	@ApiOperation({ description: "Updating product" })
 	@ApiResponse({ type: Product })
+	@Auth("admin")
 	@UseInterceptors(FileInterceptor("image", ImagesService.getImageStorage("productsImages")))
 	@HttpCode(204)
 	@Patch("/:id")
@@ -100,6 +110,7 @@ export class ProductsController {
 
 	@ApiOperation({ description: "Deleting product" })
 	@ApiResponse({ type: Number })
+	@Auth("admin")
 	@HttpCode(204)
 	@Delete("/:id")
 	async delete(@Param("id") productId: number) {

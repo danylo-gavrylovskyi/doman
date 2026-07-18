@@ -4,6 +4,8 @@ import { ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { CompanyDetailsService } from "./company-details.service";
 import { CompanyDetails } from "./company-details.model";
 
+import { Auth } from "src/auth/decorators/auth.decorator";
+
 import { UpdateCompanyDetailsDto } from "./dto/updateCompanyDetails.dto";
 
 @Controller("company-details")
@@ -20,6 +22,7 @@ export class CompanyDetailsController {
 
 	@ApiOperation({ summary: "Add company details or update if they exist" })
 	@ApiResponse({ type: CompanyDetails })
+	@Auth("admin")
 	@Post()
 	async updateCompanyDetails(@Body() dto: UpdateCompanyDetailsDto) {
 		const companyDetails = await this.companyDetailsService.updateCompanyDetails(dto);

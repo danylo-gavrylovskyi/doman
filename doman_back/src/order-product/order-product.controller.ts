@@ -6,6 +6,7 @@ import { OrderProductService } from "./order-product.service";
 import { OrderProduct } from "./order-product.model";
 
 import { CreateOrderProductDto } from "./dto/create-order-product.dto";
+import { Auth } from "src/auth/decorators/auth.decorator";
 
 @ApiTags("Order-product")
 @Controller("order-product")
@@ -14,6 +15,7 @@ export class OrderProductController {
 
 	@ApiOperation({ description: "Creating order-product" })
 	@ApiResponse({ type: OrderProduct })
+	@Auth("admin")
 	@Post()
 	async create(@Body() dto: CreateOrderProductDto) {
 		const orderProduct = await this.orderProductService.createOrderProduct(dto);

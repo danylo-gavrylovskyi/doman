@@ -60,7 +60,7 @@ describe("AdminProduct (Unit)", () => {
         });
 
         it("renders all product information", () => {
-            render(<AdminProduct {...mockProduct} />);
+            render(<AdminProduct {...mockProduct} subcategory={mockSubcategory} />);
 
             expect(screen.getByText(`${LABELS.TITLE}: ${mockProduct.title}`)).toBeInTheDocument();
             expect(screen.getByText(`${LABELS.ARTICLE}: ${mockProduct.article}`)).toBeInTheDocument();
@@ -97,7 +97,7 @@ describe("AdminProduct (Unit)", () => {
 
     describe("Subcategory handling", () => {
         it("displays subcategory title when found", () => {
-            render(<AdminProduct {...mockProduct} />);
+            render(<AdminProduct {...mockProduct} subcategory={mockSubcategory} />);
 
             expect(screen.getByText(`${LABELS.SUBCATEGORY}: ${mockSubcategory.title}`)).toBeInTheDocument();
         });

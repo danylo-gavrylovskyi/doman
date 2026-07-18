@@ -1,4 +1,5 @@
 import {
+	BadRequestException,
 	Controller,
 	Delete,
 	Get,
@@ -13,6 +14,8 @@ import { FileInterceptor } from "@nestjs/platform-express";
 
 import { BannersService } from "./banners.service";
 import { ImagesService } from "src/images/images.service";
+
+import { Auth } from "src/auth/decorators/auth.decorator";
 
 import { PaginatedEntityRequestDto, PaginatedEntityResponseDto } from "src/common/dto/paginatedEntity.dto";
 
@@ -40,14 +43,19 @@ export class BannersController {
 
 	@ApiOperation({ summary: "Adding banner" })
 	@ApiResponse({ type: String })
+	@Auth("admin")
 	@Post()
 	@UseInterceptors(FileInterceptor("banner", ImagesService.getImageStorage("banners")))
 	add(@UploadedFile() banner: Express.Multer.File) {
+		if (!banner) {
+			throw new BadRequestException("Banner image is required");
+		}
 		return banner.filename;
 	}
 
 	@ApiOperation({ summary: "Deleting banner" })
 	@ApiResponse({ type: String })
+	@Auth("admin")
 	@Delete("/:bannerUrl")
 	async delete(@Param("bannerUrl") bannerUrl: string) {
 		await this.bannersService.deleteBanner(bannerUrl);

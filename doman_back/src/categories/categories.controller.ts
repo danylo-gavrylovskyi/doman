@@ -11,11 +11,14 @@ import {
 	Patch,
 	Query,
 	NotFoundException,
+	BadRequestException,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 
 import { CategoriesService } from "./categories.service";
 import { ImagesService } from "src/images/images.service";
+
+import { Auth } from "src/auth/decorators/auth.decorator";
 
 import { Category } from "./category.model";
 import { Subcategory } from "src/subcategories/subcategory.model";
@@ -73,12 +76,16 @@ export class CategoriesController {
 
 	@ApiOperation({ summary: "Adding category" })
 	@ApiResponse({ type: Category })
+	@Auth("admin")
 	@Post()
 	@UseInterceptors(FileInterceptor("image", ImagesService.getImageStorage("categoriesImages")))
 	async add(
 		@Body() dto: { title: string; slug: string },
 		@UploadedFile() file: Express.Multer.File
 	) {
+		if (!file) {
+			throw new BadRequestException("Category image is required");
+		}
 		const category = await this.categoriesService.addCategory({
 			...dto,
 			image: file.filename,
@@ -96,6 +103,7 @@ export class CategoriesController {
 
 	@ApiOperation({ summary: "Edit category" })
 	@ApiResponse({ type: Category })
+	@Auth("admin")
 	@Patch("/:id")
 	@UseInterceptors(FileInterceptor("image", ImagesService.getImageStorage("categoriesImages")))
 	async edit(
@@ -119,6 +127,7 @@ export class CategoriesController {
 
 	@ApiOperation({ summary: "Deleting category" })
 	@ApiResponse({ type: Number })
+	@Auth("admin")
 	@Delete("/:id")
 	async delete(@Param("id") categoryId: number) {
 		await this.categoriesService.deleteCategory(categoryId);

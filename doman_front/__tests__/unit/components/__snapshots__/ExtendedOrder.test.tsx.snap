@@ -37,8 +37,7 @@ exports[`ExtendedOrder (Unit) matches snapshot 1`] = `
       </div>
     </header>
     <main
-      class="flexRowAlignCenter"
-      style="align-items: flex-start;"
+      class="content"
     >
       <div
         class="receiver"
@@ -58,18 +57,25 @@ exports[`ExtendedOrder (Unit) matches snapshot 1`] = `
           john.doe@example.com
         </span>
       </div>
-      <div>
+      <div
+        class="extendedOrderSummary"
+      >
         <div
           class="flexRowAlignCenter orderProduct"
         >
           <div
             style="display: flex; width: 50%; align-items: center;"
           >
-            <img
-              alt="test-product-1"
-              src="http://localhost:5000/uploads/productsImages/some-image-1.jpg"
-              width="15%"
-            />
+            <div
+              class="extendedOrderImageWrapper"
+            >
+              <img
+                alt="test-product-1"
+                sizes="(max-width: 768px) 20vw, 15vw"
+                src="http://test-api/uploads/productsImages/some-image-1.jpg"
+                style="object-fit: cover;"
+              />
+            </div>
             <div
               style="margin-left: 5%;"
             >
@@ -94,11 +100,16 @@ exports[`ExtendedOrder (Unit) matches snapshot 1`] = `
           <div
             style="display: flex; width: 50%; align-items: center;"
           >
-            <img
-              alt="test-product-2"
-              src="http://localhost:5000/uploads/productsImages/some-image-2.jpg"
-              width="15%"
-            />
+            <div
+              class="extendedOrderImageWrapper"
+            >
+              <img
+                alt="test-product-2"
+                sizes="(max-width: 768px) 20vw, 15vw"
+                src="http://test-api/uploads/productsImages/some-image-2.jpg"
+                style="object-fit: cover;"
+              />
+            </div>
             <div
               style="margin-left: 5%;"
             >

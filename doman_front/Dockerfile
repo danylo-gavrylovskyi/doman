@@ -1,12 +1,15 @@
-FROM node:18
+FROM node:18-alpine
 
-RUN apt-get update && apt-get install -y netcat-openbsd
+RUN apk add --no-cache netcat-openbsd
 
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
 COPY . .
+
+RUN chown -R node:node /app
+USER node
 
 CMD [ "npm", "run", "start" ]

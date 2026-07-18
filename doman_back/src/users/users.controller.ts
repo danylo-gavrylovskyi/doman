@@ -3,6 +3,7 @@ import { UsersService } from "./users.service";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { User } from "./user.model";
 import { CreateUserDto } from "./dto/createUser.dto";
+import { Auth } from "src/auth/decorators/auth.decorator";
 
 @ApiTags("Users")
 @Controller("users")
@@ -11,6 +12,7 @@ export class UsersController {
 
 	@ApiOperation({ description: "Creating new user" })
 	@ApiResponse({ type: User })
+	@Auth("admin")
 	@Post()
 	async create(@Body() dto: CreateUserDto) {
 		const createdUser = await this.usersService.createUser(dto);

@@ -8,14 +8,17 @@ import { Item } from "@/components/Item/Item";
 
 import { mockCartProduct, mockProduct } from "@/__tests__/mocks/product";
 
+const makeStore = () =>
+    configureStore({
+        reducer: { cart: cartReducer },
+    });
+
 describe("Item (Integration)", () => {
     const addToCartText = "Додати"
 
-    let store: ReturnType<typeof configureStore>
+    let store: ReturnType<typeof makeStore>
     beforeEach(() => {
-        store = configureStore({
-            reducer: { cart: cartReducer },
-        })
+        store = makeStore()
     })
 
     it("adds product to Redux state when 'add' button is clicked", () => {

@@ -28,16 +28,19 @@ const Checkout = () => {
 	const totalPrice: number = getCartTotalPrice(cartProducts);
 	const productsQuantity: number = cartProducts.reduce((prev, cur) => prev + cur.quantity, 0);
 
+	const [isSubmitting, setIsSubmitting] = React.useState<boolean>(false);
+	const [submitError, setSubmitError] = React.useState<string | null>(null);
+
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
 	} = useForm({
 		defaultValues: {
-			phoneNumber: `${currentUser.phoneNumber}`,
-			email: `${currentUser.email}`,
-			lastName: `${currentUser.lastName}`,
-			firstName: `${currentUser.firstName}`,
+			phoneNumber: currentUser.phoneNumber ?? "",
+			email: currentUser.email ?? "",
+			lastName: currentUser.lastName ?? "",
+			firstName: currentUser.firstName ?? "",
 		},
 	});
 
@@ -47,6 +50,11 @@ const Checkout = () => {
 		lastName: string;
 		firstName: string;
 	}> = async (values) => {
+		if (cartProducts.length === 0) {
+			setSubmitError("Ваш кошик порожній");
+			return;
+		}
+
 		const { firstName, lastName, email, phoneNumber } = values;
 
 		const data: Order = {
@@ -58,15 +66,18 @@ const Checkout = () => {
 			orderedProducts: cartProducts,
 		};
 
-		await OrdersService.placeOrder(data);
-		dispatch(clearCart());
-
-		push("/");
+		try {
+			setSubmitError(null);
+			setIsSubmitting(true);
+			await OrdersService.placeOrder(data);
+			dispatch(clearCart());
+			push("/");
+		} catch {
+			setSubmitError("Не вдалося оформити замовлення. Спробуйте ще раз");
+		} finally {
+			setIsSubmitting(false);
+		}
 	};
-
-	if (!currentUser) {
-		return <div>Loading...</div>;
-	}
 
 	return (
 		<div className={styles.container}>
@@ -103,10 +114,13 @@ const Checkout = () => {
 						})}></TextField>
 					<div>{productsQuantity} товари на суму</div>
 					<span style={{ fontWeight: "600" }}>{totalPrice} ₴</span>
+					{submitError && <p className={styles.submitError}>{submitError}</p>}
 					<Link className={styles.backBtn} href="/">
-						<button type="button">На головну</button>
+						На головну
 					</Link>
-					<button type="submit">Замовлення підтверджую</button>
+					<button type="submit" disabled={isSubmitting}>
+						{isSubmitting ? "Оформлення..." : "Замовлення підтверджую"}
+					</button>
 				</form>
 			</Paper>
 		</div>

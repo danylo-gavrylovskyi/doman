@@ -26,4 +26,4 @@ COPY --from=builder /app/.sequelizerc ./.sequelizerc
 RUN chown -R node:node /app
 USER node
 
-CMD [ "node", "dist/src/main" ]
+CMD [ "node", "dist/main" ]

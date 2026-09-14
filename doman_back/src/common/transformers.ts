@@ -4,7 +4,14 @@ export const ToNumber = () =>
     Transform(({ value }) => (value !== undefined ? Number(value) : value));
 
 export const ToBoolean = () =>
-    Transform(({ value }) => (value !== undefined ? Boolean(value) : value));
+    Transform(({ value }) => {
+        if (value === undefined || typeof value === "boolean") return value;
+        // Query strings and multipart fields arrive as "true"/"false", which
+        // Boolean() would both coerce to true.
+        if (value === "true") return true;
+        if (value === "false") return false;
+        return Boolean(value);
+    });
 
 export const ToJsonArray = <T>() =>
     Transform(({ value }) => {

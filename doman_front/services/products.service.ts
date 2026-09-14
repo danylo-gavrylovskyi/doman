@@ -28,6 +28,14 @@ export const ProductsService = {
 		return data;
 	},
 
+	/** Popular products via the public endpoint (safe for anonymous visitors). */
+	async getPopular(perPage = 8): Promise<Product[]> {
+		const { data } = await customAxios.get<PaginationProducts>(ApiRoutes.Products, {
+			params: { isPopular: true, perPage },
+		});
+		return data.rows;
+	},
+
 	async getAll(queryParams?: FindOptions): Promise<Product[]> {
 		const { data } = await customAxios({
 			url: `${ApiRoutes.Products}/admin`,

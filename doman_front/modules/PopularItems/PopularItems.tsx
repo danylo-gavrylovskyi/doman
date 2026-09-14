@@ -1,17 +1,14 @@
-"use client";
-
 import React from "react";
+
+import { Product } from "@/types/product.interface";
 
 import { Item } from "../../components/Item/Item";
 
 import styles from "./PopularItems.module.scss";
-import { useGetProducts } from "@/hooks/products.hooks";
 
-export const PopularItems = () => {
-	const { data: products } = useGetProducts({ where: { isPopular: true } });
-
-	if (!products) {
-		return <div>Loading...</div>;
+export const PopularItems = ({ products }: { products: Product[] }) => {
+	if (!products.length) {
+		return null;
 	}
 
 	return (

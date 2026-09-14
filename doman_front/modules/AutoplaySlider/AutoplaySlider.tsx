@@ -26,10 +26,16 @@ export const AutoplaySlider = ({ banners }: { banners: string[] }) => {
 		(state: RootState) => state.adminGeneral.currentBanner
 	);
 
+	if (!banners.length) {
+		return null;
+	}
+
+	const banner = banners[currentBanner] ?? banners[0];
+
 	return (
 		<div className={styles.sliderImgContainer}>
 			<Image
-				src={uploadUrl("banners", banners[currentBanner]) ?? ""}
+				src={uploadUrl("banners", banner) ?? ""}
 				alt="banner"
 				width={1280} // max width of your container
 				height={400} // approximate aspect ratio height

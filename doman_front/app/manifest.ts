@@ -13,7 +13,8 @@ export default function manifest(): MetadataRoute.Manifest {
 		theme_color: SITE.themeColor,
 		lang: "uk",
 		icons: [
-			{ src: "/logo.png", sizes: "any", type: "image/png" },
+			// Must match the real asset dimensions, otherwise browsers reject the icon.
+			{ src: "/logo.png", sizes: "260x85", type: "image/png" },
 		],
 	};
 }

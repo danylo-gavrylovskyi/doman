@@ -36,6 +36,7 @@ export class ProductsService {
 			inputValue = "",
 			categoryId,
 			subcategoryId,
+			isPopular,
 			...filterParams
 		}: GetFilteredProductsDto
 	): Promise<PaginatedEntityResponseDto<Product>> {
@@ -48,6 +49,7 @@ export class ProductsService {
 		};
 		if (subcategoryId) whereClause.subcategoryId = +subcategoryId;
 		if (categoryId) whereClause["$subcategory.categoryId$"] = +categoryId;
+		if (isPopular !== undefined) whereClause.isPopular = isPopular;
 
 		const attributeFilterParams: Record<string, string[]> = {};
 		for (const [key, value] of Object.entries(filterParams)) {

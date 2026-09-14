@@ -1,7 +1,7 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
-import { IsNumber, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsNumber, IsOptional, IsString } from "class-validator";
 
-import { ToNumber } from "src/common/transformers";
+import { ToBoolean, ToNumber } from "src/common/transformers";
 
 export class GetFilteredProductsDto {
 	@ApiPropertyOptional({ example: 1, description: "Page number" })
@@ -32,4 +32,10 @@ export class GetFilteredProductsDto {
 	@IsOptional()
 	@IsNumber()
 	readonly subcategoryId?: number;
+
+	@ApiPropertyOptional({ example: true, description: "Fetch only products marked as popular" })
+	@ToBoolean()
+	@IsOptional()
+	@IsBoolean()
+	readonly isPopular?: boolean;
 }

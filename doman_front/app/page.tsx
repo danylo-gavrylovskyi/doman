@@ -4,6 +4,7 @@ import { SITE, absoluteUrl } from "@/config/seo.config";
 
 import { BannersService } from "@/services/banners.service";
 import { CategoriesService } from "@/services/categories.service";
+import { ProductsService } from "@/services/products.service";
 
 import { JsonLd } from "@/components/JsonLd";
 
@@ -31,8 +32,11 @@ export const metadata: Metadata = {
 export const revalidate = 300;
 
 const Home = async () => {
-	const categories = await CategoriesService.getAll().catch(() => []);
-	const banners = await BannersService.getAll().catch(() => []);
+	const [categories, banners, popularProducts] = await Promise.all([
+		CategoriesService.getAll().catch(() => []),
+		BannersService.getAll().catch(() => []),
+		ProductsService.getPopular().catch(() => []),
+	]);
 
 	const itemListJsonLd = {
 		"@context": "https://schema.org",
@@ -50,7 +54,7 @@ const Home = async () => {
 			{categories.length > 0 && <JsonLd data={itemListJsonLd} />}
 			<div className={styles.container}>
 				<AutoplaySlider banners={banners} />
-				<PopularItems />
+				<PopularItems products={popularProducts} />
 				<Categories categories={categories} />
 			</div>
 		</div>
